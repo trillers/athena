@@ -1,14 +1,15 @@
 var mongoose = require('../app/mongoose');
-var DomainBuilder = require('../framework/model/DomainBuilder');
+var DomainBuilder = require('../../../framework/model/DomainBuilder');
 
 var schema = DomainBuilder
-    .i('ClazzBrief')
+    .i('Orgenization')
     .withBasis()
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
-        clazz: {type: String, ref: 'Clazz', required: true},
-        name: {type: String, required: true}
+        orgCode: {type: String, require: true},
+        desc: {type: String},
+        name: {type: String}
     })
     .build();
 
