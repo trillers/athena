@@ -1,9 +1,10 @@
 {
-  "name": "koa",
-  "description": "first schema with Koa.js",
+  "name": "pallas",
+  "description": "a wechat project",
   "author": "Sunny He",
   "version": "0.0.1",
   "dependencies": {
+    "co": "*",
     "co-body": "0.0.1",
     "co-views": "~0.1.0",
     "koa": "~0.2.0",
@@ -16,8 +17,14 @@
     "koa-static": "^1.4.9",
     "log4js": "^0.6.26",
     "mongoose": "^4.0.6",
+    "redis": "~0.12.1",
+    "redis-sentinel": "^0.3.3",
     "swig": "~1.2.2",
-    "thunkify": "^2.1.2"
+    "thunkify": "^2.1.2",
+    "pallas-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/pallas-settings.git"
+  },
+  "devDependencies": {
+    "mocha": "^2.1.0"
   },
   "engines": {
     "node": ">= 0.11.9"
