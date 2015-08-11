@@ -3,7 +3,7 @@ var frankon = require('../../framework/frankon');
 var express = require('express');
 var co = require('co');
 var service = require('../../services/UserService');
-var wechat = require('wechat');
+var wechat = require('co-wechat');
 var WechatOperationService = require('../../services/WechatOperationService');
 var QrChannelDispatcher = require('../../modules/qrchannel');
 var UserKv = require('../../kvs/User');
@@ -32,7 +32,7 @@ module.exports = function(){
     });
 
     var handler = frankon.generateHandler();
-    var wechatMiddleware = wechat(tokenConfig, handler).middlewarify();
+    var wechatMiddleware = wechat(tokenConfig).middlewarify(handler);
     router.use(wechatMiddleware);
     return router;
 };
