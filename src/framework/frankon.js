@@ -11,7 +11,7 @@ proto.compose = function(){
     var _next = function(){
         if(!me.middlewares.length) return;
         var middleware = me.middlewares.shift();
-        middleware.apply(me, [].concat([1, 2], _next));
+        middleware.apply(me, [].concat([].slice.call(arguments, 0, 2), _next));
     }
     return function(){
         _next([].slice(arguments, 0, 2));
