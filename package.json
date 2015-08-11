@@ -21,7 +21,7 @@
     "redis-sentinel": "^0.3.3",
     "swig": "~1.2.2",
     "thunkify": "^2.1.2",
-    "pallas-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/pallas-settings.git",
+    "athena-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/athena-settings.git",
     "co-wechat": "*"
   },
   "devDependencies": {
