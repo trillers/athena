@@ -23,12 +23,10 @@ module.exports = function(){
     var router = express.Router({strict: false});
     require('../common/routes-wechat')(router);
 
-    frankon.use(function(req, res, next){
-        co(function* (){
-            var user = yield authEnsureSignin(req.weixin, req, res, next)
-            WechatOperationService.logAction(req.weixin);
-            res.reply('欢迎来到快乐种子！');
-        });
+    frankon.use(function* (req, res, next){
+        var user = yield authEnsureSignin(req.weixin, req, res, next)
+        WechatOperationService.logAction(req.weixin);
+        res.reply('欢迎来到快乐种子！');
     });
 
     var handler = frankon.generateHandler();
