@@ -1,4 +1,4 @@
-var UserService = require('../services/UserService');
+var UserService = require('../modules/user/services/UserService');
 var logger = require('../app/logging').logger;
 
 var _extend = function(target, source){

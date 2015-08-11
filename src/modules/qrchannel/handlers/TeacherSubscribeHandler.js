@@ -1,5 +1,5 @@
 var QrHandler = require('../common/QrHandler');
-var UserService = require('../../../services/UserService');
+var UserService = require('../../user/services/UserService');
 var ClazzTeacherService = require('../../../services/ClazzTeacherService')
 var logger = require('../../../app/logging').logger;
 var UserRole = require('../../../models/TypeRegistry').item('UserRole');
