@@ -1,5 +1,5 @@
-var UserService = require('../services/UserService');
-var WechatUserService = require('../services/WechatUserService');
+var UserService = require('../modules/user/services/UserService');
+var WechatUserService = require('../modules/user/services/WechatUserService');
 var logger = require('../app/logging').logger;
 
 var _extend = function(target, source){
