@@ -5,7 +5,7 @@ var CaseStatus = require('../../common/models/TypeRegistry').item('CaseStatus');
 var settings = require('athena-settings');
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var wechat = require('../../../app/wechat/api');
+var wechat = require('../../wechat/common/api');
 var Promise = require('bluebird');
 var subcaseServiceMap = {
     'Taxi': caseTaxiService,
@@ -28,8 +28,13 @@ Service.load = function* (id) {
 };
 
 Service.create = function* (json) {
+    var subcaseService = subcaseServiceMap[CaseStatus.name(json.type)];
     var abscase = new Case(json);
-    console.log(yield abscase.save());
+    console.log(abscase)
+    var test = yield abscase.save();
+    var subcase = yield subcaseService.create(json);
+    console.log("---------------" + test)
+    return test;
 
 
     //function (err, doc, numberAffected) {

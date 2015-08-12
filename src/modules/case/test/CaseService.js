@@ -1,6 +1,6 @@
 var assert = require("assert");
 var cs = require('../services/CaseService');
-
+var co = require('co')
 describe('CustomerServer', function() {
 
     it('create case check the return', function (done) {
@@ -16,13 +16,17 @@ describe('CustomerServer', function() {
             useTime: new Date(),
             place: '孵化器2号楼旗杆处',
             evaluation: '好',
-            subcase: 'id4'
+            subcase: 'id4',
+
         }
-        cs.create(id, function (err, data) {
+        co(function* (){
+            console.log(111)
+            var data = yield cs.create(mock);
             console.log(data);
-            assert.ok(!err);
-            assert.equal(data, 1);
             done();
-        });
+        })
+
+
+
     });
 })
