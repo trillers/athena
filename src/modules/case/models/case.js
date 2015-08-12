@@ -1,4 +1,4 @@
-var mongoose = require('../app/mongoose');
+var mongoose = require('../../../app/mongoose');
 var DomainBuilder = require('../../../framework/model/DomainBuilder');
 var CaseEnum = require('../../common/models/TypeRegistry').item('Case');
 var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');

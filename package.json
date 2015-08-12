@@ -4,9 +4,12 @@
   "author": "Sunny He",
   "version": "0.0.1",
   "dependencies": {
+    "athena-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/athena-settings.git",
+    "bluebird": "^2.9.34",
     "co": "*",
     "co-body": "0.0.1",
     "co-views": "~0.1.0",
+    "co-wechat": "*",
     "koa": "~0.2.0",
     "koa-generic-session": "^1.9.0",
     "koa-logger": "~1.1.0",
@@ -20,9 +23,8 @@
     "redis": "~0.12.1",
     "redis-sentinel": "^0.3.3",
     "swig": "~1.2.2",
-    "athena-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/athena-settings.git",
     "thunkify": "^2.1.2",
-     "co-wechat": "*"
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "mocha": "^2.1.0"
