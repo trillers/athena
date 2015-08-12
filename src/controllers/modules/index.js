@@ -6,5 +6,4 @@ module.exports = function(app){
     require('./spa')(spa_router);
     app.use(spa_router.routes());
 
-
 }
