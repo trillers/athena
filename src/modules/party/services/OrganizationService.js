@@ -1,78 +1,78 @@
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var CaseCoffee = require('../models/CaseCoffee').model;
+var Organization = require('../models/Organization').model;
 var Promise = require('bluebird');
 
 var Service = {};
 
 Service.load = function (id, callback) {
-    CaseCoffee.findById(id).lean(true).exec(function (err, doc) {
+    Organization.findById(id).lean(true).exec(function (err, doc) {
         if (err) {
-            logger.error('Fail to load CaseCoffee [id=' + id + ']: ' + err);
+            logger.error('Fail to load Organization [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to load  CaseCoffee [id=' + id + ']');
+        logger.debug('Succeed to load  Organization [id=' + id + ']');
         if (callback) callback(null, doc);
     })
 };
 
 Service.create = function (json, callback) {
-    var caseCoffee = new CaseCoffee(json);
-    caseCoffee.save(function (err, doc, numberAffected) {
+    var organization = new Orgenization(json);
+    organization.save(function (err, doc, numberAffected) {
         if (err) {
             if (callback) callback(err);
             return;
         }
         if (numberAffected) {
-            logger.debug('Succeed to create CaseCoffee: ' + require('util').inspect(doc) + '\r\n');
+            logger.debug('Succeed to create Organization: ' + require('util').inspect(doc) + '\r\n');
             if (callback) callback(null, doc);
         }
         else {
-            logger.error('Fail to create CaseCoffee: ' + require('util').inspect(doc) + '\r\n');
-            if (callback) callback(new Error('Fail to create CaseCoffee'));
+            logger.error('Fail to create Organization: ' + require('util').inspect(doc) + '\r\n');
+            if (callback) callback(new Error('Fail to create Organization'));
         }
     });
 };
 
 Service.delete = function (id, callback) {
-    CaseCoffee.findByIdAndRemove(id, function (err, doc) {
+    Organization.findByIdAndRemove(id, function (err, doc) {
         if (err) {
-            logger.error('Fail to delete CaseCoffee [id=' + id + ']: ' + err);
+            logger.error('Fail to delete Organization [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to delete CaseCoffee [id=' + id + ']');
+        logger.debug('Succeed to delete Organization [id=' + id + ']');
         if (callback) callback(null, doc);
     });
 };
 
 Service.update = function (id, update, callback) {
-    CaseCoffee.findByIdAndUpdate(id, update, {new: true}, function (err, result){
+    Organization.findByIdAndUpdate(id, update, {new: true}, function (err, result){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseCoffee [id=' + id + ']');
+            logger.debug('Succeed to update Organization [id=' + id + ']');
             callback(null, result);
         }
     });
 };
 
 Service.updateByCondition = function (condition, update, callback) {
-    CaseCoffee.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
+    Organization.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseCoffee [id=' + doc._id + ']');
+            logger.debug('Succeed to update Organization [id=' + doc._id + ']');
             callback(null, doc);
         }
     });
 };
 
 Service.find = function (params, callback) {
-    var query = CaseCoffee.find();
+    var query = Organization.find();
 
     if (params.options) {
         query.setOptions(params.options);
@@ -107,7 +107,7 @@ Service.find = function (params, callback) {
 };
 
 Service.filter = function (params, callback) {
-    var query = CaseCoffee.find();
+    var query = Organization.find();
 
     if (params.options) {
         query.setOptions(params.options);

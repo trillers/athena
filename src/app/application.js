@@ -5,7 +5,7 @@ var logging = require('./logging');
 var logger = require('./logging').logger;
 var path = require('path');
 var render= views(path.join(__dirname, '../views'), { map: { html: 'swig' }});
-var settings = require('pallas-settings');
+var settings = require('athena-settings');
 app.env = 'development' || settings.env.NODE_ENV;
 //app.enable('trust proxy'); //TODO: configure it by settings
 //app.locals(settings.resources);//TODO: configure it later
