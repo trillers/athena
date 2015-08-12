@@ -34,7 +34,26 @@ var UserState = new EnumType([
         text: '已验证'
     }
 ]);
+
+var ConversationState = new EnumType([
+    {
+        value: 's',
+        name: 'start',
+        text: '开始'
+    },
+    {
+        value: 'h',
+        name: 'handing',
+        text: '处理中'
+    },
+    {
+        value: 'c',
+        name: 'closed',
+        text: '已结束'
+    }
+]);
 module.exports = {
     LifeFlag: LifeFlag,
-    UserState: UserState
+    UserState: UserState,
+    ConversationState: ConversationState
 };

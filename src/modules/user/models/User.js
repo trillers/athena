@@ -11,7 +11,6 @@ var schema = DomainBuilder
     .withProperties({
         token: {type: String}
         , stt: {type: String, enum: UserState.values(), required: true}
-        , headIconUrl: {type: String}
 
         , wx_openid: {type: String} //weixin openid
         , wx_at: String //weixin access_token
