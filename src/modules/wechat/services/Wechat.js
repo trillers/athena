@@ -1,4 +1,4 @@
-var WechatApi = require('co-wechat-api');
+var WechatApi = require('wechat-api');
 var WechatKv = require('../kvs/WechatToken');
 var WechatErrorHelper = require('../common/WechatErrorHelper');
 var logger = require('../../../app/logging').logger;
