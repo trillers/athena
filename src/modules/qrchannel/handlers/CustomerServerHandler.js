@@ -1,8 +1,8 @@
 var QrHandler = require('../common/QrHandler');
 var UserService = require('../../user/services/UserService');
-var ClazzTeacherService = require('../../../services/ClazzTeacherService')
+var UserBizService = require('../../user/services/UserBizService')
 var logger = require('../../../app/logging').logger;
-var UserRole = require('../../../models/TypeRegistry').item('UserRole');
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 
 var handle = function(message, user, res, qrChannel){
     //TODO: implementation
@@ -10,7 +10,7 @@ var handle = function(message, user, res, qrChannel){
         wx_subscribe: 1,
         wx_subscribe_time: new Date(),
         $inc: {'subscribeCount': 1},
-        role: UserRole.Teacher.value()
+        role: UserRole.RegularUser.value()
     };
 
     UserService.updateAsync(user.id, update)
