@@ -1,4 +1,4 @@
-var settings = require('pallas-settings').mongo;
+var settings = require('athena-settings').mongo;
 var mongoose = require('mongoose');
 var logger = require('./logging').logger;
 
