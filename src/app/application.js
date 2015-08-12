@@ -5,7 +5,7 @@ var logging = require('./logging');
 var logger = require('./logging').logger;
 var path = require('path');
 var render= views(path.join(__dirname, '../views'), { map: { html: 'swig' }});
-var settings = require('pallas-settings');
+var settings = require('athena-settings');
 app.env = 'development' || settings.env.NODE_ENV;
 //app.enable('trust proxy'); //TODO: configure it by settings
 //app.locals(settings.resources);//TODO: configure it later
@@ -18,7 +18,7 @@ var env = app.env;
 var system = require('./system');
 system.addMember('application', app);
 
-var server = require('./http-server')(app);
+//var server = require('./http-server')(app);
 
 app.use(logging.generatorFunc);
 //router
@@ -34,7 +34,7 @@ app.on('error', function(err){
     console.log(err);
 });
 
-server.listen(app.port, app.bindip, function(){
+app.listen(app.port, app.bindip, function(){
     logger.info('The server is binding on '+ app.bindip +' and listening on port ' + app.port + ' in ' + env );
     system.memberUp(app);
 });

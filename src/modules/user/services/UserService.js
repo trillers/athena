@@ -24,7 +24,7 @@ var createUser = function (userInfo, callback) {
         //TODO: logging
         var userBiz = {
             user: result._id,
-            classes: []
+            phone: ''
         }
         userBizService.create(userBiz, function(err, doc){
             if(err){
