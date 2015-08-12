@@ -1,4 +1,4 @@
-var settings = require('mit-settings');
+var settings = require('athena-settings');
 var wsServer = require('socket.io').Server;
 var events = require('events');
 

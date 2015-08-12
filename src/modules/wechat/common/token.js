@@ -1,4 +1,4 @@
-var settings = require('mit-settings');
+var settings = require('athena-settings');
 var wechat = require('./api');
 var Promise = require('bluebird');
 

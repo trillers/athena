@@ -1,5 +1,5 @@
 var logger = require('../app/logging').logger;
-var settings = require('mit-settings');
+var settings = require('athena-settings');
 
 var _extend = function(target, source){
     for (var key in source) {
