@@ -1,11 +1,9 @@
 var cskv = require('../../customer_server/kvs/CustomerServer');
 var EventEmitter = require('event').EventEmitter;
 var util = require('util');
-function ConversationQueue(concurrency){
+var ConversationService = require('../services/ConversationService');
+function ConversationQueue(){
     EventEmitter.call(this);
-    this.concurrency = concurrency;
-    this.running = 0;
-    this.queue = [];
     this.init();
 }
 util.inherits(ConversationQueue, EventEmitter);
@@ -27,18 +25,31 @@ ConversationQueue.prototype.setDispatcher = function(dispatcher){
 ConversationQueue.prototype.init = function(){
     var me = this;
     this.on('taskFinish', function(){
-        me.dequeue(function(){
-            me.dispatch();
+        me.nextItem(function(err, doc){
+            console.log('dispatch ok');
         })
     });
 }
+ConversationQueue.prototype.nextItem = function(callback){
+    me.dequeue(function(err, conversation){
+        me.dispatch(conversation, function(err, doc){
+            return callback(null, doc)
+        });
+    })
+}
 ConversationQueue.prototype.dispatch = function(conversation, callback){
-
+    cskv.loadCSSetByCSIdAsync.then(function(csId){
+        //更新conversation，接单
+        return ConversationService.updateAsync(conversation._id, {})
+    })
+    .then(function(doc){
+        return callback(null, doc)
+    })
+    .catch(function(e){
+        return callback(e, null)
+    })
 }
 ConversationQueue.prototype.enqueue = function(conversation, callback){
-    if(this.running < this.concurrency){
-
-    }
     cskv.pushConQueueAsync(JSON.stringify(conversation))
         .then(function(){
             return callback(null, null);
@@ -49,16 +60,12 @@ ConversationQueue.prototype.enqueue = function(conversation, callback){
 }
 ConversationQueue.prototype.dequeue = function(callback){
     var me = this;
-    if(this.running >= this.concurrency){
-        return;
-    }
-    this.running++;
     cskv.popConQueueAsync()
         .then(function(conversation){
-            return this.dispatcher.handle(conversation, callback);
+            return callback(null, conversation);
         })
         .catch(function(err){
             return callback(err, null);
         })
 }
-module.exports = new ConversationQueue(5);
+module.exports = new ConversationQueue();
