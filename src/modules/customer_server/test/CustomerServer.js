@@ -4,7 +4,8 @@ var cskv = require('../kvs/CustomerServer');
 describe('CustomerServer', function(){
     var csId = 'ABC7', csOpenId = '4x88adf888dddd88dd', openId = 'rrrrrrrr',
         wcCss = {csId: csOpenId, type: 'wc', openId: openId, expire: '33333'},
-        pcCss = {csId: csId, type: 'pc', openId: openId, expire: '44444'};
+        pcCss = {csId: csId, type: 'pc', openId: openId, expire: '44444'},
+        con = {from: openId, conId: '123'};
 
 
     it('saveCSStatusByCSId', function(done){
@@ -61,8 +62,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('pc saveCSSByOpenId', function(done){
-        cskv.saveCSSByOpenId(openId, pcCss, function(err, data){
+    it('pc saveCSSById', function(done){
+        cskv.saveCSSById(openId, csId, pcCss, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, pcCss);
@@ -70,8 +71,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('pc loadCSSByOpenId', function(done){
-        cskv.loadCSSByOpenId(openId, function(err, data){
+    it('pc loadCSSById', function(done){
+        cskv.loadCSSById(csId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data.csId, pcCss.csId);
@@ -83,8 +84,8 @@ describe('CustomerServer', function(){
     });
 
 
-    it('pc delCSSByCSOpenId', function(done){
-        cskv.delCSSByOpenId(openId, function(err, data){
+    it('pc delCSSById csId', function(done){
+        cskv.delCSSById(csId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, 1);
@@ -92,8 +93,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('wc saveCSSByOpenId', function(done){
-        cskv.saveCSSByOpenId(openId, wcCss, function(err, data){
+    it('wc saveCSSById', function(done){
+        cskv.saveCSSById(openId, csId, wcCss, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, wcCss);
@@ -101,8 +102,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('pc loadCSSByOpenId', function(done){
-        cskv.loadCSSByOpenId(openId, function(err, data){
+    it('pc loadCSSById', function(done){
+        cskv.loadCSSById(openId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data.csId, wcCss.csId);
@@ -114,8 +115,8 @@ describe('CustomerServer', function(){
     });
 
 
-    it('pc delCSSByCSOpenId', function(done){
-        cskv.delCSSByOpenId(openId, function(err, data){
+    it('pc delCSSById', function(done){
+        cskv.delCSSById(openId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, 1);
@@ -193,20 +194,42 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('saveCSStatusByCSId', function(done){
-        cskv.saveCSStatusByCSId(csId, 'ol', function(err, data){
+    it('pushConQueue', function(done){
+        var scon = JSON.stringify(con);
+        cskv.pushConQueue(scon, function(err, data){
             console.log(data);
             assert.ok(!err);
-            assert.equal(data, 'ol');
+            assert.equal(data, scon);
             done();
         });
     });
 
-    it('renameKey', function(done){
-        cskv.renameKey('cs:st:'+csId, 'cs:st:8888', function(err, data){
+    it('loadConQueue', function(done){
+        cskv.loadConQueue(function(err, data){
             console.log(data);
             assert.ok(!err);
-            assert.equal(data, 'cs:st:8888');
+            var conObj = JSON.parse(data[0]);
+            assert.equal(conObj.from, con.from);
+            assert.equal(conObj.conId, con.conId);
+            done();
+        });
+    });
+
+    it('popConQueue', function(done){
+        cskv.popConQueue(function(err, data){
+            console.log(data);
+            assert.ok(!err);
+            var conObj = JSON.parse(data);
+            assert.equal(conObj.from, con.from);
+            assert.equal(conObj.conId, con.conId);
+            done();
+        });
+    });
+
+    it('delCSSetByCSOpenId', function(done){
+        cskv.delConQueue(function(err, data){
+            console.log(data);
+            assert.ok(!err);
             done();
         });
     });

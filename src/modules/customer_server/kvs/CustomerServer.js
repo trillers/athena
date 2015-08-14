@@ -20,8 +20,12 @@ var csOpenIdToCSSetKey = function(csOpenId){
     return 'cs:set:' + csOpenId;
 }
 
-var openIdToCSSKey = function(openId){
-    return 'cs:sess:' + openId;
+var getCSSKey = function(openId, csId){
+    return 'cs:sess:' + openId + '/' + csId;
+}
+
+var getConQueueKey = function(){
+    return 'cs:conq';
 }
 
 var CustomerServer = {
@@ -93,40 +97,43 @@ var CustomerServer = {
         });
     },
 
-    loadCSSByOpenId: function(openId, callback){
-        var pkey = 'cs:sess:*' + openId + '*';
+    loadCSSById: function(id, callback){
+        var pkey = 'cs:sess:*' + id + '*';
         redis.keys(pkey, function(err, key){
             if(err) return cbUtil.handleSingleValue(callback, err, key);
             redis.hgetall(key, function(err, result){
                 cbUtil.logCallback(
                     err,
-                    'Fail to load customer server session by openId ' + openId + ': ' + err,
-                    'Succeed to load customer server session by openId ' + openId);
+                    'Fail to load customer server session by id ' + id + ': ' + err,
+                    'Succeed to load customer server session by id ' + id);
                 cbUtil.handleSingleValue(callback, err, result);
             });
         });
     },
 
-    saveCSSByOpenId: function(openId, css, callback){
-        var key = openIdToCSSKey(openId);
+    saveCSSById: function(openId, csId, css, callback){
+        var key = getCSSKey(openId, csId);
         redis.hmset(key, css, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to save customer server session by openId: ' + openId + ': ' + err,
-                'Succeed to save customer server session by openId: ' + openId);
+                'Fail to save customer server session by id: ' + openId + '/'+ csId + ': ' + err,
+                'Succeed to save customer server session by id: ' + openId + '/'+ csId );
             cbUtil.handleOk(callback, err, result, css);
         });
     },
 
-    delCSSByOpenId: function(openId, callback){
-        var key = openIdToCSSKey(openId);
-        redis.del(key, function(err, result){
-            cbUtil.logCallback(
-                err,
-                'Fail to delete customer server session by openId ' + openId + ': ' + err,
-                'Succeed to delete customer server session by openId ' + openId);
+    delCSSById: function(id, callback){
+        var pkey = 'cs:sess:*' + id + '*';
+        redis.keys(pkey, function(err, key) {
+            if (err) return cbUtil.handleSingleValue(callback, err, key);
+            redis.del(key, function(err, result){
+                cbUtil.logCallback(
+                    err,
+                    'Fail to delete customer server session by id ' + id + ': ' + err,
+                    'Succeed to delete customer server session by id ' + id);
 
-            cbUtil.handleSingleValue(callback, err, result);
+                cbUtil.handleSingleValue(callback, err, result);
+            });
         });
     },
 
@@ -246,17 +253,51 @@ var CustomerServer = {
         });
     },
 
-    renameKey: function(key, newKey, callback){
-        redis.rename(key, newKey, function(err, result){
+    loadConQueue: function(callback){
+        var key = getConQueueKey();
+        redis.lrange(key, 0, -1, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to rename key: ' + key + ': ' + err,
-                'Succeed to rename key: ' + key + 'to: ' + newKey);
+                'Fail to load conversation queue : ' + err,
+                'Succeed to load conversation queue ');
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
 
-            cbUtil.handleOk(callback, err, result, newKey);
+    pushConQueue: function(con, callback){
+        var key = getConQueueKey();
+        redis.rpush(key, con, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to add conversation queue : ' + err,
+                'Succeed to conversation queue ');
+            cbUtil.handleAffected(callback, err, con, result);
+        });
+    },
+
+    popConQueue: function(callback){
+        var key = getConQueueKey();
+        redis.lpop(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to pop conversation queue: ' + err,
+                'Succeed to pop conversation queue ' );
+
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    delConQueue: function(callback){
+        var key = getConQueueKey();
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to delete conversation queue : ' + err,
+                'Succeed to delete conversation queue');
+
+            cbUtil.handleSingleValue(callback, err, result);
         });
     }
-
 };
 
 CustomerServer = Promise.promisifyAll(CustomerServer);
