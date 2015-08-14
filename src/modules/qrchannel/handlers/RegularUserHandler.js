@@ -10,6 +10,7 @@ var handle = function(message, user, res, qrChannel){
         wx_subscribe: 1,
         wx_subscribe_time: new Date(),
         $inc: {'subscribeCount': 1},
+        role: UserRole.RegularUser.value()
     };
 
     UserService.updateAsync(user.id, userUpdate)

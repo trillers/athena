@@ -22,15 +22,15 @@ var createUser = function (userInfo, callback) {
     user.token = generateUserToken(uid); //TODO: use token generator
     user.save(function (err, result, affected) {
         //TODO: logging
-        var userBiz = {
-            user: result._id,
-            phone: ''
-        }
-        userBizService.create(userBiz, function(err, doc){
-            if(err){
-                logger.error('failed to create userBiz');
-            }
-        })
+        //var userBiz = {
+        //    user: result._id,
+        //    phone: ''
+        //}
+        //userBizService.create(userBiz, function(err, doc){
+        //    if(err){
+        //        logger.error('failed to create userBiz');
+        //    }
+        //})
         cbUtil.handleAffected(callback, err, result, affected);
     });
 };

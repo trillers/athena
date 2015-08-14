@@ -10,16 +10,17 @@ var handle = function(message, user, res, qrChannel){
         wx_subscribe: 1,
         wx_subscribe_time: new Date(),
         $inc: {'subscribeCount': 1},
+        role: UserRole.CustomerServer.value()
     };
 
-    var userBizUpdate = {
-        role: UserRole.RegularUser.value()
-    };
+    //var userBizUpdate = {
+    //    role: UserRole.RegularUser.value()
+    //};
 
     UserService.updateAsync(user.id, userUpdate)
-        .then(function(){
-            return UserBizService.updateByConditionAsync({user: user.id}, userBizUpdate);
-        })
+        //.then(function(){
+        //    return UserBizService.updateByConditionAsync({user: user.id}, userBizUpdate);
+        //})
         .then(function(){
             var replyMsg = '欢迎注册成为客服人员！';
             res.reply(replyMsg);
