@@ -24,6 +24,7 @@ module.exports = function() {
     require('../common/routes-wechat')(router);
 
     frankon.use(function* (next) {
+        //根据角色，分别派遣session，然后next
         var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
         WechatOperationService.logAction(this.weixin);
         res.reply('xx');
@@ -31,11 +32,16 @@ module.exports = function() {
     });
 
     frankon.use(function* (next) {
+        //根据消息类型分别处理
+        //如果是用户消息，先查进行中的会话，有就发送
+        //没有就查询待处理列表，没有就新建或者有就发送消息
         var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
         WechatOperationService.logAction(this.weixin);
         res.reply('xx');
         console.log(user)
     });
+
+
     var handler = frankon.generateHandler();
     var wechatMiddleware = wechat(tokenConfig).middlewarify(handler);
     router.use(wechatMiddleware);
