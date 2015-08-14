@@ -38,7 +38,7 @@ ConversationQueue.prototype.nextItem = function(callback){
     })
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
-    cskv.loadCSSetByCSIdAsync.then(function(csId){
+    cskv.popWcCSSet.then(function(csId){
         //更新conversation，接单
         return ConversationService.updateAsync(conversation._id, {})
     })

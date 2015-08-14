@@ -19,6 +19,7 @@ var thunkify = require("thunkify")
 var WechatAuthenticator = require('../../framework/WechatAuthenticator');
 var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
+var customerDispatcher = require('../../modules/customer_server');
 module.exports = function() {
     var router = express.Router({strict: false});
     require('../common/routes-wechat')(router);
@@ -27,8 +28,7 @@ module.exports = function() {
         //根据角色，分别派遣session，然后next
         var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
         WechatOperationService.logAction(this.weixin);
-        res.reply('xx');
-        console.log(user)
+        customerDispatcher.dispatch(user, this.weixin, res);
     });
 
     frankon.use(function* (next) {
