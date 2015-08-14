@@ -28,9 +28,13 @@ ConversationQueue.prototype.init = function(){
     var me = this;
     this.on('taskFinish', function(){
         me.dequeue(function(){
+            me.emit('taskFinish');
             me.dispatch();
         })
     });
+}
+ConversationQueue.prototype.dispatch = function(conversation, callback){
+
 }
 ConversationQueue.prototype.enqueue = function(conversation, callback){
     if(this.running < this.concurrency){
@@ -46,6 +50,9 @@ ConversationQueue.prototype.enqueue = function(conversation, callback){
 }
 ConversationQueue.prototype.dequeue = function(callback){
     var me = this;
+    if(this.running >= this.concurrency){
+        return;
+    }
     this.running++;
     cskv.popConQueueAsync()
         .then(function(conversation){
