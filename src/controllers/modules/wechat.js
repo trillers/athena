@@ -1,4 +1,4 @@
-var settings = require('pallas-settings');
+var settings = require('athena-settings');
 var frankon = require('../../framework/frankon');
 var express = require('express');
 var co = require('co');
