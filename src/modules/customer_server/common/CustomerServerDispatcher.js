@@ -11,7 +11,7 @@ var CustomerServerDispatcher = function(){
 var prototype  = CustomerServerDispatcher.prototype;
 
 prototype.register = function(handler){
-    var key = this.genKey(handler.forever, handler.type);
+    var key = this.genKey(handler.type);
     this.handlers[key] = handler;
 };
 
@@ -23,13 +23,11 @@ prototype.setNullHandler = function(handler){
     this.nullHandler = handler;
 };
 
-prototype.genKey = function(forever, type){
-    return (forever ? 'fv' : 'tm') + type;
-};
-
-prototype.dispatch = function(user, message){
+prototype.dispatch = function(user, message, res){
     var self = this;
-
+    var role = user.role;
+    var handler = self.handlers[role];
+    handler && handler.handle(user, message, res);
 }
 
 module.exports = CustomerServerDispatcher;

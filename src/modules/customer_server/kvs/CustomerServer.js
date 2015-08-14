@@ -150,7 +150,7 @@ var CustomerServer = {
 
     pushCSSetByCSId: function(csId, callback){
         var key = csIdToCSSetKey(csId);
-        redis.lpush(key, csId, function(err, result){
+        redis.rpush(key, csId, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to add pc customer server  set by csId: ' + csId + ': ' + err,
@@ -208,7 +208,7 @@ var CustomerServer = {
 
     pushCSSetByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSSetKey(csOpenId);
-        redis.lpush(key, csOpenId, function(err, result){
+        redis.rpush(key, csOpenId, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to add wc customer server  set by csOpenId: ' + csOpenId + ': ' + err,
