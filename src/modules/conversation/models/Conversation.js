@@ -1,6 +1,6 @@
 var mongoose = require('../../../app/mongoose');
 var DomainBuilder = require('../../../framework/model/DomainBuilder');
-var ConversationState = require('../framework/model/enums').ConversationState;
+var ConversationState = require('../../common/models/TypeRegistry').item('ConversationState');
 
 var schema = DomainBuilder
     .i('Conversation')

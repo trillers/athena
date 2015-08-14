@@ -19,19 +19,25 @@ var thunkify = require("thunkify")
 var WechatAuthenticator = require('../../framework/WechatAuthenticator');
 var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
-module.exports = function(){
+module.exports = function() {
     var router = express.Router({strict: false});
     require('../common/routes-wechat')(router);
 
-    frankon.use(function* (next){
+    frankon.use(function* (next) {
         var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
         WechatOperationService.logAction(this.weixin);
-        res.reply('欢迎来到快乐种子！');
+        res.reply('xx');
         console.log(user)
     });
 
+    frankon.use(function* (next) {
+        var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
+        WechatOperationService.logAction(this.weixin);
+        res.reply('xx');
+        console.log(user)
+    });
     var handler = frankon.generateHandler();
     var wechatMiddleware = wechat(tokenConfig).middlewarify(handler);
     router.use(wechatMiddleware);
     return router;
-};
+}
