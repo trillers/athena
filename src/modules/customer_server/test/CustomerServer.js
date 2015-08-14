@@ -124,8 +124,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('pushCSSetByCSId', function(done){
-        cskv.pushCSSetByCSId(csId, function(err, data){
+    it('pushPcCSSet', function(done){
+        cskv.pushPcCSSet(csId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, csId);
@@ -133,8 +133,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('loadCSSetByCSId', function(done){
-        cskv.loadCSSetByCSId(csId, function(err, data){
+    it('loadPcCSSet', function(done){
+        cskv.loadPcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data[0], csId);
@@ -143,7 +143,7 @@ describe('CustomerServer', function(){
     });
 
     it('popCSSetByCSId', function(done){
-        cskv.popCSSetByCSId(csId, function(err, data){
+        cskv.popPcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, csId);
@@ -151,16 +151,16 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('delCSSetByCSId', function(done){
-        cskv.delCSSetByCSId(csId, function(err, data){
+    it('delPcCSSet', function(done){
+        cskv.delPcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             done();
         });
     });
 
-    it('pushCSSetByCSOpenId', function(done){
-        cskv.pushCSSetByCSOpenId(csOpenId, function(err, data){
+    it('pushWcCSSet', function(done){
+        cskv.pushWcCSSet(csOpenId, function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, csOpenId);
@@ -168,8 +168,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('loadCSSetByCSOpenId', function(done){
-        cskv.loadCSSetByCSOpenId(csOpenId, function(err, data){
+    it('loadWcCSSet', function(done){
+        cskv.loadWcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data[0], csOpenId);
@@ -177,8 +177,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('popCSSetByCSOpenId', function(done){
-        cskv.popCSSetByCSOpenId(csOpenId, function(err, data){
+    it('popWcCSSet', function(done){
+        cskv.popWcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             assert.equal(data, csOpenId);
@@ -186,8 +186,8 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('delCSSetByCSOpenId', function(done){
-        cskv.delCSSetByCSOpenId(csOpenId, function(err, data){
+    it('delWcCSSet', function(done){
+        cskv.delWcCSSet(function(err, data){
             console.log(data);
             assert.ok(!err);
             done();

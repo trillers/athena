@@ -12,12 +12,12 @@ var csOpenIdToCSStatusKey = function(csOpenId){
     return 'cs:st:' + csOpenId;
 }
 
-var csIdToCSSetKey = function(csId){
-    return 'cs:set:' + csId;
+var getPcCSSetKey = function(){
+    return 'cs:pc:set';
 }
 
-var csOpenIdToCSSetKey = function(csOpenId){
-    return 'cs:set:' + csOpenId;
+var getWcCSSetKey = function(){
+    return 'cs:wc:set';
 }
 
 var getCSSKey = function(openId, csId){
@@ -137,117 +137,117 @@ var CustomerServer = {
         });
     },
 
-    loadCSSetByCSId: function(csId, callback){
-        var key = csIdToCSSetKey(csId);
+    loadPcCSSet: function(callback){
+        var key = getPcCSSetKey();
         redis.lrange(key, 0, -1, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to load pc customer server  set by csId ' + csId + ': ' + err,
-                'Succeed to load pc customer server  set by csId ' + csId);
+                'Fail to load pc customer server  set : ' + err,
+                'Succeed to load pc customer server  set ');
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
-    pushCSSetByCSId: function(csId, callback){
-        var key = csIdToCSSetKey(csId);
+    pushPcCSSet: function(csId, callback){
+        var key = getPcCSSetKey();
         redis.rpush(key, csId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to add pc customer server  set by csId: ' + csId + ': ' + err,
-                'Succeed to add pc customer server  set by csId: ' + csId);
+                'Fail to add pc customer server  set : ' + csId + ': ' + err,
+                'Succeed to add pc customer server  set : ' + csId);
             cbUtil.handleAffected(callback, err, csId, result);
         });
     },
 
-    popCSSetByCSId: function(csId, callback){
-        var key = csIdToCSSetKey(csId);
+    popPcCSSet: function(callback){
+        var key = getPcCSSetKey();
         redis.lpop(key, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to pop pc customer server  set by csId ' + csId + ': ' + err,
-                'Succeed to pop pc customer server  set status csId ' + csId);
+                'Fail to pop pc customer server  set : ' + err,
+                'Succeed to pop pc customer server set  ');
 
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
-    remCSSetByCSId: function(csId, callback){
-        var key = csIdToCSSetKey(csId);
+    remPcCSSet: function(csId, callback){
+        var key = getPcCSSetKey();
         redis.lrem(key, 0, csId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to pop pc customer server  set by csId ' + csId + ': ' + err,
-                'Succeed to pop pc customer server  set status csId ' + csId);
+                'Fail to remove pc ' + csId+ ' from pc customer server  set : ' + err,
+                'Succeed to remove ' + csId + ' from pc customer server  set  ');
 
             cbUtil.handleAffected(callback, err, csId, result);
         });
     },
 
-    delCSSetByCSId: function(csId, callback){
-        var key = csIdToCSSetKey(csId);
+    delPcCSSet: function(callback){
+        var key = getPcCSSetKey();
         redis.del(key, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to delete pc customer server  set by csId ' + csId + ': ' + err,
-                'Succeed to delete pc customer server  set by csId ' + csId);
+                'Fail to delete pc customer server  set : ' + err,
+                'Succeed to delete pc customer server  set ');
 
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
-    loadCSSetByCSOpenId: function(csOpenId, callback){
-        var key = csOpenIdToCSSetKey(csOpenId);
+    loadWcCSSet: function(callback){
+        var key = getWcCSSetKey();
         redis.lrange(key, 0, -1, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to load wc customer server  set by csOpenId ' + csOpenId + ': ' + err,
-                'Succeed to load wc customer server  set by csOpenId ' + csOpenId);
+                'Fail to load wc customer server  set : ' + err,
+                'Succeed to load wc customer server  set ');
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
-    pushCSSetByCSOpenId: function(csOpenId, callback){
-        var key = csOpenIdToCSSetKey(csOpenId);
+    pushWcCSSet: function(csOpenId, callback){
+        var key = getWcCSSetKey();
         redis.rpush(key, csOpenId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to add wc customer server  set by csOpenId: ' + csOpenId + ': ' + err,
-                'Succeed to wc add customer server  set by csOpenId: ' + csOpenId);
+                'Fail to add wc customer server  set : ' + csOpenId + ': ' + err,
+                'Succeed to add wc customer server  set : ' + csOpenId);
             cbUtil.handleAffected(callback, err, csOpenId, result);
         });
     },
 
-    popCSSetByCSOpenId: function(csOpenId, callback){
-        var key = csOpenIdToCSSetKey(csOpenId);
+    popWcCSSet: function(callback){
+        var key = getWcCSSetKey();
         redis.lpop(key, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to pop wc customer server set by csOpenId ' + csOpenId + ': ' + err,
-                'Succeed to pop wc customer server set status csOpenId ' + csOpenId);
+                'Fail to pop wc customer server set : ' + err,
+                'Succeed to pop wc customer server set  ');
 
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
-    remCSSetByCSId: function(csOpenId, callback){
-        var key = csOpenIdToCSSetKey(csOpenId);
+    remWcCSSet: function(csOpenId, callback){
+        var key = getWcCSSetKey();
         redis.lrem(key, 0, csOpenId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to pop wc customer server  set by csOpenId ' + csOpenId + ': ' + err,
-                'Succeed to pop wc customer server  set status csOpenId ' + csOpenId);
+                'Fail to pop wc customer server  set ' + csOpenId + ': ' + err,
+                'Succeed to pop wc customer server  set ' + csOpenId);
 
             cbUtil.handleAffected(callback, err, csOpenId, result);
         });
     },
 
-    delCSSetByCSOpenId: function(csOpenId, callback){
-        var key = csOpenIdToCSSetKey(csOpenId);
+    delWcCSSet: function(callback){
+        var key = getWcCSSetKey();
         redis.del(key, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to delete wc customer server  set by csOpenId ' + csOpenId + ': ' + err,
-                'Succeed to delete wc customer server  set by csOpenId ' + csOpenId);
+                'Fail to delete wc customer server  set : ' + err,
+                'Succeed to delete wc customer server  set ');
 
             cbUtil.handleSingleValue(callback, err, result);
         });
