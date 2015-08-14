@@ -28,7 +28,6 @@ ConversationQueue.prototype.init = function(){
     var me = this;
     this.on('taskFinish', function(){
         me.dequeue(function(){
-            me.emit('taskFinish');
             me.dispatch();
         })
     });
