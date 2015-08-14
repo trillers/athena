@@ -24,6 +24,10 @@ registry
     .up().item('Party', 'Party', '方')
     .addChild('Org','og', '机构')
     .addChild('Person','pr', '个人')
+    .up().item('ConversationState', 'ConversationState', '会话状态')
+    .addChild('Text','tx', '待处理')
+    .addChild('Voice','vo', '进行中')
+    .addChild('Pic','pi', '已结束')
 
 
 module.exports = registry;
