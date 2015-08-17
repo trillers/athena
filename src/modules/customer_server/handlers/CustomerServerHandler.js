@@ -1,19 +1,13 @@
 var CSHandler = require('../common/CSHandler');
+var MessageService = require('../../message/services/MessageService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var cskv = require('../kvs/CustomerServer');
-var onlineCommand = require('./commands/onlineCommand');
-var offlineCommand = require('./commands/offlineCommand');
-var callTaxiCommand = require('./commands/callTaxiCommand');
-var closeConvCommand = require('./commands/closeConvCommand');
 var caseTaxiHandler = require('./cases/caseTaxiHandler');
 var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
-var commandSet = {
-    'ol': onlineCommand,
-    'of': offlineCommand,
-    'ct': callTaxiCommand,
-    'cc': closeConvCommand
-}
+var command = require('./commands');
+
 var caseType = {
     'tx':caseTaxiHandler,
     'co':caseCoffeeHandler
@@ -32,29 +26,39 @@ var handle = function(user, message, res){
         return;
     })
     .then(function(){
-        if(_commandOrMsg(message)){
-            var executeFn = _commandOrMsg(message);
-            executeFn(options, function(err, data){
+            var commandType = command.commandType(message);
+            if(commandType) {
+                var executeFn = command.commandHandler(commandType);
+                executeFn(options, function(err, data){
 
-            });
-        }
+                });
+            }
+            return;
     })
     .then(function(){
         return cskv.loadCSSByIdAsync(user.wx_openid)
     })
     .then(function(data){
         if(data){
+            var customer = data.openId;
+            var msg = {
+                from: user.wx_openid,
+                to: customer,
+                contentType: MsgContentType.names(message.MsgType),
+                content: message.content
+            }
+            co(function* (){
+                yield MessageService.createAsync(msg);
 
+            })
         }else{
+            res.reply('当前无会话');
             return Promise.reject(new Error('the CS hasn,t establish conversation'));
         }
     })
     .catch(function(err){
-
+        console.log(err);
     })
-}
-function _commandOrMsg(message){
-    return message.content.length >= 3 && message.content[0] === ":" && commandSet[':' + message.content.slice(1, 3)];
 }
 
 var handler = new CSHandler(UserRole.CustomerServer.value(), handle());
