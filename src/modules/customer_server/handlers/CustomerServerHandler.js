@@ -1,5 +1,7 @@
 var CSHandler = require('../common/CSHandler');
+var MessageService = require('../../message/services/MessageService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var cskv = require('../kvs/CustomerServer');
 var onlineCommand = require('./commands/onlineCommand');
 var offlineCommand = require('./commands/offlineCommand');
@@ -44,13 +46,24 @@ var handle = function(user, message, res){
     })
     .then(function(data){
         if(data){
+            var customer = data.openId;
+            var msg = {
+                from: user.wx_openid,
+                to: customer,
+                contentType: MsgContentType.names(message.contentType),
+                content: message.content
+            }
+            co(function* (){
+                yield MessageService.createAsync(msg);
 
+            })
         }else{
+            res.reply('当前无会话');
             return Promise.reject(new Error('the CS hasn,t establish conversation'));
         }
     })
     .catch(function(err){
-
+        console.log(err);
     })
 }
 function _commandOrMsg(message){
