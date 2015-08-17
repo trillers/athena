@@ -29,9 +29,8 @@ var handle = function(user, message, res){
             var commandType = command.commandType(message);
             if(commandType) {
                 var executeFn = command.commandHandler(commandType);
-                executeFn(user, message, res, function(err, data){
-
-                });
+                executeFn(user, message, res);
+                return Promise.reject(new Error('this is a cmd,so break fn Chain'));
             }
             return;
     })
