@@ -4,6 +4,7 @@ var _ = require('underscore')._;
 var fillUseTime = stepFnGenerator('userTime');
 var fillOrigin = stepFnGenerator('origin');
 var fillDestination = stepFnGenerator('destination');
+var command = require('');
 var step = {
     1: {
         fn: fillUseTime,
@@ -19,9 +20,21 @@ var step = {
     }
 };
 module.exports = function(data, user, message, res){
-
-    return step[data.step](arguments);
+    var args = arguments;
+    co(function* (){
+        yield cancelOrder(user, message);
+        return fillForm(data.step, args)
+    })
 };
+function* cancelOrder(user, message){
+    if(command.isCommand(message) && command.isCommand(message) === command.getSet().quit){
+        yield cskv.delPlaceCaseAsync(user.wx_openid);
+        res.reply('订单已取消');
+    }
+}
+function fillForm(type, args){
+    return step[type](args);
+}
 function stepFnGenerator(type){
     return function(){
         data[type] = arguments.message.content;
