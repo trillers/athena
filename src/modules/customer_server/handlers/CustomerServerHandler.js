@@ -30,7 +30,7 @@ var handle = function(user, message, res){
             if(commandType) {
                 var executeFn = command.commandHandler(commandType);
                 executeFn(user, message, res, function(err, data){
-                    
+
                 });
             }
             return;
