@@ -29,8 +29,8 @@ ConversationQueue.prototype.init = function(){
             this.isClear = list === null && true || false;
             return;
         })
-    this.on('taskFinish', function(csId){
-        cskv.pushWcCSSetAsync(csId)
+    this.on('taskFinish', function(data){
+        cskv.pushWcCSSetAsync(data.csId)
             .then(function(){
                 me.nextItem(function(err, doc){
                     console.log('dispatch ok');
