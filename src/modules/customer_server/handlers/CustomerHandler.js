@@ -11,7 +11,23 @@ var handle = function(user, message, res){
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){
-                return wechatApi['send' + _char0UpperCase(type) + 'Async'](openid, message.content);
+                switch(message.MsgType){
+                    case 'text':
+                        co(function* (){
+                            yield wechatApi.sendTextAsync(customer, message.Content);
+                        })
+                        break;
+                    case 'image':
+                        co(function* (){
+                            yield wechatApi.sendImageAsync(customer, message.MediaId);
+                        })
+                        break;
+                    case 'voice':
+                        co(function* (){
+                            yield wechatApi.sendVoiceAsync(customer, message.MediaId);
+                        })
+                        break;
+                }
             }
             return conversation;
         })
