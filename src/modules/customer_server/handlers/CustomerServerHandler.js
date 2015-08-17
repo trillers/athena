@@ -29,8 +29,8 @@ var handle = function(user, message, res){
             var commandType = command.commandType(message);
             if(commandType) {
                 var executeFn = command.commandHandler(commandType);
-                executeFn(options, function(err, data){
-
+                executeFn(user, message, res, function(err, data){
+                    
                 });
             }
             return;
