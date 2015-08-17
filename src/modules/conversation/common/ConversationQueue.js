@@ -24,23 +24,34 @@ ConversationQueue.prototype.setDispatcher = function(dispatcher){
 }
 ConversationQueue.prototype.init = function(){
     var me = this;
-    this.on('taskFinish', function(){
-        me.nextItem(function(err, doc){
-            console.log('dispatch ok');
+    cskv.loadConQueueAsync()
+        .then(function(list){
+            this.isClear = list === null && true || false;
+            return;
         })
+    this.on('taskFinish', function(csId){
+        cskv.pushWcCSSetAsync(csId)
+            .then(function(){
+                me.nextItem(function(err, doc){
+                    console.log('dispatch ok');
+                })
+            })
+
     });
 }
 ConversationQueue.prototype.nextItem = function(callback){
     me.dequeue(function(err, conversation){
+        if(e){
+            return callback(e, null)
+        }
         me.dispatch(conversation, function(err, doc){
             return callback(null, doc)
         });
     })
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
-    cskv.popWcCSSet.then(function(csId){
-        //更新conversation，接单
-        return ConversationService.updateAsync(conversation._id, {})
+    cskv.popWcCSSetAysnc.then(function(csId){
+        return cskv.saveCSSById(conversation.initiator, csId, conversation)
     })
     .then(function(doc){
         return callback(null, doc)
@@ -50,18 +61,27 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     })
 }
 ConversationQueue.prototype.enqueue = function(conversation, callback){
+    if(this.isClear){
+        return this.nextItem(function(err, doc){
+            callback && callback(null, doc)
+        });
+    }
     cskv.pushConQueueAsync(JSON.stringify(conversation))
         .then(function(){
-            return callback(null, null);
+            return callback && callback(null, null);
         })
         .catch(function(err){
-            return callback(err, null);
+            return callback && callback(err, null);
         })
 }
 ConversationQueue.prototype.dequeue = function(callback){
     var me = this;
     cskv.popConQueueAsync()
         .then(function(conversation){
+            if(!conversation){
+                me.isClear = true;
+                return callback(new Error("the Missions Clear"), null);
+            }
             return callback(null, conversation);
         })
         .catch(function(err){

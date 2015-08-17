@@ -1,5 +1,6 @@
 var logger = require('../../../app/logging').logger;
 var WechatLog = require('../models/WechatLog').model;
+var Promise = require('bluebird');
 var Service = {};
 
 Service.logAction = function(msg, user, callback){
@@ -18,5 +19,5 @@ Service.logAction = function(msg, user, callback){
     });
 
 };
-
+var Service = Promise.promisifyAll(Service);
 module.exports = Service;
