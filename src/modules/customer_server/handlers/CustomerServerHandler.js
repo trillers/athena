@@ -7,6 +7,7 @@ var caseTaxiHandler = require('./cases/caseTaxiHandler');
 var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
 var command = require('./commands');
+var wechatApi = require('../../wechat/common/api').api;
 
 var caseType = {
     'tx':caseTaxiHandler,
@@ -29,7 +30,9 @@ var handle = function(user, message, res){
             var commandType = command.commandType(message);
             if(commandType) {
                 var executeFn = command.commandHandler(commandType);
-                executeFn(user, message, res);
+                executeFn(user, message, res, function(err, data){
+                    console.log(commandType + 'command finish');
+                });
                 return Promise.reject(new Error('this is a cmd,so break fn Chain'));
             }
             return;
@@ -44,11 +47,27 @@ var handle = function(user, message, res){
                 from: user.wx_openid,
                 to: customer,
                 contentType: MsgContentType.names(message.MsgType),
-                content: message.content
+                content: message.Content
             }
             co(function* (){
                 yield MessageService.createAsync(msg);
-
+                switch(message.MsgType){
+                    case 'text':
+                        co(function* (){
+                            yield wechatApi.sendTextAsync(customer, message.Content);
+                        })
+                        break;
+                    case 'image':
+                        co(function* (){
+                            yield wechatApi.sendImageAsync(customer, message.MediaId);
+                        })
+                        break;
+                    case 'voice':
+                        co(function* (){
+                            yield wechatApi.sendVoiceAsync(customer, message.MediaId);
+                        })
+                        break;
+                }
             })
         }else{
             res.reply('当前无会话');

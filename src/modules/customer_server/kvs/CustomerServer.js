@@ -28,6 +28,10 @@ var getConQueueKey = function(){
     return 'cs:conq';
 }
 
+var getPlaceCaseKey = function(openId){
+    return 'pc:' + openId;
+}
+
 var CustomerServer = {
     loadCSStatusByCSId: function(csId, callback){
         var key = csIdToCSStatusKey(csId);
@@ -294,6 +298,40 @@ var CustomerServer = {
                 err,
                 'Fail to delete conversation queue : ' + err,
                 'Succeed to delete conversation queue');
+
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    loadPlaceCase: function(csOpenId, callback){
+        var key = getPcCSSetKey(csOpenId);
+        redis.get(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to load wc customer server place case by csId ' + csOpenId + ': ' + err,
+                'Succeed to load  wc customer server place case by csId ' + csOpenId);
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    savePlaceCase: function(csOpenId, pc, callback){
+        var key = getPcCSSetKey(csOpenId);
+        redis.set(key, pc, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to save wc customer server place case by csId: ' + csOpenId + ': ' + err,
+                'Succeed to save wc customer server place case by csId: ' + csOpenId);
+            cbUtil.handleOk(callback, err, result, st);
+        });
+    },
+
+    delPlaceCase: function(csOpenId, callback){
+        var key = getPcCSSetKey(csOpenId);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to delete wc customer server place case by csId ' + csOpenId + ': ' + err,
+                'Succeed to delete wc customer server place case csId ' + csOpenId);
 
             cbUtil.handleSingleValue(callback, err, result);
         });
