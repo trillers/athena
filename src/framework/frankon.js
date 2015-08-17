@@ -32,3 +32,4 @@ proto.generateHandler = function(){
         })
     }
 }
+module.exports = Frankon;

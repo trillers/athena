@@ -1,5 +1,5 @@
 var settings = require('athena-settings');
-var frankon = require('../../framework/frankon');
+var Frankon = require('../../framework/frankon');
 var express = require('express');
 var co = require('co');
 var service = require('../../services/UserService');
@@ -20,6 +20,7 @@ var WechatAuthenticator = require('../../framework/WechatAuthenticator');
 var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
+var frankon = new Frankon();
 module.exports = function() {
     var router = express.Router({strict: false});
     require('../common/routes-wechat')(router);
