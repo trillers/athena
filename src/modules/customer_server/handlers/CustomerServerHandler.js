@@ -26,12 +26,14 @@ var handle = function(user, message, res){
         return;
     })
     .then(function(){
-        if(_commandOrMsg(message)){
-            var executeFn = _commandOrMsg(message);
-            executeFn(options, function(err, data){
+            var commandType = command.commandType(message);
+            if(commandType) {
+                var executeFn = command.commandHandler(commandType);
+                executeFn(options, function(err, data){
 
-            });
-        }
+                });
+            }
+            return;
     })
     .then(function(){
         return cskv.loadCSSByIdAsync(user.wx_openid)
