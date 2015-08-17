@@ -7,6 +7,7 @@ var caseTaxiHandler = require('./cases/caseTaxiHandler');
 var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
 var command = require('./commands');
+var wechatApi = require('../../wechat/common/api').api;
 
 var caseType = {
     'tx':caseTaxiHandler,
