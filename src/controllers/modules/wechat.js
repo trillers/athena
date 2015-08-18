@@ -48,7 +48,10 @@ module.exports = function() {
 
     //var handler = frankon.generateHandler();
     var wechatMiddleware = wechat(tokenConfig).middleware(handler);
-    console.log(wechatMiddleware.toString());
-    router.use('/wechat', wechatMiddleware);
+    //console.log(wechatMiddleware.toString());
+    //router.use('/wechat', wechatMiddleware);
+    router.use('/wechat', function* (){
+        console.log('get request');
+    });
     return router.routes();
 }
