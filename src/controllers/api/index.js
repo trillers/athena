@@ -6,4 +6,10 @@ module.exports = function(app){
     user_router.prefix('/api/user');
     require('./user')(user_router);
     app.use(user_router.routes());
+
+    //wechat
+    var wc_router = new router();
+    require('./wechat')(wc_router);
+    app.use(wc_router.routes());
+
 }
