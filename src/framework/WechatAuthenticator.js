@@ -42,6 +42,8 @@ Authenticator.prototype = {
 
     loadOrCreateWechatUser: function(message, req, res, next, done){
         var me = this;
+        console.log('msg info');
+        console.log(message);
         UserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
             if(err){
                 logger.error('Fail to sign in from wechat: ' + err);
