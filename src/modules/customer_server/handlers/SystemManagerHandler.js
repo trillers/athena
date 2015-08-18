@@ -6,6 +6,6 @@ var handle = function(user, message, res){
 
 }
 
-var handler = new CSHandler(UserRole.SystemManager.value(), handle());
+var handler = new CSHandler(UserRole.SystemManager.value(), handle);
 
 module.exports = handler;

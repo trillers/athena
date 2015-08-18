@@ -79,6 +79,6 @@ var handle = function(user, message, res){
     })
 }
 
-var handler = new CSHandler(UserRole.CustomerServer.value(), handle());
+var handler = new CSHandler(UserRole.CustomerServer.value(), handle);
 
 module.exports = handler;
