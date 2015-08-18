@@ -56,6 +56,8 @@ Authenticator.prototype = {
                 console.log('no error');
                 console.log(user);
                 me.setAuthentication(req, res, user);
+                console.log('excute done');
+                console.log(done.toString());
                 done(null, user);
             }
         });

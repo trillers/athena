@@ -44,6 +44,7 @@ module.exports = function() {
         console.log('_________________________');
         console.log(this);
         authenticator.ensureSignin(this.weixin, this.request, this.response, next, function(err, user){
+            console.log('wechat dddd');
             WechatOperationService.logActionAysnc(this.weixin)
             customerDispatcher.dispatch(user, this.weixin, res);
         });
