@@ -42,7 +42,7 @@ function* createCaseToMango(data, res){
         var doc = yield caseService.create(data);
         res.reply('下单成功');
     }catch(err){
-        res.reply('下单成功，请联系管理员');
+        res.reply('下单失败，请联系管理员');
     }
 }
 function* cancelOrder(user, message){
@@ -61,7 +61,7 @@ function stepFnGenerator(type){
         var callback = [].slice.call(arguments, -1);
         data[type] = arguments.message.content;
         data['step'] += 1;
-        cskv.updatePlaceCaseAsync(data)
+        cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(data){
             callback(null, data);
             step && step[arguments.data.step -1].res && res.reply(step[arguments.data.step -1].res);
