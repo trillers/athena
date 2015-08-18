@@ -25,6 +25,9 @@ Authenticator.prototype = {
     },
 
     setAuthentication: function(req, res, user){
+        console.log('no error');
+        console.log(req.wxsession);
+        console.log(this.userKey);
         req.wxsession && (req.wxsession[this.userKey] = user);
     },
 
