@@ -50,8 +50,10 @@ Authenticator.prototype = {
                 //next();//TODO: do more error handling than this
             }
             else{
+                console.log('no error');
+                console.log(user);
                 me.setAuthentication(req, res, user);
-                done(user);
+                done(null, user);
             }
         });
     }
