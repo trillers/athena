@@ -23,8 +23,8 @@ var schema = DomainBuilder
         place: {type: String, require: true},
         evaluation: {type: String},
         subcase: {type: String, require: true}
+
     })
     .build();
-
 module.exports.schema = schema;
 module.exports.model = schema.model(true);
