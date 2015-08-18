@@ -26,7 +26,7 @@ module.exports = function(data, user, message, res){
     co(function* (){
         var result = yield cancelOrder(user, message);
         if(!result){
-            var data = yield fillForm(data.step, args);
+            var data = yield fillFormThunk(data.step, args);
             if(allDone(data)){
                 return yield createCaseToMango(data, res);
             };
