@@ -5,7 +5,7 @@ var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatu
 
 var schema = DomainBuilder
     .i('Case')
-    .withBasis()
+    .withBasis()  
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
