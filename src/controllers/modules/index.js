@@ -7,6 +7,11 @@ module.exports = function(app){
     app.use(spa_router.routes());
 
     //wechat
-    app.use(require('./wechat')());
+    var wc_router = new router();
+    wc_router.use('/wechat', function* (){
+        console.log('test');
+    })
+    //app.use(require('./wechat')());
+    app.use(wc_router.routes());
 
 }
