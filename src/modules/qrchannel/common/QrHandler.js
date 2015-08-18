@@ -1,6 +1,6 @@
 var QrCodeKv = require('../kvs/QrCode');
 var QrChannelService = require('../services/QrChannelService');
-var wechat = require('../../wechat/wechat/api');
+var wechat = require('../../wechat/common/api');
 var Promise = require('bluebird');
 var logger = require('../../../app/logging').logger;
 

@@ -11,7 +11,7 @@ var CustomerServerDispatcher = function(){
 var prototype  = CustomerServerDispatcher.prototype;
 
 prototype.register = function(handler){
-    var key = this.genKey(handler.type);
+    var key = handler.type;
     this.handlers[key] = handler;
 };
 

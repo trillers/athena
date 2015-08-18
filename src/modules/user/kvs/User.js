@@ -1,8 +1,8 @@
-var redis = require('../app/redis');
-var logger = require('../app/logging').logger;
+var redis = require('../../../app/redis');
+var logger = require('../../../app/logging').logger;
 var _ = require('underscore');
 var Promise = require('bluebird');
-var cbUtil = require('../framework/callback');
+var cbUtil = require('../../../framework/callback');
 
 var idToUserKey = function(id){
     return 'usr:id:' + id;

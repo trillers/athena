@@ -6,8 +6,8 @@ var schema = DomainBuilder
     .i('Conversation')
     .withBasis()
     .withProperties({
-        stt: {type: String, enum: ConversationState.values(), default: ConversationState.Start.value, required: true}
-        , initiator: {type: String, ref: 'UserBiz', required: true}
+        stt: {type: String, enum: ConversationState.valueList(), default: ConversationState.Start.value(), required: true}
+        , initiator: {type: String, ref: 'User', required: true}
         , expire: {type: Date}
         , case: [{type: String, ref: 'Case'}]
         , createTime: {type: Date, required: true}

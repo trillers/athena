@@ -1,6 +1,6 @@
 var mongoose = require('../../../app/mongoose');
 var DomainBuilder = require('../../../framework/model/DomainBuilder');
-var UserState = require('../framework/model/enums').UserState;
+var UserState = require('../../../framework/model/enums').UserState;
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 
 var _ = require('underscore');

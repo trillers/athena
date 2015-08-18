@@ -1,6 +1,6 @@
 var logger = require('../../../app/logging').logger;
 var QrChannel = require('../models/QrChannel').model;
-var wechat = require('../../../app/wechat/api');
+var wechat = require('../../wechat/common/api');
 
 var u = require('../../../app/util');
 var Promise = require('bluebird');

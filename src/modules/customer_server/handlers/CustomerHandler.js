@@ -6,6 +6,7 @@ var conversationQueue = require('../../conversation/common/ConversationQueue');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
 var wechatApi = require('../../wechat/common/api').api;
+var Promise = require('bluebird');
 
 var handle = function(user, message, res){
     _fetchConversationAsync(user)

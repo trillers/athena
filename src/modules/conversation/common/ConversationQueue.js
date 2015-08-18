@@ -1,5 +1,5 @@
 var cskv = require('../../customer_server/kvs/CustomerServer');
-var EventEmitter = require('event').EventEmitter;
+var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
 function ConversationQueue(){

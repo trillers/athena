@@ -1,12 +1,11 @@
 var settings = require('athena-settings');
 var Frankon = require('../../framework/frankon');
-var express = require('express');
+var Router = require('koa-router');
 var co = require('co');
-var service = require('../../services/UserService');
 var wechat = require('co-wechat');
-var WechatOperationService = require('../../services/WechatOperationService');
+var WechatOperationService = require('../../modules/wechat/services/WechatOperationService');
 var QrChannelDispatcher = require('../../modules/qrchannel');
-var UserKv = require('../../kvs/User');
+var UserKv = require('../../modules/user/kvs/User');
 var CSDispatcher = require('../../modules/customer_server');
 var productionMode = settings.env.mode == 'production';
 var logger = require('../../app/logging').logger;
@@ -22,8 +21,8 @@ var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
 module.exports = function() {
-    var router = express.Router({strict: false});
-    require('../common/routes-wechat')(router);
+    var router = new Router();
+    //require('../common/routes-wechat')(router);
 
     frankon.use(function* (next) {
         //根据角色，分别派遣session，然后next
@@ -33,16 +32,16 @@ module.exports = function() {
 
     });
 
-    frankon.use(function* (next) {
-        //根据消息类型分别处理
-        //如果是用户消息，先查进行中的会话，有就发送
-        //没有就查询待处理列表，没有就新建或者有就发送消息
-
-    });
+    //frankon.use(function* (next) {
+    //    //根据消息类型分别处理
+    //    //如果是用户消息，先查进行中的会话，有就发送
+    //    //没有就查询待处理列表，没有就新建或者有就发送消息
+    //
+    //});
 
 
     var handler = frankon.generateHandler();
-    var wechatMiddleware = wechat(tokenConfig).middlewarify(handler);
+    var wechatMiddleware = wechat(tokenConfig).middleware(handler);
     router.use(wechatMiddleware);
     return router;
 }
