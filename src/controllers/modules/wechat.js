@@ -39,7 +39,7 @@ module.exports = function() {
     //
     //});
 
-    var handler = function* () {
+    var handler = function* (next) {
         //根据角色，分别派遣session，然后next
         var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
         WechatOperationService.logActionAysnc(this.weixin)
