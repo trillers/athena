@@ -14,10 +14,10 @@ module.exports = function(router){
             if(err){
                 logger.error(err);
                 self.response.status = 400;
-                self.response.body = ApiReturn.i().error(err.code, err.message);
+                //self.response.body = ApiReturn.i().error(err.code, err.message);
             }
             else{
-                self.response.status = 200;
+                //self.response.status = 200;
                 self.response.body = ApiReturn.i().ok(jt);
             }
         });
@@ -31,10 +31,10 @@ module.exports = function(router){
             if(err){
                 logger.error(err);
                 self.response.status = 400;
-                self.response.body = ApiReturn.i().error(err.code, err.message);
+                //self.response.body = ApiReturn.i().error(err.code, err.message);
             }
             else{
-                self.response.status = 200;
+                //self.response.status = 200;
                 self.response.body = ApiReturn.i().ok(at);
             }
         });
