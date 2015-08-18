@@ -48,7 +48,7 @@ module.exports = function() {
             res = this.response;
         authenticator.ensureSignin(message, req, res, next, function(err, user){
             console.log('wechat dddd');
-            WechatOperationService.logActionAysnc(message);
+            WechatOperationService.logActionAsync(message);
             customerDispatcher.dispatch(user, message, res);
         });
     }
