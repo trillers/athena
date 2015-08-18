@@ -6,6 +6,9 @@ var Service = {};
 Service.logAction = function(msg, user, callback){
     var wechatLog = new WechatLog(msg);
     wechatLog.save(function (err, doc, numberAffected) {
+        console.log(err);
+        console.log(doc);
+        console.log(numberAffected);
         if (err) {
             logger.error('failed to save wechat logger :'+ err +' \r\n');
             return;

@@ -43,10 +43,13 @@ module.exports = function() {
         //根据角色，分别派遣session，然后next
         console.log('_________________________');
         console.log(this);
-        authenticator.ensureSignin(this.weixin, this.request, this.response, next, function(err, user){
+        var message = this.wexin,
+            req = this.request,
+            res = this.response;
+        authenticator.ensureSignin(message, req, res, next, function(err, user){
             console.log('wechat dddd');
-            WechatOperationService.logActionAysnc(this.weixin)
-            customerDispatcher.dispatch(user, this.weixin, res);
+            WechatOperationService.logActionAysnc(message);
+            customerDispatcher.dispatch(user, message, res);
         });
     }
 
