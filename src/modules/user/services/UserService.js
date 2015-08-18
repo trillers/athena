@@ -213,8 +213,9 @@ Service.loadOrCreateFromWechat = function(openid, callback){
         .then(function(user){
             console.log('=================');
             console.log(user);
-            console.log(callback);
+            console.log(callback.toString());
             if(callback) callback(null, user);
+            console.log('finish')
             return user;
         })
         .catch(Error, function (err) {
