@@ -32,7 +32,7 @@ var generateGetAt = function(force){
 
     return fn;
 };
-module.exports.generateGetAt = generateGetAt;
+module.exports.generateGetAt = Promise.promisify(generateGetAt);
 var getAt = generateGetAt(false);
 module.exports.getAt = Promise.promisify(getAt);
 
@@ -66,7 +66,7 @@ var generateGetJt = function(force){
 
     return fn;
 };
-module.exports.generateGetJt = generateGetJt;
+module.exports.generateGetJt = Promise.promisify(generateGetJt);
 var getJt = generateGetJt(false);
 module.exports.getJt = Promise.promisify(getJt);
 
