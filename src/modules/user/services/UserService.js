@@ -182,8 +182,6 @@ Service.createFromWechat = function (userInfo, callback) {
 
 var getUserFromWechat = function(openid, callback){
     wechat.api.getUser(openid, function(err, userInfo){
-        console.log('get user info form wechat');
-        console.log(userInfo);
         if(err){
             if(callback) callback(err);
         }
@@ -211,11 +209,7 @@ Service.loadOrCreateFromWechat = function(openid, callback){
                 .then(Service.createFromWechat);
         })
         .then(function(user){
-            console.log('=================');
-            console.log(user);
-            console.log(callback.toString());
             if(callback) callback(null, user);
-            console.log('finish')
             return user;
         })
         .catch(Error, function (err) {

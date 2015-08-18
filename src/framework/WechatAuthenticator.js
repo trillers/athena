@@ -25,15 +25,10 @@ Authenticator.prototype = {
     },
 
     setAuthentication: function(req, res, user){
-        console.log('no error');
-        console.log(req.wxsession);
-        console.log(this.userKey);
         req.wxsession && (req.wxsession[this.userKey] = user);
     },
 
     ensureSignin: function(message, req, res, next, done){
-        console.log('test');
-        console.log(this);
         var user = this.authenticated(req);
         if(user){
             done(user);
@@ -45,19 +40,13 @@ Authenticator.prototype = {
 
     loadOrCreateWechatUser: function(message, req, res, next, done){
         var me = this;
-        console.log('msg info');
-        console.log(message);
         UserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
             if(err){
                 logger.error('Fail to sign in from wechat: ' + err);
-                //next();//TODO: do more error handling than this
+                next();//TODO: do more error handling than this
             }
             else{
-                console.log('no error');
-                console.log(user);
                 me.setAuthentication(req, res, user);
-                console.log('excute done');
-                console.log(done.toString());
                 done(null, user);
             }
         });
