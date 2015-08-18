@@ -24,13 +24,13 @@ module.exports = function() {
     var router = new Router();
     //require('../common/routes-wechat')(router);
 
-    frankon.use(function* (next) {
-        //根据角色，分别派遣session，然后next
-        var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
-        WechatOperationService.logActionAysnc(this.weixin);
-        customerDispatcher.dispatch(user, this.weixin, res);
-
-    });
+    //frankon.use(function* (next) {
+    //    //根据角色，分别派遣session，然后next
+    //    var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
+    //    WechatOperationService.logActionAysnc(this.weixin);
+    //    customerDispatcher.dispatch(user, this.weixin, res);
+    //
+    //});
 
     //frankon.use(function* (next) {
     //    //根据消息类型分别处理
@@ -39,8 +39,14 @@ module.exports = function() {
     //
     //});
 
+    var handler = function* () {
+        //根据角色，分别派遣session，然后next
+        var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
+        WechatOperationService.logActionAysnc(this.weixin)
+        customerDispatcher.dispatch(user, this.weixin, res);
+    }
 
-    var handler = frankon.generateHandler();
+    //var handler = frankon.generateHandler();
     var wechatMiddleware = wechat(tokenConfig).middleware(handler);
     router.use(wechatMiddleware);
     return router.routes();
