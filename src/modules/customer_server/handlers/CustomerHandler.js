@@ -66,7 +66,7 @@ function _char0UpperCase(string){
     return String.uppercase(string.charAt(0)) + string.slice(1);
 }
 _fetchConversationAsync = Promise.promisify(_fetchConversation);
-var handler = new CSHandler(UserRole.RegularUser.value(), handle());
+var handler = new CSHandler(UserRole.RegularUser.value(), handle);
 
 module.exports = handler;
 

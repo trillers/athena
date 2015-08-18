@@ -15,9 +15,8 @@ var caseType = {
 }
 var handle = function(user, message, res){
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
-    co(function* (){
-        return yield cskv.loadPlaceCaseAsync(user.wx_openid)
-    })
+
+    cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){
         //different biz logic
         if(data){
@@ -79,6 +78,6 @@ var handle = function(user, message, res){
     })
 }
 
-var handler = new CSHandler(UserRole.CustomerServer.value(), handle());
+var handler = new CSHandler(UserRole.CustomerServer.value(), handle);
 
 module.exports = handler;
