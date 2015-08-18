@@ -9,7 +9,7 @@ module.exports = function(router){
     //jt - get js ticket
     router.get('/jt', function* (){
         var self = this;
-        var force = req.query.force && req.query.force=='true';
+        var force = self.request.query.force && self.request.query.force=='true';
         token.generateGetJt(force)(function(err, jt){
             if(err){
                 logger.error(err);
@@ -25,7 +25,8 @@ module.exports = function(router){
 
     //at - get access token
     router.get('/at', function* (){
-        var force = req.query.force && req.query.force=='true';
+        var self = this;
+        var force = self.request.query.force && self.request.query.force=='true';
         token.generateGetAt(force)(function(err, at){
             if(err){
                 logger.error(err);
