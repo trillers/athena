@@ -30,9 +30,9 @@ var generateGetAt = function(force){
         };
     }
 
-    return fn;
+    return Promise.promisify(fn);
 };
-module.exports.generateGetAt = Promise.promisify(generateGetAt);
+module.exports.generateGetAt = generateGetAt;
 var getAt = generateGetAt(false);
 module.exports.getAt = Promise.promisify(getAt);
 
@@ -64,9 +64,9 @@ var generateGetJt = function(force){
         };
     }
 
-    return fn;
+    return Promise.promisify(fn);
 };
-module.exports.generateGetJt = Promise.promisify(generateGetJt);
+module.exports.generateGetJt = generateGetJt;
 var getJt = generateGetJt(false);
 module.exports.getJt = Promise.promisify(getJt);
 
