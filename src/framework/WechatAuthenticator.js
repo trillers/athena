@@ -29,6 +29,7 @@ Authenticator.prototype = {
     },
 
     ensureSignin: function(message, req, res, next, done){
+        console.log(this);
         var user = this.authenticated(req);
         if(user){
             done(user);
