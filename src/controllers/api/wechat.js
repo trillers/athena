@@ -1,8 +1,8 @@
-var settings = require('mit-settings');
+var settings = require('athena-settings');
 var util = require('util');
 var logger = require('../../app/logging').logger;
 var ApiReturn = require('../../framework/ApiReturn');
-var token = require('../../app/wechat/token');
+var token = require('../../modules/wechat/common/token');
 
 module.exports = function(router){
 
