@@ -8,6 +8,6 @@ module.exports = function(app){
 
     //wechat
     var wechat = require('./wechat')();
-    console.log(wechat);
+    console.log(wechat.routes());
     app.use(wechat.routes());
 }
