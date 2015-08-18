@@ -21,7 +21,7 @@ var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
 module.exports = function() {
-    var router = new Router();
+    //var router = new Router();
     //require('../common/routes-wechat')(router);
 
     //frankon.use(function* (next) {
@@ -50,8 +50,8 @@ module.exports = function() {
     var wechatMiddleware = wechat(tokenConfig).middleware(handler);
     //console.log(wechatMiddleware.toString());
     //router.use('/wechat', wechatMiddleware);
-    router.use('/wechat', function* (){
-        console.log('get request');
-    });
-    return router.routes();
+    //router.use('/wechat', function* (){
+    //    console.log('get request');
+    //});
+    return wechatMiddleware;
 }
