@@ -23,7 +23,7 @@ var Command = function(){
 
 var pro = Command.prototype;
 pro.commandType = function(message){
-    if(message.content.length >= 3 && message.Content[0] === ":" && handlerSet[message.Content.slice(1, 3)]){
+    if(message.Content.length >= 3 && message.Content[0] === ":" && handlerSet[message.Content.slice(1, 3)]){
         return message.Content.slice(1, 3);
     }
     return null;
