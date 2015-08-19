@@ -36,7 +36,7 @@ var handle = function(user, message, res){
             var msg = {
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
-                contentType: _char0UpperCase(message.MsgType),
+                contentType: message.MsgType,
                 content: message.Content
             }
             return messageService.create(msg)
@@ -62,9 +62,7 @@ function _fetchConversation(user, callback){
             return callback(err, null);
         })
 }
-function _char0UpperCase(string){
-    return String.uppercase(string.charAt(0)) + string.slice(1);
-}
+
 _fetchConversationAsync = Promise.promisify(_fetchConversation);
 var handler = new CSHandler(UserRole.RegularUser.value(), handle);
 
