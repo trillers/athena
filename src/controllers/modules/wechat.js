@@ -22,8 +22,6 @@ var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
 
 var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
-var qrDispatch = thunkify(QrChannelDispatcher.dispatch.bind(QrChannelDispatcher));
-var csDispatch = thunkify(customerDispatcher.dispatch.bind(customerDispatcher));
 
 module.exports = function() {
     var router = new Router();
@@ -56,9 +54,8 @@ module.exports = function() {
                 switch(message.Event){
                     case 'subscribe':
                         console.log('subscribe');
-                        yield  qrDispatch(message, user, self);
+                        QrChannelDispatcher.dispatch(message, user, self);
                         console.log('dispatch finish');
-                        self.body = '欢迎关注';
                         break;
                     case 'unsubscribe':
                         //var update = {};
@@ -69,7 +66,7 @@ module.exports = function() {
 
             }else{
                 console.log('message');
-                yield csDispatch(user, message, self);
+                CSDispatcher.dispatch(user, message, self);
             }
         } catch (err){
             console.log('ensureSignin error:' + err);
