@@ -111,14 +111,14 @@ var CustomerServer = {
                     err,
                     'Fail to load customer server session by id ' + id + ': ' + err,
                     'Succeed to load customer server session by id ' + id);
-                cbUtil.handleSingleValue(callback, err, JSON.parse(result));
+                cbUtil.handleSingleValue(callback, err, result);
             });
         });
     },
 
     saveCSSById: function(openId, csId, css, callback){
         var key = getCSSKey(openId, csId);
-        redis.hmset(key, JSON.stringify(css), function(err, result){
+        redis.hmset(key, css, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to save customer server session by id: ' + openId + '/'+ csId + ': ' + err,
