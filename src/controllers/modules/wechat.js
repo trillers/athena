@@ -54,7 +54,7 @@ module.exports = function() {
                 switch(message.Event){
                     case 'subscribe':
                         console.log('subscribe');
-                        QrChannelDispatcher.dispatch(message, user, self);
+                        yield QrChannelDispatcher.dispatch(message, user, self);
                         console.log('dispatch finish');
                         break;
                     case 'unsubscribe':

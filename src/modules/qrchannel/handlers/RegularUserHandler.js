@@ -4,7 +4,7 @@ var UserBizService = require('../../user/services/UserBizService')
 var logger = require('../../../app/logging').logger;
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 
-var handle = function(message, user, ctx, qrChannel){
+var handle = function* (message, user, ctx, qrChannel){
     //TODO: implementation
     var userUpdate = {
         wx_subscribe: 1,

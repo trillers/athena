@@ -1,7 +1,6 @@
 var QrChannelService = require('../services/QrChannelService');
 var u = require('../../../app/util');
 var logger = require('../../../app/logging').logger;
-var co = require('co');
 
 
 var QrHandlerDispatcher = function(){
@@ -36,24 +35,23 @@ QrHandlerDispatcher.prototype.dispatch = function* (message, user, ctx){
     else{
         var index = message.EventKey.indexOf("_") + 1;
         var sceneId = message.EventKey.substring(index);
-        co(function* (){
-            var qr = QrChannelService.loadBySceneIdAsync(sceneId);
-            return qr;
-        }).then(function(qr){
+        try{
+            var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
             if(qr){
                 var key = me.genKey(qr.forever, qr.type);
                 var handler = me.handlers[key];
-                handler && yield handler.handle(message, user, ctx, qr);
+                if(handler) {
+                    yield handler.handle(message, user, ctx, qr);
+                }
                 console.log('has qr');
             }
             else{
                 me.nullHandler(message, user, ctx, null);
             }
-        }, function(err){
+        }catch(err){
             ctx.body = reply;
-            console.log('loadBySceneId err:' + err);
             return;
-        });
+        }
     }
 };
 
