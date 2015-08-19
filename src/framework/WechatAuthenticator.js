@@ -15,38 +15,38 @@ var Authenticator = function(options){
 };
 
 Authenticator.prototype = {
-    authenticated: function(req){
-        var user = req.wxsession && req.wxsession[this.userKey];
+    authenticated: function(ctx){
+        var user = ctx.wxsession && ctx.wxsession[this.userKey];
         return user;
     },
 
-    clearAuthentication: function(req, res){
-        req.wxsession && req.wxsession.destroy();
+    clearAuthentication: function(ctx){
+        ctx.wxsession && ctx.wxsession.destroy();
     },
 
     setAuthentication: function(req, res, user){
-        req.wxsession && (req.wxsession[this.userKey] = user);
+        ctx.wxsession && (ctx.wxsession[this.userKey] = user);
     },
 
-    ensureSignin: function(message, req, res, next, done){
-        var user = this.authenticated(req);
+    ensureSignin: function(message, ctx, next, done){
+        var user = this.authenticated(ctx);
         if(user){
-            done(user);
+            done(null, user);
         }
         else{
-            this.loadOrCreateWechatUser(message, req, res, next, done);
+            this.loadOrCreateWechatUser(message, ctx, next, done);
         }
     },
 
-    loadOrCreateWechatUser: function(message, req, res, next, done){
+    loadOrCreateWechatUser: function(message, ctx, next, done){
         var me = this;
         UserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
             if(err){
                 logger.error('Fail to sign in from wechat: ' + err);
-                //next();//TODO: do more error handling than this
+                if(next) next();//TODO: do more error handling than this
             }
             else{
-                me.setAuthentication(req, res, user);
+                me.setAuthentication(ctx, user);
                 done(null, user);
             }
         });

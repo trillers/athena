@@ -20,6 +20,11 @@ var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
+
+var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
+var qrDispatch = thunkify(QrChannelDispatcher.dispatch.bind(QrChannelDispatcher));
+var csDispatch = thunkify(customerDispatcher.dispatch.bind(customerDispatcher));
+
 module.exports = function() {
     var router = new Router();
     //require('../common/routes-wechat')(router);
@@ -41,27 +46,29 @@ module.exports = function() {
 
     var handler = function* (next) {
         //根据角色，分别派遣session，然后next
-        var message = this.weixin,
-            req = this.request,
-            res = this.response;
-        authenticator.ensureSignin(message, req, res, next, function(err, user){
+        var self = this;
+        var message = self.weixin;
+        try{
+            var user = yield ensureSignin(message, self, next);
             WechatOperationService.logActionAsync(message);
             if(message.MsgType == 'event'){
                 switch(message.Event){
                     case 'subscribe':
-                        QrChannelDispatcher.dispatch(message, user, res);
+                        yield  qrDispatch(message, user, self);
                         break;
                     case 'unsubscribe':
                         //var update = {};
                         //update.wx_subscribe = 0;
-                        res.reply('');
+                        self.body = '';
                         break;
                 }
 
             }else{
-                customerDispatcher.dispatch(user, message, res);
+                yield csDispatch(user, message, self);
             }
-        });
+        } catch (err){
+            console.log('ensureSignin error:' + err);
+        }
     }
 
     //var handler = frankon.generateHandler();

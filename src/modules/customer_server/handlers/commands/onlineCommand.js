@@ -1,10 +1,10 @@
 var cskv = require('../../kvs/CustomerServer');
-module.exports = function(user, message, res, callback){
+module.exports = function(user, message, ctx, callback){
     cskv.saveCSStatusByCSOpenId(user.wx_openid, 'ol')
         .then(function(){
             return cskv.pushWcCSSetAsync(user.wx_openid);
         })
         .then(function(){
-            res.reply('您已上线');
+            ctx.body = '您已上线';
         })
 }
