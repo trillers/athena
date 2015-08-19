@@ -30,6 +30,7 @@ ConversationQueue.prototype.init = function(){
             return;
         })
     this.on('taskFinish', function(data){
+        console.log('check csid----------------------' + data)
         cskv.pushWcCSSetAsync(data.csId)
             .then(function(){
                 return cskv.delCSSByIdAsync(data.csId)
@@ -49,6 +50,7 @@ ConversationQueue.prototype.init = function(){
 ConversationQueue.prototype.nextItem = function(callback){
     var me = this;
     me.dequeue(function(err, conversation){
+        console.log('next dispath-------------' + conversation)
         if(err){
             return callback(err, null)
         }
