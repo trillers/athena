@@ -15,6 +15,7 @@ var caseType = {
 }
 var handle = function(user, message, res){
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
+    res.reply('');
 
     cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){
@@ -41,7 +42,7 @@ var handle = function(user, message, res){
     })
     .then(function(data){
         if(data){
-            var customer = data.openId;
+            var customer = data.csId;
             var msg = {
                 from: user.wx_openid,
                 to: customer,
@@ -69,7 +70,6 @@ var handle = function(user, message, res){
                 }
             })
         }else{
-            res.reply('当前无会话');
             return Promise.reject(new Error('the CS hasn,t establish conversation'));
         }
     })

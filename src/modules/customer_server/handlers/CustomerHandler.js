@@ -9,23 +9,25 @@ var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
 var handle = function(user, message, res){
+    res.reply('');
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){
+                var csId = conversation.csId;
                 switch(message.MsgType){
                     case 'text':
                         co(function* (){
-                            yield wechatApi.sendTextAsync(customer, message.Content);
+                            yield wechatApi.sendTextAsync(csId, message.Content);
                         })
                         break;
                     case 'image':
                         co(function* (){
-                            yield wechatApi.sendImageAsync(customer, message.MediaId);
+                            yield wechatApi.sendImageAsync(csId, message.MediaId);
                         })
                         break;
                     case 'voice':
                         co(function* (){
-                            yield wechatApi.sendVoiceAsync(customer, message.MediaId);
+                            yield wechatApi.sendVoiceAsync(csId, message.MediaId);
                         })
                         break;
                 }
@@ -36,8 +38,8 @@ var handle = function(user, message, res){
             var msg = {
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
-                contentType: _char0UpperCase(message.type),
-                content: {type: message.content}
+                contentType: message.MsgType,
+                content: message.Content
             }
             return messageService.create(msg)
         })
@@ -62,9 +64,7 @@ function _fetchConversation(user, callback){
             return callback(err, null);
         })
 }
-function _char0UpperCase(string){
-    return String.uppercase(string.charAt(0)) + string.slice(1);
-}
+
 _fetchConversationAsync = Promise.promisify(_fetchConversation);
 var handler = new CSHandler(UserRole.RegularUser.value(), handle);
 

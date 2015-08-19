@@ -30,7 +30,7 @@ var generateGetAt = function(force){
         };
     }
 
-    return fn;
+    return Promise.promisify(fn);
 };
 module.exports.generateGetAt = generateGetAt;
 var getAt = generateGetAt(false);
@@ -64,7 +64,7 @@ var generateGetJt = function(force){
         };
     }
 
-    return fn;
+    return Promise.promisify(fn);
 };
 module.exports.generateGetJt = generateGetJt;
 var getJt = generateGetJt(false);

@@ -93,6 +93,15 @@ describe('CustomerServer', function(){
         });
     });
 
+    it('wc loadCSSById', function(done){
+        cskv.loadCSSById(openId, function(err, data){
+            console.log(data);
+            assert.ok(!err);
+            assert.equal(data, null);
+            done();
+        });
+    });
+
     it('wc saveCSSById', function(done){
         cskv.saveCSSById(openId, csId, wcCss, function(err, data){
             console.log(data);
@@ -102,7 +111,7 @@ describe('CustomerServer', function(){
         });
     });
 
-    it('pc loadCSSById', function(done){
+    it('wc loadCSSById', function(done){
         cskv.loadCSSById(openId, function(err, data){
             console.log(data);
             assert.ok(!err);
@@ -115,7 +124,7 @@ describe('CustomerServer', function(){
     });
 
 
-    it('pc delCSSById', function(done){
+    it('wc delCSSById', function(done){
         cskv.delCSSById(openId, function(err, data){
             console.log(data);
             assert.ok(!err);

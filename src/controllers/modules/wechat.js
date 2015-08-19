@@ -39,11 +39,17 @@ module.exports = function() {
     //
     //});
 
-    var handler = function* () {
+    var handler = function* (next) {
         //根据角色，分别派遣session，然后next
-        var user = yield authEnsureSignin(this.weixin, this.req, this.res, next)
-        WechatOperationService.logActionAysnc(this.weixin)
-        customerDispatcher.dispatch(user, this.weixin, res);
+        console.log('_________________________');
+        console.log(this);
+        var message = this.weixin,
+            req = this.request,
+            res = this.response;
+        authenticator.ensureSignin(message, req, res, next, function(err, user){
+            WechatOperationService.logActionAsync(message);
+            customerDispatcher.dispatch(user, message, res);
+        });
     }
 
     //var handler = frankon.generateHandler();

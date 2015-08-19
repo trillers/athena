@@ -47,7 +47,7 @@ Authenticator.prototype = {
             }
             else{
                 me.setAuthentication(req, res, user);
-                done(user);
+                done(null, user);
             }
         });
     }

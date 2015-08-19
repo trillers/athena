@@ -8,6 +8,7 @@ var schema = DomainBuilder
     .withProperties({
         stt: {type: String, enum: ConversationState.valueList(), default: ConversationState.Start.value(), required: true}
         , initiator: {type: String, ref: 'User', required: true}
+        , csId: {type: String}
         , expire: {type: Date}
         , case: [{type: String, ref: 'Case'}]
         , createTime: {type: Date, required: true}
