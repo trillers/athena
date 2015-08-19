@@ -32,6 +32,13 @@ ConversationQueue.prototype.init = function(){
     this.on('taskFinish', function(data){
         cskv.pushWcCSSetAsync(data.csId)
             .then(function(){
+                return cskv.delCSSByIdAsync(data.csId)
+            })
+            .then(function(){
+                data['stt'] = 'fn';
+                return ConversationService.update(data._id, data);
+            })
+            .then(function(){
                 me.nextItem(function(err, doc){
                     console.log('dispatch ok');
                 })
