@@ -40,6 +40,7 @@ ConversationQueue.prototype.init = function(){
     });
 }
 ConversationQueue.prototype.nextItem = function(callback){
+    var me = this;
     me.dequeue(function(err, conversation){
         if(e){
             return callback(e, null)
