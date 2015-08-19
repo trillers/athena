@@ -1,5 +1,8 @@
 module.exports=function(router){
-    router.post('/p/validateIc', function* (){
-        var data = this.body;
+    router.post('/validateIc', function* (){
+        var data = this.query;
+        var phone = data.phone;
+        var ic = data.ic;
+        console.log(data);
     })
 }

@@ -56,6 +56,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         if(!csId){
             Promise.reject(new Error('workers all busy'));
         }
+        conversation.stt = 'hd';
         conversation.csId = csId;
         return cskv.saveCSSByIdAsync(conversation.initiator, csId, conversation)
     })
