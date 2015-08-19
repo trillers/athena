@@ -13,4 +13,10 @@ module.exports = function(app){
     require('./wechat')(wc_router);
     app.use(wc_router.routes());
 
+    //qrCode
+    var qr_router = new router();
+    qr_router.prefix('/api/qr');
+    require('./qr')(qr_router);
+    app.use(qr_router.routes());
+
 }
