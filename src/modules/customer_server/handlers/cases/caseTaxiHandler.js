@@ -42,21 +42,15 @@ function allDone(data){
 function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
-        wechatApi.sendText(user.wx_openid, '下单成功', function(err, result){
-            console.log(result);
-        });
+        yield wechatApi.sendTextAsync(user.wx_openid, '下单成功');
     }catch(err){
-        wechatApi.sendText(user.wx_openid, '下单失败，请联系管理员', function(err, result){
-            console.log(result);
-        });
+        yield wechatApi.sendTextAsync(user.wx_openid, '下单失败，请联系管理员');
     }
 }
 function* cancelOrder(user, message){
     if(command.commandType(message) && command.commandType(message) === command.commandSet.quit){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
-        wechatApi.sendText(user.wx_openid, '订单已取消', function(err, result){
-            console.log(result);
-        });
+        yield wechatApi.sendTextAsync(user.wx_openid, '订单已取消');
         return true;
     }
     return false;
@@ -72,7 +66,11 @@ function stepFnGenerator(type){
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(data){
             callback(null, data);
-            step && step[arguments.data.step -1].res && res.reply(step[arguments.data.step -1].res);
+            if(step && step[arguments.data.step -1].res){
+                wechatApi.sendTextAsync(user.wx_openid, step[arguments.data.step -1].res, function(){
+                    console.log('step tips');
+                })
+            };
         })
         .catch(function(err){
             throw new Error('case handling error occur.');
