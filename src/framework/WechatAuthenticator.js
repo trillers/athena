@@ -30,6 +30,8 @@ Authenticator.prototype = {
 
     ensureSignin: function(message, ctx, next, done){
         var user = this.authenticated(ctx);
+        console.log('has user');
+        console.log(user);
         if(user){
             done(null, user);
         }

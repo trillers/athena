@@ -48,13 +48,13 @@ module.exports = function() {
         var message = self.weixin;
         try{
             var user = yield ensureSignin(message, self, next);
+            console.log('+++++++++++++++++');
+            console.log(user);
             WechatOperationService.logActionAsync(message);
             if(message.MsgType == 'event'){
                 switch(message.Event){
                     case 'subscribe':
-                        console.log('subscribe');
                         yield QrChannelDispatcher.dispatch(message, user, self);
-                        console.log('dispatch finish');
                         break;
                     case 'unsubscribe':
                         //var update = {};

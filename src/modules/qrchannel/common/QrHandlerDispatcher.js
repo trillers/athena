@@ -43,7 +43,6 @@ QrHandlerDispatcher.prototype.dispatch = function* (message, user, ctx){
                 if(handler) {
                     yield handler.handle(message, user, ctx, qr);
                 }
-                console.log('has qr');
             }
             else{
                 me.nullHandler(message, user, ctx, null);
