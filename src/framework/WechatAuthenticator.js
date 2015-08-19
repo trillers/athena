@@ -29,15 +29,15 @@ Authenticator.prototype = {
     },
 
     ensureSignin: function(message, ctx, next, done){
-        var user = this.authenticated(ctx);
-        console.log('has user');
-        console.log(user);
-        if(user){
-            done(null, user);
-        }
-        else{
+        //var user = this.authenticated(ctx);
+        //console.log('has user');
+        //console.log(user);
+        //if(user){
+        //    done(null, user);
+        //}
+        //else{
             this.loadOrCreateWechatUser(message, ctx, next, done);
-        }
+        //}
     },
 
     loadOrCreateWechatUser: function(message, ctx, next, done){
