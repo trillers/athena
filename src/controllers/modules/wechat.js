@@ -41,14 +41,26 @@ module.exports = function() {
 
     var handler = function* (next) {
         //根据角色，分别派遣session，然后next
-        console.log('_________________________');
-        console.log(this);
         var message = this.weixin,
             req = this.request,
             res = this.response;
         authenticator.ensureSignin(message, req, res, next, function(err, user){
             WechatOperationService.logActionAsync(message);
-            customerDispatcher.dispatch(user, message, res);
+            if(message.MsgType == 'event'){
+                switch(message.Event){
+                    case 'subscribe':
+                        QrChannelDispatcher.dispatch(message, user, res);
+                        break;
+                    case 'unsubscribe':
+                        //var update = {};
+                        //update.wx_subscribe = 0;
+                        res.reply('');
+                        break;
+                }
+
+            }else{
+                customerDispatcher.dispatch(user, message, res);
+            }
         });
     }
 
