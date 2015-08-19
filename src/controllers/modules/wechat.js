@@ -56,8 +56,9 @@ module.exports = function() {
                 switch(message.Event){
                     case 'subscribe':
                         console.log('subscribe');
-                        yield  qrDispatch(message, user, self);
+                        //yield  qrDispatch(message, user, self);
                         console.log('dispatch finish');
+                        self.body = '欢迎关注';
                         break;
                     case 'unsubscribe':
                         //var update = {};
