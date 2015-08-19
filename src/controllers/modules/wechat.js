@@ -51,6 +51,7 @@ module.exports = function() {
         try{
             var user = yield ensureSignin(message, self, next);
             WechatOperationService.logActionAsync(message);
+            console.log(user);
             if(message.MsgType == 'event'){
                 switch(message.Event){
                     case 'subscribe':
@@ -65,6 +66,7 @@ module.exports = function() {
                 }
 
             }else{
+                console.log('message');
                 yield csDispatch(user, message, self);
             }
         } catch (err){

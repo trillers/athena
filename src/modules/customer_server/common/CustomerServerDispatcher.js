@@ -23,11 +23,11 @@ prototype.setNullHandler = function(handler){
     this.nullHandler = handler;
 };
 
-prototype.dispatch = function(user, message, res){
+prototype.dispatch = function(user, message, ctx){
     var self = this;
     var role = user.role;
     var handler = self.handlers[role];
-    handler && handler.handle(user, message, res);
+    handler && handler.handle(user, message, ctx);
 }
 
 module.exports = CustomerServerDispatcher;
