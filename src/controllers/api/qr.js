@@ -8,7 +8,7 @@ module.exports = function(router){
     router.get('/getCSQrCode', function* (){
         var key = QrChannel.genKey(true, 'CS');
         var handler = QrChannel.handlers[key];
-        var qr = yield handler.manualCreate(50, null);
+        var qr = yield handler.manualCreateAsync(50, null);
         var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
         this.redirect(url);
     });
@@ -17,7 +17,7 @@ module.exports = function(router){
     router.get('/getSMQrCode', function* (){
         var key = QrChannel.genKey(true, 'SM');
         var handler = QrChannel.handlers[key];
-        var qr = yield handler.manualCreate(51, null);
+        var qr = yield handler.manualCreateAsync(51, null);
         var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
         this.redirect(url);
     });
