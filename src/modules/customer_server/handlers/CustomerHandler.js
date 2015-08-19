@@ -9,23 +9,25 @@ var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
 var handle = function(user, message, res){
+    res.reply('');
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){
+                var csId = conversation.csId;
                 switch(message.MsgType){
                     case 'text':
                         co(function* (){
-                            yield wechatApi.sendTextAsync(customer, message.Content);
+                            yield wechatApi.sendTextAsync(csId, message.Content);
                         })
                         break;
                     case 'image':
                         co(function* (){
-                            yield wechatApi.sendImageAsync(customer, message.MediaId);
+                            yield wechatApi.sendImageAsync(csId, message.MediaId);
                         })
                         break;
                     case 'voice':
                         co(function* (){
-                            yield wechatApi.sendVoiceAsync(customer, message.MediaId);
+                            yield wechatApi.sendVoiceAsync(csId, message.MediaId);
                         })
                         break;
                 }

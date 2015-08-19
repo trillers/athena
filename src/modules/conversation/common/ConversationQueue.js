@@ -51,6 +51,7 @@ ConversationQueue.prototype.nextItem = function(callback){
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
     cskv.popWcCSSetAysnc.then(function(csId){
+        conversation.csId = csId;
         return cskv.saveCSSById(conversation.initiator, csId, conversation)
     })
     .then(function(doc){
