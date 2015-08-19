@@ -131,6 +131,8 @@ var CustomerServer = {
         var pkey = 'cs:sess:*' + id + '*';
         redis.keys(pkey, function(err, key) {
             if (err) return cbUtil.handleSingleValue(callback, err, key);
+            console.log('++++++++++++++++');
+            console.log(key);
             redis.del(key, function(err, result){
                 cbUtil.logCallback(
                     err,
