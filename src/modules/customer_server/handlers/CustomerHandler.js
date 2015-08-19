@@ -36,8 +36,8 @@ var handle = function(user, message, res){
             var msg = {
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
-                contentType: _char0UpperCase(message.type),
-                content: {type: message.content}
+                contentType: _char0UpperCase(message.MsgType),
+                content: message.Content
             }
             return messageService.create(msg)
         })
