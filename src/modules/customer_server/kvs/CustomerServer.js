@@ -265,7 +265,10 @@ var CustomerServer = {
                 err,
                 'Fail to load conversation queue : ' + err,
                 'Succeed to load conversation queue ');
-            cbUtil.handleSingleValue(callback, err, JSON.parse(result));
+            if(result.length > 0){
+                result = JSON.parse(result);
+            }
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
