@@ -23,7 +23,7 @@ var handle = function(message, user, res, qrChannel){
         //})
         .then(function(){
             var replyMsg = '欢迎注册成为客服人员！';
-            res.reply(replyMsg);
+            res.body = replyMsg;
         })
         .catch(Error, function(err){
             logger.error(err);
