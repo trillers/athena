@@ -51,6 +51,7 @@ ConversationQueue.prototype.nextItem = function(callback){
     })
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
+    console.log('dispath begin=============================================')
     cskv.popWcCSSetAysnc.then(function(csId){
         conversation.csId = csId;
         return cskv.saveCSSByIdAsync(conversation.initiator, csId, conversation)
@@ -69,7 +70,7 @@ ConversationQueue.prototype.enqueue = function(conversation, callback){
             callback && callback(null, doc)
         });
     }
-    cskv.pushConQueueAsync(JSON.stringify(conversation))
+    cskv.pushConQueueAsync(conversation)
         .then(function(){
             return callback && callback(null, null);
         })
