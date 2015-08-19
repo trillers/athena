@@ -111,14 +111,14 @@ var CustomerServer = {
                     err,
                     'Fail to load customer server session by id ' + id + ': ' + err,
                     'Succeed to load customer server session by id ' + id);
-                cbUtil.handleSingleValue(callback, err, result);
+                cbUtil.handleSingleValue(callback, err, JSON.parse(result));
             });
         });
     },
 
     saveCSSById: function(openId, csId, css, callback){
         var key = getCSSKey(openId, csId);
-        redis.hmset(key, css, function(err, result){
+        redis.hmset(key, JSON.stringify(css), function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to save customer server session by id: ' + openId + '/'+ csId + ': ' + err,
@@ -160,7 +160,7 @@ var CustomerServer = {
                 err,
                 'Fail to add pc customer server  set : ' + csId + ': ' + err,
                 'Succeed to add pc customer server  set : ' + csId);
-            cbUtil.handleAffected(callback, err, csId, result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
@@ -218,7 +218,7 @@ var CustomerServer = {
                 err,
                 'Fail to add wc customer server  set : ' + csOpenId + ': ' + err,
                 'Succeed to add wc customer server  set : ' + csOpenId);
-            cbUtil.handleAffected(callback, err, csOpenId, result);
+            cbUtil.handleSingleValue(callback, err, csOpenId, result);
         });
     },
 
@@ -265,13 +265,13 @@ var CustomerServer = {
                 err,
                 'Fail to load conversation queue : ' + err,
                 'Succeed to load conversation queue ');
-            cbUtil.handleSingleValue(callback, err, result);
+            cbUtil.handleSingleValue(callback, err, JSON.parse(result));
         });
     },
 
     pushConQueue: function(con, callback){
         var key = getConQueueKey();
-        redis.rpush(key, con, function(err, result){
+        redis.rpush(key, JSON.stringify(con), function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to add conversation queue : ' + err,
@@ -288,7 +288,7 @@ var CustomerServer = {
                 'Fail to pop conversation queue: ' + err,
                 'Succeed to pop conversation queue ' );
 
-            cbUtil.handleSingleValue(callback, err, result);
+            cbUtil.handleSingleValue(callback, err, JSON.parse(result));
         });
     },
 
@@ -311,18 +311,18 @@ var CustomerServer = {
                 err,
                 'Fail to load wc customer server place case by csId ' + csOpenId + ': ' + err,
                 'Succeed to load  wc customer server place case by csId ' + csOpenId);
-            cbUtil.handleSingleValue(callback, err, result);
+            cbUtil.handleSingleValue(callback, err, JSON.parse(result));
         });
     },
 
     savePlaceCase: function(csOpenId, pc, callback){
         var key = getPcCSSetKey(csOpenId);
-        redis.set(key, pc, function(err, result){
+        redis.set(key, JSON.stringify(pc), function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to save wc customer server place case by csId: ' + csOpenId + ': ' + err,
                 'Succeed to save wc customer server place case by csId: ' + csOpenId);
-            cbUtil.handleOk(callback, err, result, st);
+            cbUtil.handleOk(callback, err, result);
         });
     },
 
