@@ -65,10 +65,10 @@ function stepFnGenerator(type){
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(data){
-            callback(null, data);
             if(step && step[arguments.data.step -1].res){
                 wechatApi.sendTextAsync(user.wx_openid, step[arguments.data.step -1].res, function(){
                     console.log('step tips');
+                    callback(null, data);
                 })
             };
         })
