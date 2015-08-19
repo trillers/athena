@@ -48,6 +48,7 @@ function _fetchConversation(user, callback){
     return cskv.loadCSSByIdAsync(user.wx_openid)
         .then(function(conversation){
             if(conversation){
+                console.log('have css');
                 return callback(null, conversation);
             }
             var conversation = {
@@ -56,6 +57,7 @@ function _fetchConversation(user, callback){
             }
             conversationService.createAsync(conversation)
                 .then(function(conversation){
+                    console.log('created conversation');
                     conversationQueue.enqueue(conversation);
                     return callback(null, conversation)
                 })

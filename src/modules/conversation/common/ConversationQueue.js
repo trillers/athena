@@ -62,6 +62,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     })
 }
 ConversationQueue.prototype.enqueue = function(conversation, callback){
+    console.log('conversation enqueue');
     if(this.isClear){
         return this.nextItem(function(err, doc){
             callback && callback(null, doc)
