@@ -27,7 +27,7 @@ Service.create = function (json, callback) {
         }
         if (numberAffected) {
             logger.debug('Succeed to create Conversation: ' + require('util').inspect(doc) + '\r\n');
-            if (callback) callback(null, doc);
+            if (callback) callback(null, doc.toObject());
         }
         else {
             logger.error('Fail to create Conversation: ' + require('util').inspect(doc) + '\r\n');
