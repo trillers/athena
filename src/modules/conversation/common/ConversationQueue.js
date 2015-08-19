@@ -52,7 +52,7 @@ ConversationQueue.prototype.nextItem = function(callback){
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
     console.log('dispath begin=============================================')
-    cskv.popWcCSSetAysnc().then(function(csId){
+    cskv.popWcCSSetAsync().then(function(csId){
         if(!csId){
             Promise.reject(new Error('workers all busy'));
         }
