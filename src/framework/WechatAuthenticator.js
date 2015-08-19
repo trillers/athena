@@ -24,7 +24,7 @@ Authenticator.prototype = {
         ctx.wxsession && ctx.wxsession.destroy();
     },
 
-    setAuthentication: function(req, res, user){
+    setAuthentication: function(ctx, user){
         ctx.wxsession && (ctx.wxsession[this.userKey] = user);
     },
 
