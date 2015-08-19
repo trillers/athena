@@ -7,6 +7,7 @@ var conversationService = require('../../conversation/services/ConversationServi
 var messageService = require('../../message/services/MessageService')
 var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
+var co = require('co');
 
 var handle = function(user, message){
     console.log('ru handle start');
