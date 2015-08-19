@@ -27,6 +27,7 @@ prototype.dispatch = function(user, message){
     var self = this;
     var role = user.role;
     var handler = self.handlers[role];
+    console.log(role);
     handler && handler.handle(user, message);
 }
 

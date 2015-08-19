@@ -14,6 +14,7 @@ var caseType = {
     'co':caseCoffeeHandler
 }
 var handle = function(user, message){
+    console.log('cs handler start');
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
     cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){

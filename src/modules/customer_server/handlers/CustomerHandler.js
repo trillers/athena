@@ -9,6 +9,7 @@ var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
 var handle = function(user, message){
+    console.log('ru handle start');
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){
