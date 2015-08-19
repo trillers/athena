@@ -36,7 +36,7 @@ ConversationQueue.prototype.init = function(){
             })
             .then(function(){
                 data['stt'] = 'fn';
-                return ConversationService.update(data._id, data);
+                return ConversationService.updateAsync(data._id, data);
             })
             .then(function(){
                 me.nextItem(function(err, doc){
