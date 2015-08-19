@@ -86,6 +86,5 @@ QrHandler.prototype.manualCreate = function(sceneId, customId, callback){
     })
 };
 
-QrHandler = Promise.promisifyAll(QrHandler);
 module.exports = QrHandler;
 
