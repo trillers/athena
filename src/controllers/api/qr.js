@@ -11,7 +11,7 @@ module.exports = function(router){
         var key = QrChannel.genKey(true, 'CS');
         var handler = QrChannel.handlers[key];
         var createQrCode = thunkify(handler.manualCreate);
-        var qr = yield createQrCode(50, null).bind(handler);
+        var qr = yield createQrCode.call(handler, 50, null);
         var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
         this.redirect(url);
     });
@@ -22,7 +22,7 @@ module.exports = function(router){
         var key = QrChannel.genKey(true, 'SM');
         var handler = QrChannel.handlers[key];
         var createQrCode = thunkify(handler.manualCreate);
-        var qr = yield createQrCode(51, null).bind(handler);
+        var qr = yield createQrCode.call(handler, 51, null);
         var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
         this.redirect(url);
     });
