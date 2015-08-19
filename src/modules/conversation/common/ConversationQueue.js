@@ -42,8 +42,8 @@ ConversationQueue.prototype.init = function(){
 ConversationQueue.prototype.nextItem = function(callback){
     var me = this;
     me.dequeue(function(err, conversation){
-        if(e){
-            return callback(e, null)
+        if(err){
+            return callback(err, null)
         }
         me.dispatch(conversation, function(err, doc){
             return callback(null, doc)
@@ -52,7 +52,10 @@ ConversationQueue.prototype.nextItem = function(callback){
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
     console.log('dispath begin=============================================')
-    cskv.popWcCSSetAysnc.then(function(csId){
+    cskv.popWcCSSetAsync().then(function(csId){
+        if(!csId){
+            Promise.reject(new Error('workers all busy'));
+        }
         conversation.csId = csId;
         return cskv.saveCSSByIdAsync(conversation.initiator, csId, conversation)
     })
@@ -70,13 +73,17 @@ ConversationQueue.prototype.enqueue = function(conversation, callback){
             callback && callback(null, doc)
         });
     }
-    cskv.pushConQueueAsync(conversation)
-        .then(function(){
-            return callback && callback(null, null);
-        })
-        .catch(function(err){
-            return callback && callback(err, null);
-        })
+    this.dispatch(conversation, function(err, doc){
+        if(err){
+            cskv.pushConQueueAsync(conversation)
+                .then(function(){
+                    return callback && callback(null, null);
+                })
+                .catch(function(err){
+                    return callback && callback(err, null);
+                })
+        }
+    })
 }
 ConversationQueue.prototype.dequeue = function(callback){
     var me = this;
