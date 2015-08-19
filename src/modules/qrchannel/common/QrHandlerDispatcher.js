@@ -27,6 +27,7 @@ QrHandlerDispatcher.prototype.genKey = function(forever, type){
 };
 
 QrHandlerDispatcher.prototype.dispatch = function(message, user, ctx){
+    console.log('start dispatch');
     var me = this, reply = '';
     if(!message.EventKey){
         me.defaultHandler && me.defaultHandler(message, user, ctx, null);
@@ -44,6 +45,7 @@ QrHandlerDispatcher.prototype.dispatch = function(message, user, ctx){
                 var key = me.genKey(qr.forever, qr.type);
                 var handler = me.handlers[key];
                 handler && handler.handle(message, user, ctx, qr);
+                console.log('has qr');
             }
             else{
                 me.nullHandler(message, user, ctx, null);

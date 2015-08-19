@@ -57,6 +57,7 @@ module.exports = function() {
                     case 'subscribe':
                         console.log('subscribe');
                         yield  qrDispatch(message, user, self);
+                        console.log('dispatch finish');
                         break;
                     case 'unsubscribe':
                         //var update = {};
