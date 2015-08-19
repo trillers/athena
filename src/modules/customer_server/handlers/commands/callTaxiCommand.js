@@ -1,5 +1,7 @@
 var cskv = require('../../kvs/CustomerServer');
-module.exports = function(user, message, ctx, callback){
+var wechatApi = require('../../../wechat/common/api').api;
+
+module.exports = function(user, message, callback){
     //save to redis
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
     var json = {
@@ -11,6 +13,8 @@ module.exports = function(user, message, ctx, callback){
     }
     cskv.savePlaceCaseAsync(user.wx_openid, json)
     .then(function(){
-        ctx.body = '用车时间是？';
+        wechatApi.sendText(user.wx_openid, '用车时间是?', function(err, result){
+            if(callback) return callback(err, result);
+        });
     })
 }

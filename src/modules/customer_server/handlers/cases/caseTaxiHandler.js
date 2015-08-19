@@ -7,6 +7,8 @@ var command = require('../commands');
 var thunkify = require('thunkify');
 var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
+var wechatApi = require('../../../wechat/common/api').api;
+
 //placeCase:openid  {type: ct, payload:{xxx: 1, yyy: 2}, step:2}
 var step = {
     1: {
@@ -21,14 +23,14 @@ var step = {
         fn: fillDestination
     }
 };
-module.exports = function(data, user, message, res){
+module.exports = function(data, user, message){
     var args = arguments;
     co(function* (){
         var result = yield cancelOrder(user, message);
         if(!result){
             var data = yield fillFormThunk(data.step, args);
             if(allDone(data)){
-                return yield createCaseToMango(data, res);
+                return yield createCaseToMango(data, user);
             };
         }
         return;
@@ -37,18 +39,24 @@ module.exports = function(data, user, message, res){
 function allDone(data){
     return data.step === Object.keys(step).length - 1;
 }
-function* createCaseToMango(data, res){
+function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
-        res.reply('下单成功');
+        wechatApi.sendText(user.wx_openid, '下单成功', function(err, result){
+            console.log(result);
+        });
     }catch(err){
-        res.reply('下单失败，请联系管理员');
+        wechatApi.sendText(user.wx_openid, '下单失败，请联系管理员', function(err, result){
+            console.log(result);
+        });
     }
 }
 function* cancelOrder(user, message){
     if(command.commandType(message) && command.commandType(message) === command.commandSet.quit){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
-        res.reply('订单已取消');
+        wechatApi.sendText(user.wx_openid, '订单已取消', function(err, result){
+            console.log(result);
+        });
         return true;
     }
     return false;
@@ -59,7 +67,7 @@ function fillForm(type, args, callback){
 function stepFnGenerator(type){
     return function(){
         var callback = [].slice.call(arguments, -1);
-        data[type] = arguments.message.content;
+        data[type] = arguments.message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(data){

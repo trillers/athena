@@ -13,14 +13,14 @@ var handle = function* (message, user, ctx, qrChannel){
         role: UserRole.RegularUser.value()
     };
 
-    UserService.updateAsync(user.id, userUpdate)
-        .then(function(){
-            var replyMsg = '欢迎注册！';
-            ctx.body = replyMsg;
-        })
-        .catch(Error, function(err){
-            logger.error(err);
-        });
+    try{
+        yield UserService.updateAsync(user.id, userUpdate);
+    } catch (err){
+        logger.error(err);
+    }
+
+    var replyMsg = '欢迎关注';
+    ctx.body = replyMsg;
 };
 
 var handler = new QrHandler(true, 'RU', handle); //RU regular user handler

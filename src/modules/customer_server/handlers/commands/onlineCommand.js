@@ -1,10 +1,14 @@
 var cskv = require('../../kvs/CustomerServer');
-module.exports = function(user, message, ctx, callback){
+var wechatApi = require('../../../wechat/common/api').api;
+
+module.exports = function(user, message, callback){
     cskv.saveCSStatusByCSOpenId(user.wx_openid, 'ol')
         .then(function(){
             return cskv.pushWcCSSetAsync(user.wx_openid);
         })
         .then(function(){
-            ctx.body = '您已上线';
-        })
+            wechatApi.sendText(user.wx_openid, '您已上线', function(err, result){
+                if(callback) return callback(err, result);
+            });
+        });
 }

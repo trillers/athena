@@ -17,17 +17,13 @@ var handle = function* (message, user, ctx, qrChannel){
     //    role: UserRole.SystemManager.value()
     //};
 
-    UserService.updateAsync(user.id, userUpdate)
-        //.then(function(){
-        //    return UserBizService.updateByConditionAsync({user: user.id}, userBizUpdate);
-        //})
-        .then(function(){
-            var replyMsg = '欢迎注册成为系统管理员！';
-            ctx.body = replyMsg;
-        })
-        .catch(Error, function(err){
-            logger.error(err);
-        });
+    try{
+        yield  UserService.updateAsync(user.id, userUpdate);
+    }catch(err){
+        logger.error(err);
+    }
+    var replyMsg = '欢迎注册成为系统管理员！';
+    ctx.body = replyMsg;
 };
 
 var handler = new QrHandler(true, 'SM', handle); //SM system manager handler

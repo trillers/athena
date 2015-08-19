@@ -49,9 +49,6 @@ module.exports = function() {
         try{
             var user = yield ensureSignin(message, self, next);
             WechatOperationService.logActionAsync(message);
-            console.log('++++++++++++++++');
-            console.log(message);
-            console.log(user);
             if(message.MsgType == 'event'){
                 switch(message.Event){
                     case 'subscribe':
@@ -68,7 +65,8 @@ module.exports = function() {
 
             }else{
                 console.log('message');
-                CSDispatcher.dispatch(user, message, self);
+                self.body = '';
+                CSDispatcher.dispatch(user, message);
             }
         } catch (err){
             console.log('ensureSignin error:' + err);

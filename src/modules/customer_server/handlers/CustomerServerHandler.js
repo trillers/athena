@@ -13,13 +13,13 @@ var caseType = {
     'tx':caseTaxiHandler,
     'co':caseCoffeeHandler
 }
-var handle = function(user, message, ctx){
+var handle = function(user, message){
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
     cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){
         //different biz logic
         if(data){
-            caseType[data.type](data, user, message, ctx);
+            caseType[data.type](data, user, message);
             return Promise.reject(new Error('client Server is handling Case, so break fn Chain'));
         }
         return;
@@ -28,7 +28,7 @@ var handle = function(user, message, ctx){
             var commandType = command.commandType(message);
             if(commandType) {
                 var executeFn = command.commandHandler(commandType);
-                executeFn(user, message, ctx, function(err, data){
+                executeFn(user, message, function(err, data){
                     console.log(commandType + 'command finish');
                 });
                 return Promise.reject(new Error('this is a cmd,so break fn Chain'));
