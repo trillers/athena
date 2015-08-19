@@ -41,7 +41,7 @@ var handle = function(user, message){
     })
     .then(function(data){
         if(data){
-            var customer = data.csId;
+            var customer = data.initiator;
             var msg = {
                 from: user.wx_openid,
                 to: customer,
