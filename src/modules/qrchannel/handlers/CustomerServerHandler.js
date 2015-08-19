@@ -3,6 +3,7 @@ var UserService = require('../../user/services/UserService');
 var UserBizService = require('../../user/services/UserBizService')
 var logger = require('../../../app/logging').logger;
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var UserKv = require('../../user/kvs/User');
 
 var handle = function* (message, user, ctx, qrChannel){
     //TODO: implementation
@@ -15,6 +16,7 @@ var handle = function* (message, user, ctx, qrChannel){
 
     try{
         yield UserService.updateAsync(user.id, userUpdate);
+        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerServer.value());
     } catch (err){
         logger.error(err);
     }

@@ -135,6 +135,17 @@ var User = {
         });
     },
 
+    updateUserRoleById: function(id, role, callback){
+        var key = idToUserKey(id);
+        redis.hset(key, 'role', role, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to save user by id ' + id + ': ' + err,
+                'Succeed to save user by id ' + id);
+            cbUtil.handleAffected(callback, err, role, result);
+        });
+    },
+
     deleteById: function(id, callback){
         var key = idToUserKey(id);
         redis.del(key, function(err, result){
