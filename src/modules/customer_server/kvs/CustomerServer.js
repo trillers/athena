@@ -265,6 +265,7 @@ var CustomerServer = {
                 err,
                 'Fail to load conversation queue : ' + err,
                 'Succeed to load conversation queue ');
+            console.log(result);
             if(result.length > 0){
                 result = JSON.parse(result);
             }
