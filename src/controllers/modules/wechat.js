@@ -54,6 +54,7 @@ module.exports = function() {
             if(message.MsgType == 'event'){
                 switch(message.Event){
                     case 'subscribe':
+                        console.log('subscribe');
                         yield  qrDispatch(message, user, self);
                         break;
                     case 'unsubscribe':

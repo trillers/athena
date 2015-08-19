@@ -26,10 +26,10 @@ QrHandlerDispatcher.prototype.genKey = function(forever, type){
     return (forever ? 'fv' : 'tm') + type;
 };
 
-QrHandlerDispatcher.prototype.dispatch = function(message, user, res){
+QrHandlerDispatcher.prototype.dispatch = function(message, user, ctx){
     var me = this, reply = '';
     if(!message.EventKey){
-        me.defaultHandler && me.defaultHandler(message, user, res, null);
+        me.defaultHandler && me.defaultHandler(message, user, ctx, null);
     }
     else{
         var index = message.EventKey.indexOf("_") + 1;
@@ -37,16 +37,16 @@ QrHandlerDispatcher.prototype.dispatch = function(message, user, res){
         QrChannelService.loadBySceneId(sceneId, function(err, qr){
             if(err){
                 //TODO
-                res.reply(reply);
+                ctx.body = reply;
                 return;
             }
             if(qr){
                 var key = me.genKey(qr.forever, qr.type);
                 var handler = me.handlers[key];
-                handler && handler.handle(message, user, res, qr);
+                handler && handler.handle(message, user, ctx, qr);
             }
             else{
-                me.nullHandler(message, user, res, null);
+                me.nullHandler(message, user, ctx, null);
             }
 
         });
