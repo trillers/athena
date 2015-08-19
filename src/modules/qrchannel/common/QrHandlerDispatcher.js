@@ -27,7 +27,7 @@ QrHandlerDispatcher.prototype.genKey = function(forever, type){
     return (forever ? 'fv' : 'tm') + type;
 };
 
-QrHandlerDispatcher.prototype.dispatch = function(message, user, ctx){
+QrHandlerDispatcher.prototype.dispatch = function* (message, user, ctx){
     console.log('start dispatch');
     var me = this, reply = '';
     if(!message.EventKey){
@@ -43,7 +43,7 @@ QrHandlerDispatcher.prototype.dispatch = function(message, user, ctx){
             if(qr){
                 var key = me.genKey(qr.forever, qr.type);
                 var handler = me.handlers[key];
-                handler && handler.handle(message, user, ctx, qr);
+                handler && yield handler.handle(message, user, ctx, qr);
                 console.log('has qr');
             }
             else{
