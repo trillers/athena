@@ -63,7 +63,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     console.log('dispath begin=============================================')
     cskv.popWcCSSetAsync().then(function(csId){
         if(!csId){
-            Promise.reject(new Error('workers all busy'));
+            return Promise.reject(new Error('workers all busy'));
         }
         conversation.stt = 'hd';
         conversation.csId = csId;

@@ -11,6 +11,6 @@ module.exports=function(router){
         var data = this.query;
         var phone = data.phone;
         var ic = data.ic;
-        console.log(phone);
+        console.log(data);
     })
 }
