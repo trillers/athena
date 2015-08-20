@@ -1,5 +1,6 @@
 var wechatApi = require('../../wechat/common/api').api;
 var messageService = require('../../message/services/MessageService');
+var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var userService = require('../../user/services/UserService')
 var Promise = require('bluebird');
 var _ = require('underscore')
@@ -50,7 +51,9 @@ function sendHistoryMsgs(conversation, callback){
     .then(function(){
         var promiseArr = [];
         msgs.forEach(function(item){
-            promiseArr.push(wechatApi['send' + _firstCharUpper(item.contentType) + 'Async'](conversation.csId, item.content))
+            console.log("`````````````````````````````");
+            console.log(MsgContentType.valueNames(item.contentType));
+            promiseArr.push(wechatApi['send' + _firstCharUpper(MsgContentType.valueNames(item.contentType)) + 'Async'](conversation.csId, item.content))
         })
         Promise.all(promiseArr).then(function(){
             console.log('Succeed to send history message')
