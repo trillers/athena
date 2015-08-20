@@ -5,6 +5,7 @@ var fillOrigin = stepFnGenerator('origin');
 var fillDestination = stepFnGenerator('destination');
 var command = require('../commands');
 var thunkify = require('thunkify');
+var Promise = require('bluebird')
 var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
@@ -33,11 +34,11 @@ module.exports = function(data, user, message){
         console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
             console.log('000000000')
-            fillForm(data.step, args, function(err, data){
-                if(allDone(data)){
-                    return yield createCaseToMango(data, user);
-                };
-            });
+            var data = yield fillFormAsync(data.step, args)
+            if(allDone(data)){
+                return yield createCaseToMango(data, user);
+            };
+
         }else{
             return;
         }
@@ -67,6 +68,7 @@ function fillForm(type, args, callback){
     console.log('????????????????????????????');
     return step[type]([].concat.call(args, [callback]));
 }
+var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
     return function(){
         console.log('******************************');
