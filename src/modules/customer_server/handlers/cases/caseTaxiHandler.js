@@ -68,7 +68,7 @@ function* cancelOrder(user, message){
 }
 function fillForm(type, args, callback){
     if(step && step[type] && step[type]['fn']){
-        return step[type]['fn']([].concat.call([].slice.call(args), [callback]));
+        return step[type]['fn']([].concat.call([].slice.call(args), callback));
     }else{
         return callback(null, args[0][0])
     }
@@ -79,17 +79,18 @@ function stepFnGenerator(type){
         var data = arguments[0][0];
         var user = arguments[0][1];
         var message= arguments[0][2];
-        var callback = arguments[1]
+        var callback = arguments[0][3];
         data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
-        .then(function(pc){
+        .then(function(){
             if(step && step[data.step -1].res){
-                wechatApi.sendTextAsync(user.wx_openid, step[data.step -1].res, function(){
-                    console.log('step tips');
-                    callback(null, data);
-                })
+                return wechatApi.sendTextAsync(user.wx_openid, step[data.step -1].res)
             };
+            return data;
+        })
+        .then(function(data){
+            callback(null, data);
         })
         .catch(function(err){
             console.log(err);

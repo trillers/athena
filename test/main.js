@@ -1,6 +1,11 @@
-/**
- * Created by bjhl on 15/8/20.
- */
-require('./A.js')
-    .init(1234)
-    .doStuff();
+var co=require('co')
+function* test1(){
+    setTimeout(function(){
+        console.log(1231)
+    }, 2000)
+
+    return true === false
+}
+co(function* (){
+    return yield test1();
+})
