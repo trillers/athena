@@ -30,28 +30,30 @@ ConversationQueue.prototype.init = function(){
             this.isClear = list === null && true || false;
             return;
         })
-    this.on('taskFinish', function(data){
-        console.log('check csid----------------------' + data)
-        cskv.pushWcCSSetAsync(data.csId)
-            .then(function(){
-                return cskv.delCSSByIdAsync(data.csId)
-            })
-            .then(function(){
-                data['stt'] = 'fn';
-                return ConversationService.updateAsync(data._id, data);
-            })
-            .then(function(){
+        .then(function(){
+            me.on('taskFinish', function(data){
+                console.log('check csid----------------------' + data)
+                cskv.pushWcCSSetAsync(data.csId)
+                    .then(function(){
+                        return cskv.delCSSByIdAsync(data.csId)
+                    })
+                    .then(function(){
+                        data['stt'] = 'fn';
+                        return ConversationService.updateAsync(data._id, data);
+                    })
+                    .then(function(){
+                        me.nextItem(function(err, doc){
+                            console.log('dispatch ok');
+                        })
+                    })
+
+            });
+            me.on('csOnline', function(data){
                 me.nextItem(function(err, doc){
                     console.log('dispatch ok');
                 })
             })
-
-    });
-    this.on('csOnline', function(data){
-        me.nextItem(function(err, doc){
-            console.log('dispatch ok');
         })
-    })
 }
 ConversationQueue.prototype.nextItem = function(callback){
     var me = this;
