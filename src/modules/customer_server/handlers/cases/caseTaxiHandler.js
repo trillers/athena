@@ -32,12 +32,15 @@ module.exports = function(data, user, message){
         var result = yield cancelOrder(user, message);
         console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
-            var data = yield fillFormThunk(data.step, args);
-            if(allDone(data)){
-                return yield createCaseToMango(data, user);
-            };
+            console.log('000000000')
+            fillForm(data.step, args, function(err, data){
+                if(allDone(data)){
+                    return yield createCaseToMango(data, user);
+                };
+            });
+        }else{
+            return;
         }
-        return;
     })
 };
 function allDone(data){
@@ -61,8 +64,8 @@ function* cancelOrder(user, message){
     return false;
 }
 function fillForm(type, args, callback){
-    console.log('---------------------------');
-    return step[type]([].concat.call(args, callback));
+    console.log('????????????????????????????');
+    return step[type]([].concat.call(args, [callback]));
 }
 function stepFnGenerator(type){
     return function(){
