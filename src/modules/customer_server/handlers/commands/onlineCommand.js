@@ -7,7 +7,7 @@ module.exports = function(user, message, callback){
             return cskv.pushWcCSSetAsync(user.wx_openid);
         })
         .then(function(){
-            console.log('queue----------------------' + require('util').inspect(conversationQueue));
+            //console.log('queue----------------------' + require('util').inspect(conversationQueue));
             //return conversationQueue.emit('csOnline', {csId: user.wx_openid});
         })
         .then(function(){
