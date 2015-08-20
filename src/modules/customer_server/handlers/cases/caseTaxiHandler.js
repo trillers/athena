@@ -69,7 +69,7 @@ function* cancelOrder(user, message){
     return false;
 }
 function fillForm(type, args, callback){
-    if(step[type]['fn']){
+    if(step && step[type]['fn']){
         return step[type]['fn']([].concat.call(args, [callback]));
     }else{
         return callback(null, args[0][0])
