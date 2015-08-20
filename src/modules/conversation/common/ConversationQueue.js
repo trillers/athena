@@ -125,4 +125,4 @@ ConversationQueue.prototype.dequeue = function(callback){
             return callback(err, null);
         })
 }
-module.exports = {fuck: 'you'};
+module.exports = new ConversationQueue();
