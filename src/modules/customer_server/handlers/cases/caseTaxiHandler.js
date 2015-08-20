@@ -80,10 +80,10 @@ var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
     return function(){
         console.log('******************************');
-        var data = arguments[0];
-        var user = arguments[1];
-        var message= arguments[2];
-        var callback = [].slice.call(arguments, -1)[0];
+        var data = arguments[0][0];
+        var user = arguments[0][1];
+        var message= arguments[0][2];
+        var callback = [].slice.call(arguments[0], -1);
         console.log(arguments)
         console.log(arguments[0])
         data[type] = message.Content;
