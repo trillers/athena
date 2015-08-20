@@ -18,7 +18,9 @@ var handle = function(user, message){
     //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
     cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){
-        //different biz logic
+    //different biz logic
+        console.log('data-----------------------')
+        console.log(data)
         if(data){
             caseType[data.type](data, user, message);
             return Promise.reject(new Error('client Server is handling Case, so break fn Chain'));
