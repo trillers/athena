@@ -32,14 +32,20 @@ ConversationQueue.prototype.init = function(){
         })
         .then(function(){
             me.on('taskFinish', function(data){
-                console.log('check csid----------------------' + data)
+                var conversation;
                 cskv.pushWcCSSetAsync(data.csId)
+                    .then(function(){
+                        return cskv.loadCSSById(data.csId)
+                    })
+                    .then(function(session){
+                        conversation = session;
+                    })
                     .then(function(){
                         return cskv.delCSSByIdAsync(data.csId)
                     })
                     .then(function(){
                         data['stt'] = 'fn';
-                        return ConversationService.updateAsync(data._id, data);
+                        return ConversationService.updateAsync(conversation._id, conversation);
                     })
                     .then(function(){
                         me.nextItem(function(err, doc){
