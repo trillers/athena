@@ -26,18 +26,12 @@ var step = {
     }
 };
 module.exports = function(data, user, message){
-    console.log('@@@@@@@@@@@@@@@@@@@')
     console.log(data)
     var codata = data;
-    console.log('place case~~~~~~~~~~~~~~~~~~~~')
     var args = arguments;
     co(function* (){
-        console.log('in co~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         var result = yield cancelOrder(user, message);
-        console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
-            console.log('000000000')
-            console.log(codata)
             try{
                 var data = yield fillFormAsync(codata.step, args)
                 if(allDone(data)){
@@ -53,7 +47,7 @@ module.exports = function(data, user, message){
     })
 };
 function allDone(data){
-    return data.step === Object.keys(step).length;
+    return data.step > Object.keys(step).length;
 }
 function* createCaseToMango(data, user){
     try{
@@ -64,7 +58,6 @@ function* createCaseToMango(data, user){
     }
 }
 function* cancelOrder(user, message){
-    console.log('test cancelOrder------------')
     if(command.commandType(message) && command.commandType(message) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '订单已取消');
@@ -73,7 +66,6 @@ function* cancelOrder(user, message){
     return false;
 }
 function fillForm(type, args, callback){
-    console.log('????????????????????????????');
     return step[type]['fn']([].concat.call(args, [callback]));
 }
 var fillFormAsync = Promise.promisify(fillForm)
@@ -83,10 +75,6 @@ function stepFnGenerator(type){
         var user = arguments[0][0][1];
         var message= arguments[0][0][2];
         var callback = arguments[0][1]
-        console.log('¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥¥')
-        console.log(data)
-        console.log(user)
-        console.log(message)
         data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
