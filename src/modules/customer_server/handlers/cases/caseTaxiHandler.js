@@ -91,12 +91,10 @@ function stepFnGenerator(type){
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(pc){
-                console.log('******************************');
-                console.log(pc)
-            if(step && step[pc.step -1].res){
-                wechatApi.sendTextAsync(user.wx_openid, step[pc.step -1].res, function(){
+            if(step && step[data.step -1].res){
+                wechatApi.sendTextAsync(user.wx_openid, step[data.step -1].res, function(){
                     console.log('step tips');
-                    callback(null, pc);
+                    callback(null, data);
                 })
             };
         })
