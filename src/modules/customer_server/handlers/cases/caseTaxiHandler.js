@@ -80,14 +80,16 @@ var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
     return function(){
         console.log('******************************');
-        var data = {};
-        var callback = [].slice.call(arguments, -1);
-        data[type] = arguments.message.Content;
+        var data = arguments[0];
+        var user = arguments[1];
+        var message= arguments[2];
+        var callback = [].slice.call(arguments, -1)[0];
+        data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(data){
-            if(step && step[arguments.data.step -1].res){
-                wechatApi.sendTextAsync(user.wx_openid, step[arguments.data.step -1].res, function(){
+            if(step && step[data.step -1].res){
+                wechatApi.sendTextAsync(user.wx_openid, step[data.step -1].res, function(){
                     console.log('step tips');
                     callback(null, data);
                 })
