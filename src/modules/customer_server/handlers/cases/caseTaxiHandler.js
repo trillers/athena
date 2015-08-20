@@ -34,6 +34,7 @@ module.exports = function(data, user, message){
         console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
             console.log('000000000')
+            console.log(data)
             try{
                 var data = yield fillFormAsync(data.step, args)
                 if(allDone(data)){

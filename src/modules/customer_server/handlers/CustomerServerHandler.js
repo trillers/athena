@@ -20,6 +20,8 @@ var handle = function(user, message){
     .then(function(data){
     //different biz logic
         if(data){
+            console.log('000000000000111111')
+            console.log(data)
             caseType[data.type](data, user, message);
             return Promise.reject(new Error('client Server is handling Case, so break fn Chain'));
         }
