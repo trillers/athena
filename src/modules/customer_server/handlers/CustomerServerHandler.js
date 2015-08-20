@@ -10,7 +10,7 @@ var command = require('./commands');
 var wechatApi = require('../../wechat/common/api').api;
 
 var caseType = {
-    'tx':caseTaxiHandler,
+    'ct':caseTaxiHandler,
     'co':caseCoffeeHandler
 }
 var handle = function(user, message){
