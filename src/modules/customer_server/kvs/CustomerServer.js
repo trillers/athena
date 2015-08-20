@@ -269,6 +269,9 @@ var CustomerServer = {
                 'Succeed to load conversation queue ');
             if(result.length > 0){
                 result.map(function(item){
+                    console.log('++++++++');
+                    console.log(item);
+                    console.log(JSON.parse(item));
                     return JSON.parse(item);
                 });
             }
