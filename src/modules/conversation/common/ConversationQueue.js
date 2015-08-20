@@ -119,6 +119,8 @@ ConversationQueue.prototype.enqueue = function(conversation, callback){
                 .catch(function(err){
                     return callback && callback(err, null);
                 })
+        }else{
+            return callback && callback(null, null);
         }
     })
 }

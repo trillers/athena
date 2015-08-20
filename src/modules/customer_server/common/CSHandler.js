@@ -45,11 +45,10 @@ function sendHistoryMsgs(conversation, callback){
     })
     .then(function(){
         var promiseArr = [];
-        msgs.forEach(function(item){
-            console.log("`````````````````````````````");
-            console.log(MsgContentType.valueNames(item.contentType));
+        for(var i=0,len=msgs.length;i<len;i++){
+            var item = msgs[i];
             promiseArr.push(wechatApi['send' + _firstCharUpper(MsgContentType.valueNames(item.contentType)) + 'Async'](conversation.csId, item.content))
-        })
+        }
         Promise.all(promiseArr).then(function(){
             console.log('Succeed to send history message')
             callback(null, null)
