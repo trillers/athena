@@ -84,7 +84,8 @@ function stepFnGenerator(type){
         var user = arguments[1];
         var message= arguments[2];
         var callback = [].slice.call(arguments, -1)[0];
-        console.log(message)
+        console.log(arguments)
+        console.log(arguments[0])
         data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
