@@ -57,10 +57,13 @@ function* cancelOrder(user, message){
     return false;
 }
 function fillForm(type, args, callback){
+    console.log('---------------------------');
     return step[type]([].concat.call(args, callback));
 }
 function stepFnGenerator(type){
     return function(){
+        console.log('******************************');
+        console.log(arguments)
         var callback = [].slice.call(arguments, -1);
         data[type] = arguments.message.Content;
         data['step'] += 1;
@@ -74,7 +77,8 @@ function stepFnGenerator(type){
             };
         })
         .catch(function(err){
-            throw new Error('case handling error occur.');
+            console.log(err);
+            callback(err, null);
         })
     }
 }
