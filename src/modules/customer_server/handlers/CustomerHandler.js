@@ -40,6 +40,7 @@ var handle = function(user, message){
         })
         .then(function(conversation){
             console.log(conversation);
+            console.log(message);
             var msg = {
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
