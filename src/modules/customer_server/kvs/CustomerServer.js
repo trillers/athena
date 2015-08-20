@@ -268,10 +268,7 @@ var CustomerServer = {
                 'Fail to load conversation queue : ' + err,
                 'Succeed to load conversation queue ');
             if(result.length > 0){
-                result.map(function(item){
-                    console.log('++++++++');
-                    console.log(item);
-                    console.log(JSON.parse(item));
+                result = result.map(function(item){
                     return JSON.parse(item);
                 });
             }
