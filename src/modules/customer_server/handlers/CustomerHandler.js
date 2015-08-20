@@ -36,7 +36,7 @@ var handle = function(user, message){
                         break;
                     case 'video':
                         co(function* (){
-                            yield wechatApi.sendVoiceAsync(customer, message.MediaId, message.ThumbMediaId);
+                            yield wechatApi.sendVideoAsync(customer, message.MediaId, message.ThumbMediaId);
                         })
                         break;
                 }
