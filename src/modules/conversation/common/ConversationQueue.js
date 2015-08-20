@@ -76,7 +76,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         return CustomerServerHandler.sendHistoryMsgsAsync(doc)
     })
     .then(function(){
-        return CustomerServerHandler.sendCustomerProfileAsync(result.initiator);
+        return CustomerServerHandler.sendCustomerProfileAsync(result);
     })
     .then(function(){
         return callback(null, result)

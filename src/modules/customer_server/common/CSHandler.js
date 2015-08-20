@@ -13,17 +13,20 @@ CSHandler.prototype.closeConversation = function(){
 }
 CSHandler.prototype.sendCustomerProfileAsync = Promise.promisify(sendCustomerProfile);
 CSHandler.prototype.sendHistoryMsgsAsync = Promise.promisify(sendHistoryMsgs);
-function sendCustomerProfile(customerId, callback){
+function sendCustomerProfile(conversation, callback){
     var userdoc;
     var params = {
         conditions: {
-            wx_openid: customerId
+            wx_openid: conversation.initiator
         }
     }
     userService.filterAsync(params)
         .then(function(user){
-            userdoc = _.pick(user);
-            return wechatApi.sendTextAsync(conversation.csId, item.content)
+            userdoc = _.pick(user, 'nickName', 'phone');
+            var res = '客户信息——————————————\n'+
+                      '客户昵称：'+ userdoc.nickName + '\n' +
+                      '手机号码：'+ userdoc.phone;
+            return wechatApi.sendTextAsync(conversation.csId, res)
         })
         .then(function(){
             callback(null, userdoc);
