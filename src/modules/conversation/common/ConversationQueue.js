@@ -47,6 +47,11 @@ ConversationQueue.prototype.init = function(){
             })
 
     });
+    this.on('csOnline', function(data){
+        me.nextItem(function(err, doc){
+            console.log('dispatch ok');
+        })
+    })
 }
 ConversationQueue.prototype.nextItem = function(callback){
     var me = this;
