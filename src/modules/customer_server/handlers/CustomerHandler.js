@@ -45,7 +45,7 @@ var handle = function(user, message){
                 content: message.Content,
                 channel: conversation._id
             }
-            return messageService.create(msg)
+            return messageService.createAsync(msg)
         })
 }
 function _fetchConversation(user, callback){

@@ -2,7 +2,7 @@ var cskv = require('../../customer_server/kvs/CustomerServer');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
-var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
+//var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
 function ConversationQueue(){
     EventEmitter.call(this);
     this.init();
@@ -81,13 +81,6 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         conversation.stt = 'hd';
         conversation.csId = csId;
         return cskv.saveCSSByIdAsync(conversation.initiator, csId, conversation)
-    })
-    .then(function(doc){
-        result = doc;
-        return CustomerServerHandler.sendHistoryMsgsAsync(doc)
-    })
-    .then(function(){
-        return CustomerServerHandler.sendCustomerProfileAsync(result);
     })
     .then(function(){
         return callback(null, result)
