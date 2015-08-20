@@ -4,7 +4,6 @@ var util = require('util');
 var ConversationService = require('../services/ConversationService');
 var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
 function ConversationQueue(){
-    this.fuck = 'you';
     EventEmitter.call(this);
     this.init();
 }
@@ -126,4 +125,4 @@ ConversationQueue.prototype.dequeue = function(callback){
             return callback(err, null);
         })
 }
-module.exports = new ConversationQueue();
+module.exports = {fuck: 'you'};
