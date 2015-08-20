@@ -312,7 +312,7 @@ var CustomerServer = {
     },
 
     loadPlaceCase: function(csOpenId, callback){
-        var key = getPcCSSetKey(csOpenId);
+        var key = getPlaceCaseKey(csOpenId);
         redis.get(key, function(err, result){
             cbUtil.logCallback(
                 err,
@@ -323,7 +323,7 @@ var CustomerServer = {
     },
 
     savePlaceCase: function(csOpenId, pc, callback){
-        var key = getPcCSSetKey(csOpenId);
+        var key = getPlaceCaseKey(csOpenId);
         redis.set(key, JSON.stringify(pc), function(err, result){
             cbUtil.logCallback(
                 err,
@@ -334,7 +334,7 @@ var CustomerServer = {
     },
 
     delPlaceCase: function(csOpenId, callback){
-        var key = getPcCSSetKey(csOpenId);
+        var key = getPlaceCaseKey(csOpenId);
         redis.del(key, function(err, result){
             cbUtil.logCallback(
                 err,
