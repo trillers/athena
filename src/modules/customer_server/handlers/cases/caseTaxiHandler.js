@@ -26,6 +26,9 @@ var step = {
     }
 };
 module.exports = function(data, user, message){
+    console.log('@@@@@@@@@@@@@@@@@@@')
+    console.log(data)
+    var codata = data;
     console.log('place case~~~~~~~~~~~~~~~~~~~~')
     var args = arguments;
     co(function* (){
@@ -34,9 +37,9 @@ module.exports = function(data, user, message){
         console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
             console.log('000000000')
-            console.log(data)
+            console.log(codata)
             try{
-                var data = yield fillFormAsync(data.step, args)
+                var data = yield fillFormAsync(codata.step, args)
                 if(allDone(data)){
                     return yield createCaseToMango(data, user);
                 };
