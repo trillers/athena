@@ -57,7 +57,9 @@ function _fetchConversation(user, callback){
             return cskv.loadConQueueAsync();
         })
         .then(function(conQueue){
+            console.log(conQueue);
             conQueue.forEach(function(item){
+                console.log(item.initiator == user.wx_openid);
                 if(item.initiator == user.wx_openid){
                     return callback(null, item);
                 }
