@@ -57,13 +57,14 @@ function _fetchConversation(user, callback){
             return cskv.loadConQueueAsync();
         })
         .then(function(conQueue){
-            console.log(conQueue);
+            var con = null;
             conQueue.forEach(function(item){
                 console.log(item.initiator == user.wx_openid);
                 if(item.initiator == user.wx_openid){
-                    return callback(null, item);
+                    con = item;
                 }
             });
+            if(con) return callback(null, con);
             var conversation = {
                 initiator: user.wx_openid,
                 createTime: new Date()
