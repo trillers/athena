@@ -4,6 +4,7 @@ var callTaxiCommand = require('./callTaxiCommand');
 var closeConvCommand = require('./closeConvCommand');
 
 var commandSet = {
+    rollback: 'q',
     quit: 'cc',
     online: 'ol',
     offline: 'of',

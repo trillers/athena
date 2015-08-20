@@ -26,15 +26,15 @@ var handle = function(user, message){
         return;
     })
     .then(function(){
-            var commandType = command.commandType(message);
-            if(commandType) {
-                var executeFn = command.commandHandler(commandType);
-                executeFn(user, message, function(err, data){
-                    console.log(commandType + 'command finish');
-                });
-                return Promise.reject(new Error('this is a cmd,so break fn Chain'));
-            }
-            return;
+        var commandType = command.commandType(message);
+        if(commandType) {
+            var executeFn = command.commandHandler(commandType);
+            executeFn(user, message, function(err, data){
+                console.log(commandType + 'command finish');
+            });
+            return Promise.reject(new Error('this is a cmd,so break fn Chain'));
+        }
+        return;
     })
     .then(function(){
         return cskv.loadCSSByIdAsync(user.wx_openid)
