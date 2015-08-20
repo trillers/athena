@@ -69,7 +69,11 @@ function* cancelOrder(user, message){
     return false;
 }
 function fillForm(type, args, callback){
-    return step[type]['fn']([].concat.call(args, [callback]));
+    if(step[type]['fn']){
+        return step[type]['fn']([].concat.call(args, [callback]));
+    }else{
+        return callback(null, args[0][0])
+    }
 }
 var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
