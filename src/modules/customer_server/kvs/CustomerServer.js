@@ -329,7 +329,7 @@ var CustomerServer = {
                 err,
                 'Fail to save wc customer server place case by csId: ' + csOpenId + ': ' + err,
                 'Succeed to save wc customer server place case by csId: ' + csOpenId);
-            cbUtil.handleOk(callback, err, result);
+            cbUtil.handleOk(callback, err, JSON.parse(result));
         });
     },
 
