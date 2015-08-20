@@ -74,8 +74,10 @@ function _fetchConversation(user, callback){
             conversationService.createAsync(conversation)
                 .then(function(conversation){
                     console.log('created conversation');
-                    conversationQueue.enqueue(conversation);
-                    return callback(null, conversation)
+                    conversationQueue.enqueue(conversation, function(){
+                         return callback(null, conversation)
+                    });
+
                 });
         })
         .catch(function(err){
