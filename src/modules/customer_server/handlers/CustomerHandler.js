@@ -6,6 +6,7 @@ var conversationQueue = require('../../conversation/common/ConversationQueue');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
 var wechatApi = require('../../wechat/common/api').api;
+var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent')
 var Promise = require('bluebird');
 var co = require('co');
 
@@ -42,8 +43,8 @@ var handle = function(user, message){
             var msg = {
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
-                contentType: message.MsgType,
-                content: message.Content,
+                contentType: MsgContentType.names(message.MsgType),
+                content: message.Content || message.MediaId,
                 channel: conversation._id
             }
             return messageService.createAsync(msg)
