@@ -35,7 +35,7 @@ ConversationQueue.prototype.init = function(){
                 var conversation;
                 cskv.pushWcCSSetAsync(data.csId)
                     .then(function(){
-                        return cskv.loadCSSById(data.csId)
+                        return cskv.loadCSSByIdAsync(data.csId)
                     })
                     .then(function(session){
                         conversation = session;
