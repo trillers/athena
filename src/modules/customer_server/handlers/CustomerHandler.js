@@ -11,6 +11,8 @@ var co = require('co');
 
 var handle = function(user, message){
     console.log('ru handle start');
+    console.log('queue----------------')
+    console.log(conversationQueue);
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){

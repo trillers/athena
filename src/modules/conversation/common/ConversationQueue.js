@@ -54,6 +54,10 @@ ConversationQueue.prototype.init = function(){
                 })
             })
         })
+        .catch(function(err){
+            console.log('init err occur ====================')
+            console.log(err)
+        })
 }
 ConversationQueue.prototype.nextItem = function(callback){
     var me = this;
@@ -89,6 +93,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         return callback(null, result)
     })
     .catch(function(e){
+        console.log(e);
         return callback(e, null)
     })
 }
