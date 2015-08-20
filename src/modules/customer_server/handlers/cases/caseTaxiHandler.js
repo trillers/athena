@@ -25,9 +25,12 @@ var step = {
     }
 };
 module.exports = function(data, user, message){
+    console.log('place case~~~~~~~~~~~~~~~~~~~~')
     var args = arguments;
     co(function* (){
+        console.log('in co~~~~~~~~~~~~~~~~~~~~~~~~~~~')
         var result = yield cancelOrder(user, message);
+        console.log('result~~~~~~~~~~~~~~~~~~~~~' + result)
         if(!result){
             var data = yield fillFormThunk(data.step, args);
             if(allDone(data)){
@@ -49,6 +52,7 @@ function* createCaseToMango(data, user){
     }
 }
 function* cancelOrder(user, message){
+    console.log('test cancelOrder------------')
     if(command.commandType(message) && command.commandType(message) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '订单已取消');
