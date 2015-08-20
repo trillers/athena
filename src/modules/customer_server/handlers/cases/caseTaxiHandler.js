@@ -30,19 +30,19 @@ module.exports = function(data, user, message){
     var args = arguments;
     co(function* (){
         var result = yield cancelOrder(user, message);
-        if(!result){
-            try{
+        if(!result) {
+            try {
                 var executedData = yield fillFormAsync(codata.step, args)
-                if(allDone(executedData)){
+                if (allDone(executedData)) {
                     return yield createCaseToMango(executedData, user);
-                };
-            }catch(e){
+                }
+                ;
+            } catch (e) {
                 console.log('Error Occur------------------')
                 console.log(e)
             }
-        }else{
-            return;
         }
+        return;
     })
 };
 function allDone(data){
