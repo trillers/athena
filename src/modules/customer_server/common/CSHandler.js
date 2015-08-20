@@ -36,6 +36,7 @@ function sendCustomerProfile(conversation, callback){
         })
 }
 function sendHistoryMsgs(conversation, callback){
+    var msgs = []
     var params = {
         conditions: {
             channel: conversation._id
@@ -43,11 +44,12 @@ function sendHistoryMsgs(conversation, callback){
     }
     messageService.filterAsync(params)
     .then(function(docs){
+        msgs = docs;
         return wechatApi.sendTextAsync(conversation.csId, '您已连接新客户====================')
     })
     .then(function(){
         var promiseArr = [];
-        docs.forEach(function(item){
+        msgs.forEach(function(item){
             promiseArr.push(wechatApi['send' + _firstCharUpper(item.contentType) + 'Async'](conversation.csId, item.content))
         })
         Promise.all(promiseArr).then(function(){
