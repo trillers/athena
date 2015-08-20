@@ -47,6 +47,10 @@ var handle = function(user, message){
             }
             return messageService.createAsync(msg)
         })
+        .catch(function(e){
+            console.log('Failed to Fetch conversation')
+            console.log(e)
+        })
 }
 function _fetchConversation(user, callback){
     return cskv.loadCSSByIdAsync(user.wx_openid)
