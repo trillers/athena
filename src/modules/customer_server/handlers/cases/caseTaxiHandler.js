@@ -26,16 +26,15 @@ var step = {
     }
 };
 module.exports = function(data, user, message){
-    console.log(data)
     var codata = data;
     var args = arguments;
     co(function* (){
         var result = yield cancelOrder(user, message);
         if(!result){
             try{
-                var data = yield fillFormAsync(codata.step, args)
-                if(allDone(data)){
-                    return yield createCaseToMango(data, user);
+                var executedData = yield fillFormAsync(codata.step, args)
+                if(allDone(executedData)){
+                    return yield createCaseToMango(executedData, user);
                 };
             }catch(e){
                 console.log('Error Occur------------------')
@@ -47,9 +46,6 @@ module.exports = function(data, user, message){
     })
 };
 function allDone(data){
-    console.log('00000000000000000')
-    console.log(data.step)
-    console.log(Object.keys(step).length)
     return data.step === Object.keys(step).length + 1;
 }
 function* createCaseToMango(data, user){
