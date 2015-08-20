@@ -2,6 +2,7 @@ var cskv = require('../../customer_server/kvs/CustomerServer');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
+var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
 function ConversationQueue(){
     EventEmitter.call(this);
     this.init();
@@ -61,6 +62,7 @@ ConversationQueue.prototype.nextItem = function(callback){
 }
 ConversationQueue.prototype.dispatch = function(conversation, callback){
     console.log('dispath begin=============================================')
+    var result;
     cskv.popWcCSSetAsync().then(function(csId){
         if(!csId){
             return Promise.reject(new Error('workers all busy'));
@@ -70,7 +72,14 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         return cskv.saveCSSByIdAsync(conversation.initiator, csId, conversation)
     })
     .then(function(doc){
-        return callback(null, doc)
+        result = doc;
+        return CustomerServerHandler.sendHistoryMsgsAsync(doc)
+    })
+    .then(function(){
+        return CustomerServerHandler.sendCustomerProfileAsync(result.initiator);
+    })
+    .then(function(){
+        return callback(null, result)
     })
     .catch(function(e){
         return callback(e, null)

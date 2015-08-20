@@ -46,7 +46,8 @@ var handle = function(user, message){
                 from: user.wx_openid,
                 to: customer,
                 contentType: MsgContentType.names(message.MsgType),
-                content: message.Content
+                content: message.Content || message.MediaId,
+                channel: data._id
             }
             co(function* (){
                 yield MessageService.createAsync(msg);

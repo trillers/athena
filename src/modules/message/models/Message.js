@@ -11,7 +11,7 @@ var schema = DomainBuilder
     .withProperties({
         from: {type: String, ref: 'User', required: true},
         to: {type: String, ref: 'User'},
-        //channel: {type: String, require: true},
+        channel: {type: String, require: true},
         contentType: {type: String,enum: MsgContentType.valueList(), default:  MsgContentType.text.value()},
         content: {type: String}  //mediaId
     })

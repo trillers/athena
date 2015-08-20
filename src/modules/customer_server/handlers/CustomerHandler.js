@@ -40,7 +40,8 @@ var handle = function(user, message){
                 from: user.wx_openid,
                 to: conversation && conversation.csId || '',
                 contentType: message.MsgType,
-                content: message.Content
+                content: message.Content,
+                channel: conversation._id
             }
             return messageService.create(msg)
         })
