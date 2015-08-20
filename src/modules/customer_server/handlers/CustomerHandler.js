@@ -53,6 +53,15 @@ function _fetchConversation(user, callback){
                 console.log('have css');
                 return callback(null, conversation);
             }
+
+            return cskv.loadConQueueAsync();
+        })
+        .then(function(conQueue){
+            conQueue.forEach(function(item){
+                if(item.initiator == user.wx_openid){
+                    return callback(null, item);
+                }
+            });
             var conversation = {
                 initiator: user.wx_openid,
                 createTime: new Date()
@@ -62,7 +71,7 @@ function _fetchConversation(user, callback){
                     console.log('created conversation');
                     conversationQueue.enqueue(conversation);
                     return callback(null, conversation)
-                })
+                });
         })
         .catch(function(err){
             return callback(err, null);

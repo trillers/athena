@@ -50,6 +50,7 @@ module.exports = function() {
             var user = yield ensureSignin(message, self, next);
             console.log('+++++++++++++++++');
             console.log(user);
+            console.log(message);
             WechatOperationService.logActionAsync(message);
             if(message.MsgType == 'event'){
                 switch(message.Event){
