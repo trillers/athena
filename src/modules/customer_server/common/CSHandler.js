@@ -45,7 +45,7 @@ function sendHistoryMsgs(conversation, callback){
     messageService.filterAsync(params)
     .then(function(docs){
         msgs = docs;
-        return wechatApi.sendTextAsync(conversation.csId, '您已连接新客户====================')
+        return wechatApi.sendTextAsync(conversation.csId, '您已连接新客户=========')
     })
     .then(function(){
         var promiseArr = [];

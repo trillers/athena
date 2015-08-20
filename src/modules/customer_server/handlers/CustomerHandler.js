@@ -46,7 +46,7 @@ var handle = function(user, message){
                 content: message.Content,
                 channel: conversation._id
             }
-            return messageService.create(msg)
+            return messageService.createAsync(msg)
         })
 }
 function _fetchConversation(user, callback){
@@ -75,8 +75,10 @@ function _fetchConversation(user, callback){
             conversationService.createAsync(conversation)
                 .then(function(conversation){
                     console.log('created conversation');
-                    conversationQueue.enqueue(conversation);
-                    return callback(null, conversation)
+                    conversationQueue.enqueue(conversation, function(){
+                         return callback(null, conversation)
+                    });
+
                 });
         })
         .catch(function(err){
