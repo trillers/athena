@@ -21,6 +21,8 @@ registry
     .addChild('text','tx', '文本')
     .addChild('voice','vo', '语音')
     .addChild('image','pi', '图片')
+    .addChild('video','vi', '视频')
+    .addChild('shortvideo','sv', '小视频')
     .up().item('Party', 'Party', '方')
     .addChild('Org','og', '机构')
     .addChild('Person','pr', '个人')
