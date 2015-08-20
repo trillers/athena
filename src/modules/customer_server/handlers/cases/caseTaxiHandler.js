@@ -47,7 +47,9 @@ module.exports = function(data, user, message){
     })
 };
 function allDone(data){
+    console.log('00000000000000000')
     console.log(data.step)
+    console.log(Object.keys(step).length)
     return data.step >= Object.keys(step).length;
 }
 function* createCaseToMango(data, user){
