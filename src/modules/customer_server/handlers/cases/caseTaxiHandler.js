@@ -79,7 +79,6 @@ function fillForm(type, args, callback){
 var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
     return function(){
-        console.log('******************************');
         var data = arguments[0][0][0];
         var user = arguments[0][0][1];
         var message= arguments[0][0][2];
@@ -91,11 +90,13 @@ function stepFnGenerator(type){
         data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
-        .then(function(data){
-            if(step && step[data.step -1].res){
-                wechatApi.sendTextAsync(user.wx_openid, step[data.step -1].res, function(){
+        .then(function(pc){
+                console.log('******************************');
+                console.log(pc)
+            if(step && step[pc.step -1].res){
+                wechatApi.sendTextAsync(user.wx_openid, step[pc.step -1].res, function(){
                     console.log('step tips');
-                    callback(null, data);
+                    callback(null, pc);
                 })
             };
         })
