@@ -75,11 +75,7 @@ function fillForm(type, args, callback){
 }
 var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
-    return function(){
-        var data = arguments[0][0];
-        var user = arguments[0][1];
-        var message= arguments[0][2];
-        var callback = arguments[0][3];
+    return function(data, user, message, callback){
         data[type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)

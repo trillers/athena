@@ -12,7 +12,7 @@ module.exports = function(user, message, callback){
             yield wechatApi.sendTextAsync(user.wx_openid, '当前没有会话');
             return callback(null, null);
         }
-        var bindOrNot = yield common.validateUserBindAsync(user);
+        var bindOrNot = yield common.validateUserBindAsync(conversation.initiator);
         if(bindOrNot){
             yield wechatApi.sendTextAsync(user.wx_openid, '用户已绑定');
             return callback(null, null);
