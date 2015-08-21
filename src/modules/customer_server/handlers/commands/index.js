@@ -14,6 +14,7 @@ var commandSet = {
 }
 
 var handlerSet = {
+    'qu': "nothing",
     'bu': bindUserCommand,
     'ol': onlineCommand,
     'of': offlineCommand,
