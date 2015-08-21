@@ -1,12 +1,12 @@
 var Promise = require('bluebird');
 var userBizService = require('../../../user/services/UserBizService');
-function validateUserBind(openid, callback){
-    return userBizService.loadAsync(openid)
+function validateUserBind(user, callback){
+    userBizService.loadAsync(user.wx_openid)
     .then(function(userBiz){
-        if(userBiz && userBiz.phone){
+        if(userBiz.phone){
             return callback(null, true);
         }
         return callback(null, false);
     })
 }
-module.exports.validateUserBindAsync = validateUserBind;
+module.exports.validateUserBindAsync = Promise.promisify(validateUserBind);
