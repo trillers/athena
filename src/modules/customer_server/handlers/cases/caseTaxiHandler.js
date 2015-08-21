@@ -26,6 +26,9 @@ var step = {
     }
 };
 module.exports = function(data, user, message){
+    console.log('-----------------------')
+    console.log(message);
+
     var codata = data;
     var args = arguments;
     co(function* (){
