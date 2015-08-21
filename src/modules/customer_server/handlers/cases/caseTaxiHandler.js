@@ -52,10 +52,10 @@ function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
         yield wechatApi.sendTextAsync(user.wx_openid, '下单成功');
-        yield cskv.delPlaceCase(user.wx_openid);
+        yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '下单失败，请联系管理员');
-        yield cskv.delPlaceCase(user.wx_openid);
+        yield cskv.delPlaceCaseAsync(user.wx_openid);
     }
 }
 function* cancelOrder(user, message){

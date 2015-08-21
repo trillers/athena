@@ -2,8 +2,10 @@ var onlineCommand = require('./onlineCommand');
 var offlineCommand = require('./offlineCommand');
 var callTaxiCommand = require('./callTaxiCommand');
 var closeConvCommand = require('./closeConvCommand');
+var bindUserCommand = require('./bindUserCommand')
 
 var commandSet = {
+    bindUser: 'bu',
     rollback: 'q',
     quit: 'cc',
     online: 'ol',
@@ -12,6 +14,7 @@ var commandSet = {
 }
 
 var handlerSet = {
+    'bu': bindUserCommand,
     'ol': onlineCommand,
     'of': offlineCommand,
     'ct': callTaxiCommand,
