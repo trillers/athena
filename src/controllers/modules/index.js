@@ -1,5 +1,4 @@
 var router = require('koa-router');
-
 module.exports = function(app){
     //spa module
     var spa_router = new router();
