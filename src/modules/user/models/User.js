@@ -13,9 +13,6 @@ var schema = DomainBuilder
     .withProperties({
         token: {type: String}
         , stt: {type: String, enum: UserState.values(), required: true}
-
-        , nickName: {type: String, default: '匿名'}
-        , phone: {type: String}
         , role: {type: String, enum: UserRole.valueList(), default: UserRole.RegularUser.value()}
         //, tag: [{type: String, ref: 'Tag'}]
 

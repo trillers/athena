@@ -14,7 +14,9 @@ var schema = DomainBuilder
             content: {type: String, required: true},
             count: {type: Number, required: true, default: 0}
         }]
-        , role: {type: String, enum: UserRole.valueList(), default: UserRole.RegularUser.value()}
+        , home: {type: String}
+        , company: {type: String}
+        , wx_openid: {type: String, required: true}
         //, tag: [{type: String, ref: 'Tag'}]
     })
     .build();

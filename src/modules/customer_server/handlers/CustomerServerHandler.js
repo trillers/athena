@@ -18,7 +18,7 @@ var handle = function(user, message){
     .then(function(data){
         if(data){
             caseType[data.type](data, user, message);
-            return Promise.resolve();
+            return Promise.reject(new Error('isCase'));
         }
         return;
     })
@@ -29,7 +29,7 @@ var handle = function(user, message){
             executeFn(user, message, function(err, data){
                 console.log(commandType + 'command finish');
             });
-            return Promise.resolve();
+            return Promise.reject(new Error('isCmd'));
         }
         return;
     })
@@ -65,7 +65,7 @@ var handle = function(user, message){
         }
     })
     .catch(function(err){
-        console.log(err);
+        if(err && err.message != 'isCase' && err.message != 'isCmd') console.log(err);
     })
 }
 
