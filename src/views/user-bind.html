@@ -58,10 +58,7 @@
                     alert('验证失败');
                     return;
                 }
-                alert('验证成功');
-                window.opener=null;
-                window.open('','_self');
-                window.close();
+                WeixinJSBridge.invoke('closeWindow',{},function(res){});
             });
         }
         function RemoteGetIC(phoneStr, callback){
