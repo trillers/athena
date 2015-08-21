@@ -17,7 +17,7 @@ module.exports = function(user, message, callback){
             yield wechatApi.sendTextAsync(user.wx_openid, '用户已绑定');
             return callback(null, null);
         }
-        var res = '请先绑定您的手机，我们才能联系你哦\n<a href="/p/userbind">点击绑定手机</a>'
+        var res = '请先绑定您的手机，我们才能联系你哦\n<a href="http://ci.www.wenode.org/p/userbind">点击绑定手机</a>'
         yield wechatApi.sendTextAsync(conversation.initiator, res);
         yield wechatApi.sendTextAsync(user.wx_openid, '绑定请求已发出');
         return callback(null, null);
