@@ -5,6 +5,7 @@ var closeConvCommand = require('./closeConvCommand');
 var bindUserCommand = require('./bindUserCommand')
 
 var commandSet = {
+    viewState: 'vs',
     bindUser: 'bu',
     rollback: 'qu',
     quit: 'cc',
@@ -14,6 +15,7 @@ var commandSet = {
 }
 
 var handlerSet = {
+    'vs': viewStateCommand,
     'qu': "nothing",
     'bu': bindUserCommand,
     'ol': onlineCommand,

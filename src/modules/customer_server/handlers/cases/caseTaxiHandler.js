@@ -15,20 +15,17 @@ var co = require('co')
 var step = {
     1: {
         fn: fillUseTime,
-        res: '请输入出发地'
+        res: '[系统]:请输入出发地'
     },
     2: {
         fn: fillOrigin,
-        res: '请输入目的地'
+        res: '[系统]:请输入目的地'
     },
     3: {
         fn: fillDestination
     }
 };
 module.exports = function(data, user, message){
-    console.log('-----------------------')
-    console.log(message);
-
     var codata = data;
     var args = arguments;
     co(function* (){
@@ -62,9 +59,6 @@ function* createCaseToMango(data, user){
     }
 }
 function* cancelOrder(user, message){
-    console.log("---------------------------------")
-    console.log(message.Content)
-    console.log(command.commandType(message))
     if(command.commandType(message) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:订单已取消');
@@ -82,7 +76,6 @@ function fillForm(type, args, callback){
 var fillFormAsync = Promise.promisify(fillForm)
 function stepFnGenerator(type){
     return function(){
-        console.log(arguments)
         var data = arguments[0][0];
         var user = arguments[0][1];
         var message = arguments[0][2];
