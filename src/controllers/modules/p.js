@@ -12,6 +12,7 @@ module.exports=function(router){
         var data = this.request.body;
         var phone = data.phone;
         var ic = data.ic;
+        var user = this.session.user;
         this.status = 200;
         this.body = {result: 'ok'}
         try{

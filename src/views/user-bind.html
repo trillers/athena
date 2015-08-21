@@ -59,6 +59,8 @@
                     return;
                 }
                 alert('验证成功');
+                window.opener=null;
+                window.open('','_self');
                 window.close();
             });
         }
