@@ -21,12 +21,12 @@ Service.load = function (id, callback) {
 Service.loadByOpenid = function (openid, callback) {
     UserBiz.findOne({wx_openid: openid}).lean(true).exec(function (err, doc) {
         if (err) {
-            logger.error('Fail to load userBiz [id=' + id + ']: ' + err);
+            logger.error('Fail to load userBiz [id=' + doc._id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to load  userBiz [id=' + id + ']');
+        logger.debug('Succeed to load  userBiz [id=' + doc._id + ']');
         if (callback) callback(null, doc);
     })
 };
