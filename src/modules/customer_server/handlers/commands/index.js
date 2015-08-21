@@ -6,7 +6,7 @@ var bindUserCommand = require('./bindUserCommand')
 
 var commandSet = {
     bindUser: 'bu',
-    rollback: 'q',
+    rollback: 'qu',
     quit: 'cc',
     online: 'ol',
     offline: 'of',
