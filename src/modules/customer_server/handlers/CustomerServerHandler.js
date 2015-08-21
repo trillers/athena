@@ -61,7 +61,7 @@ var handle = function(user, message){
                 }
             })
         }else{
-            return wechatApi.sendTextAsync(user.wx_openid, '您还没有建立会话');
+            return wechatApi.sendTextAsync(user.wx_openid, '[系统]:您还没有建立会话');
         }
     })
     .catch(function(err){

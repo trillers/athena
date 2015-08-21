@@ -10,12 +10,12 @@ module.exports = function(user, message, callback){
         try{
             var conversation = yield cskv.loadCSSByIdAsync(user.wx_openid);
             if(!conversation){
-                yield wechatApi.sendTextAsync(user.wx_openid, '当前没有会话');
+                yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前没有会话');
                 return callback(null, null);
             }
             var bindOrNot = yield common.validateUserBindAsync(conversation.initiator);
             if(!bindOrNot){
-                yield wechatApi.sendTextAsync(user.wx_openid, '请先绑定用户');
+                yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:请先绑定用户');
                 return callback(null, null);
             }
             var json = {
@@ -27,7 +27,7 @@ module.exports = function(user, message, callback){
             };
             cskv.savePlaceCaseAsync(user.wx_openid, json)
                 .then(function(){
-                    wechatApi.sendText(user.wx_openid, '用车时间是?', function(err, result){
+                    wechatApi.sendText(user.wx_openid, '[系统]:用车时间是?', function(err, result){
                         if(callback) return callback(err, result);
                     });
                 });
