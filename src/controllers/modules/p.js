@@ -14,7 +14,8 @@ module.exports=function(router){
         var ic = data.ic;
         //var user = this.session.user;
         var user = {
-            wx_openid: 'okvXqswFmgRwEV0YrJ-h5YvKhdUk'
+            wx_openid: 'okvXqswFmgRwEV0YrJ-h5YvKhdUk',
+            _id: '1232'
         }
         this.status = 200;
         this.body = {result: 'ok'}
