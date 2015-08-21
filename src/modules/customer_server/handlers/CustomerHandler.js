@@ -17,24 +17,20 @@ var handle = function(user, message){
     _fetchConversationAsync(user)
         .then(function(conversation){
             if(ConversationState.valueNames(conversation.stt) === 'Handing'){
-                var csId = conversation.csId;
-                switch(message.MsgType){
-                    case 'text':
-                        co(function* (){
+                co(function* (){
+                    var csId = conversation.csId;
+                    switch(message.MsgType){
+                        case 'text':
                             yield wechatApi.sendTextAsync(csId, message.Content);
-                        })
-                        break;
-                    case 'image':
-                        co(function* (){
+                            break;
+                        case 'image':
                             yield wechatApi.sendImageAsync(csId, message.MediaId);
-                        })
-                        break;
-                    case 'voice':
-                        co(function* (){
+                            break;
+                        case 'voice':
                             yield wechatApi.sendVoiceAsync(csId, message.MediaId);
-                        })
-                        break;
-                }
+                            break;
+                    }
+                })
             }
             return conversation;
         })

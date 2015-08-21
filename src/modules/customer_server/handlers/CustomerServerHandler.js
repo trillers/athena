@@ -14,16 +14,11 @@ var caseType = {
     'co':caseCoffeeHandler
 }
 var handle = function(user, message){
-    console.log('cs handler start');
-    //placeCase:openid  {type: 2ct, payload:{xxx: 1, yyy: 2}, step:2}
     cskv.loadPlaceCaseAsync(user.wx_openid)
     .then(function(data){
-    //different biz logic
         if(data){
-            console.log('000000000000111111')
-            console.log(data)
             caseType[data.type](data, user, message);
-            return Promise.reject(new Error('client Server is handling Case, so break fn Chain'));
+            return Promise.resolve();
         }
         return;
     })
@@ -34,7 +29,7 @@ var handle = function(user, message){
             executeFn(user, message, function(err, data){
                 console.log(commandType + 'command finish');
             });
-            return Promise.reject(new Error('this is a cmd,so break fn Chain'));
+            return Promise.resolve();
         }
         return;
     })
@@ -55,24 +50,18 @@ var handle = function(user, message){
                 yield MessageService.createAsync(msg);
                 switch(message.MsgType){
                     case 'text':
-                        co(function* (){
-                            yield wechatApi.sendTextAsync(customer, message.Content);
-                        })
+                        yield wechatApi.sendTextAsync(customer, message.Content);
                         break;
                     case 'image':
-                        co(function* (){
-                            yield wechatApi.sendImageAsync(customer, message.MediaId);
-                        })
+                        yield wechatApi.sendImageAsync(customer, message.MediaId);
                         break;
                     case 'voice':
-                        co(function* (){
-                            yield wechatApi.sendVoiceAsync(customer, message.MediaId);
-                        })
+                        yield wechatApi.sendVoiceAsync(customer, message.MediaId);
                         break;
                 }
             })
         }else{
-            return Promise.reject(new Error('the CS hasn,t establish conversation'));
+            return wechatApi.sendTextAsync(user.wx_openid, '您还没有建立会话');
         }
     })
     .catch(function(err){
