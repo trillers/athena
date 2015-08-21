@@ -62,6 +62,9 @@ function* createCaseToMango(data, user){
     }
 }
 function* cancelOrder(user, message){
+    console.log("---------------------------------")
+    console.log(message.Content)
+    console.log(command.commandType(message.Content))
     if(command.commandType(message.Content) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:订单已取消');
