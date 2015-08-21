@@ -31,7 +31,7 @@ module.exports=function(router){
                     }
                     yield userBizService.createAsync(json);
                 }
-                yield wechatApi.sendTextAsync(data.csId, '[系统]:绑定用户成功');
+                yield wechatApi.sendTextAsync(result.csId, '[系统]:绑定用户成功');
             }
         }catch(e){
             console.log(e)
