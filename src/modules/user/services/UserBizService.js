@@ -18,6 +18,19 @@ Service.load = function (id, callback) {
     })
 };
 
+Service.loadByOpenid = function (openid, callback) {
+    UserBiz.findOne({wx_openid: openid}).lean(true).exec(function (err, doc) {
+        if (err) {
+            logger.error('Fail to load userBiz [id=' + id + ']: ' + err);
+            if (callback) callback(err);
+            return;
+        }
+
+        logger.debug('Succeed to load  userBiz [id=' + id + ']');
+        if (callback) callback(null, doc);
+    })
+};
+
 Service.create = function (json, callback) {
     var userBiz = new UserBiz(json);
     userBiz.save(function (err, doc, numberAffected) {
