@@ -1,6 +1,7 @@
 var cskv = require('../../kvs/CustomerServer');
 var wechatApi = require('../../../wechat/common/api').api;
 var common = require('./commonCommand');
+var co = require('co')
 
 module.exports = function(user, message, callback){
     //save to redis
