@@ -1,5 +1,5 @@
 var Promise = require('bluebird');
-var userBizService = require('../../../user/services/userBizService');
+var userBizService = require('../../../user/services/UserBizService');
 function validateUserBind(user, callback){
     return userBizService.loadAsync(user.wx_openid)
     .then(function(userBiz){
