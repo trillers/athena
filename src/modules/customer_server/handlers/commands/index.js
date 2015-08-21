@@ -3,7 +3,7 @@ var offlineCommand = require('./offlineCommand');
 var callTaxiCommand = require('./callTaxiCommand');
 var closeConvCommand = require('./closeConvCommand');
 var bindUserCommand = require('./bindUserCommand')
-
+var viewStateCommand = require('./viewStateCommand')
 var commandSet = {
     viewState: 'vs',
     bindUser: 'bu',
