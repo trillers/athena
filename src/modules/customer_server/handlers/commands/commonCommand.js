@@ -3,7 +3,7 @@ var userBizService = require('../../../user/services/UserBizService');
 function validateUserBind(openid, callback){
     return userBizService.loadAsync(openid)
     .then(function(userBiz){
-        if(userBiz.phone){
+        if(userBiz && userBiz.phone){
             return callback(null, true);
         }
         return callback(null, false);
