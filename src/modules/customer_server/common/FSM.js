@@ -16,7 +16,7 @@ var cmdWorkflow = FSM.create({
         {name: 'rollback', from: 'case', to: 'busy'},
         {name: 'quit', from: 'busy', to: 'free'},
         {name: 'online', from: 'off', to: 'free'},
-        {name: 'offline', from: 'free, busy', to: 'off'},
+        {name: 'offline', from: ['free', 'busy'], to: 'off'},
         {name: 'callTaxi', from: 'busy', to: 'case'}
     ]
 })
