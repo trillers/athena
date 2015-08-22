@@ -16,7 +16,7 @@ CSHandler.prototype.sendCustomerProfileAsync = Promise.promisify(sendCustomerPro
 CSHandler.prototype.sendHistoryMsgsAsync = Promise.promisify(sendHistoryMsgs);
 function sendCustomerProfile(conversation, callback){
     var userdoc;
-    userBizService.loadByOpenid(conversation.initiator)
+    userBizService.loadByOpenidAsync(conversation.initiator)
         .then(function(user){
             userdoc = _.pick(user, 'nickName', 'phone');
             var res = '客户信息——————————————\n'+
