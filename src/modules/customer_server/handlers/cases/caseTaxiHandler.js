@@ -63,6 +63,7 @@ function* cancelOrder(user, message){
     if(command.commandType(message) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:订单已取消');
+        yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
         return true;
     }
     return false;
