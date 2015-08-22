@@ -1,3 +1,4 @@
+var ListenersCombinations = {};
 function FSM() {
     this.instanceMap = {};
 }
@@ -23,57 +24,18 @@ function Workflow(data) {
     this.statMap = {};
     this.curr = null;
     this.previous = null;
+    this.actionList = [];
+    this.changed = false;
+    this.listeners = {};
 }
+var composeActionFrom = _composeActionChannel('from')
+var composeActionTo = _composeActionChannel('to')
 Workflow.prototype.compose = function(data){
-    var me = this;
-    me.data = data;
-    me.curr = data.initial;
+    this.data = data;
+    this.curr = data.initial;
     var actions = data.actions;
-    for(var i=0, len=actions.length; i<len; i++){
-        var currAction = actions[i];
-        var action = me.actionsMap[currAction.name];
-        //build action
-        if(!me.actionsMap[currAction.name]){
-            action = me.actionsMap[currAction.name] = {actionList: [], froms: {}, tos:{}};
-        }
-        action.actionList.push(currAction);
-        if(Array.isArray(currAction.from)){
-            currAction.from.forEach(function(from){
-                if(action.froms.hasOwnProperty(from)){
-                    throw new Error('workflow action property [from] has already exist');
-                }else{
-                    action.froms[from] = from
-                }
-            })
-        }else{
-            action.froms[currAction.from] = currAction.from
-        }
-
-        if(Array.isArray(currAction.to)){
-            currAction.to.forEach(function(to){
-                if(action.tos.hasOwnProperty(to)){
-                    throw new Error('workflow action property [to] has already exist');
-                }else{
-                    action.tos[to] = to
-                }
-            })
-        }else{
-            action.tos[currAction.to] = currAction.to
-        }
-
-        //build state
-        var fromStat = me.statMap[currAction.from];
-        if(!fromStat){
-            fromStat = me.statMap[currAction.from] = {actions: {}}
-        }
-        fromStat.actions[currAction.name] = currAction;
-
-        var toStat = me.statMap[currAction.to];
-        if(!toStat){
-            toStat = me.statMap[currAction.to] = {actions: {}}
-        }
-        toStat.actions[currAction.name] = currAction;
-    }
+    _composeActions(actions, this);
+    _attachListeners(data, this);
     return this;
 }
 Workflow.prototype.is = function (s){
@@ -122,17 +84,94 @@ Workflow.prototype.transition = function(e, stt){
         throw new Error('err Occur [code] can not transform the status');
     }
 }
-Workflow.prototype.init = function (){
+Workflow.prototype.startup = function (){
     var me = this;
-    this.actions.forEach(function(action){
-        me[action.name] = function(){
-            if(me.can(action.name)){
-                this.status = action.to;
-            }else{
-                throw new Error('the current Status can,t execute the action');
-            }
+    this.actionList.forEach(function(action){
+        me[action.name] = function(stt, data){
+            var stt = stt || me.current();
+            var result = me.transition(action.name, stt)
+            if(result === stt) me.changed = true;
+            this.curr = result;
         }
     })
+}
+function _composeActionChannel(type){
+    return function(actionInMap, actionInLoop){
+        if(Array.isArray(actionInLoop[type])){
+            actionInLoop[type].forEach(function(channel){
+                if(actionInMap[type+'s'].hasOwnProperty(channel)){
+                    throw new Error('workflow action property ['+ type +'] has already exist');
+                }else{
+                    actionInMap[type+'s'][channel] = channel
+                }
+            })
+        }else{
+            actionInMap[type+'s'][actionInLoop[type]] = actionInLoop[type]
+        }
+    }
+}
+function _composeActions(actions, me){
+    for(var i=0, len=actions.length; i<len; i++){
+        var currAction = actions[i];
+        var action = me.actionsMap[currAction.name];
+        //build action
+        if(!me.actionsMap[currAction.name]){
+            action = me.actionsMap[currAction.name] = {actionList: [], froms: {}, tos:{}};
+        }
+        action.actionList.push(currAction);
+        composeActionFrom(action, currAction);
+        composeActionTo(action, currAction);
+        //build state
+        var fromStat = me.statMap[currAction.from];
+        if(!fromStat){
+            fromStat = me.statMap[currAction.from] = {actions: {}}
+        }
+        fromStat.actions[currAction.name] = currAction;
+
+        var toStat = me.statMap[currAction.to];
+        if(!toStat){
+            toStat = me.statMap[currAction.to] = {actions: {}}
+        }
+        toStat.actions[currAction.name] = currAction;
+        //collection actionList
+        me.actionList.push(currAction)
+        me.statList = Object.keys(me.statMap);
+    }
+}
+function _composeListenersCombinations(workflow){
+    for(var i=0, len=workflow.actionList.length; i<len; i++){
+        ListenersCombinations['onbefore' + workflow.actionList[i].name] = 'onbefore' + workflow.actionList[i].name
+        ListenersCombinations['onafter' + workflow.actionList[i].name] = 'onafter' + workflow.actionList[i].name
+    }
+    ListenersCombinations['onbeforeevent'] = 'onbeforeevent';
+    ListenersCombinations['onafterevent'] = 'onafterevent';
+    for(var i=0, len=workflow.statList.length; i<len; i++){
+        ListenersCombinations['onleave' + workflow.statList[i]] = 'onleave' + workflow.statList[i]
+        ListenersCombinations['onenter' + workflow.statList[i]] = 'onenter' + workflow.statList[i]
+    }
+    ListenersCombinations['onleavestate'] = 'onleavestate';
+    ListenersCombinations['onenterstate'] = 'onafterstate';
+}
+function _validateListenerType(listenerName, workflow){
+    _composeListenersCombinations(workflow);
+    if(ListenersCombinations[listenerName]){
+        return true;
+    }
+    return false;
+}
+function _attachListeners(options, workflow){
+    var listeners = options.attach;
+    console.log(workflow.listeners)
+    for(var key in listeners){
+        if(!workflow.listeners.hasOwnProperty(key)){
+            if(!_validateListenerType(key, workflow)){
+                throw new Error('the listener in workflow has error');
+            };
+            workflow.listeners[key] = listeners[key];
+        }else{
+            throw new Error('the listener is already exist');
+        }
+    }
 }
 module.exports.FSM = new FSM();
 module.exports.Workflow = Workflow;
