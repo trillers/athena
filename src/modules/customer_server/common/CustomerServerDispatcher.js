@@ -6,9 +6,34 @@ var CustomerServerDispatcher = function(){
     this.handlers = {};
     this.defaultHandler = null;
     this.nullHandler = null;
+    this.redisClient = redis.createClient();
+    this.redisClientInit();
 }
 
 var prototype  = CustomerServerDispatcher.prototype;
+
+prototype.redisClientInit = function(){
+    var self = this;
+    self.redisClient.subscribe('__keyevent@0__:expired');
+    self.redisClient.on('message', self.handleRedisMessage.bind(self));
+}
+
+prototype.handleRedisMessage = function(channel, message){
+    var key = message;
+    var index = key.indexOf(':', key.indexOf(':'));
+    var csId = key.slice(index);
+    cskv.delCSSByIdAsync(csId)
+        .then(function(){
+            return cskv.remWcCSSetAsync(csId);
+        })
+        .then(function(){
+            cskv.saveCSStatusByCSOpenIdAsync(csId, 'of');
+        })
+        .catch(Error, function(err){
+            console.log('reset cs error');
+            console.log(err);
+        });
+}
 
 prototype.register = function(handler){
     var key = handler.type;

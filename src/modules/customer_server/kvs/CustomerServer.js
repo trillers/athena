@@ -67,6 +67,18 @@ var CustomerServer = {
         });
     },
 
+    resetCSStatusTTLByCSId: function(csId, callback){
+        var key = csIdToCSStatusKey(csId);
+        redis.expire(key, 30, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to reset pc customer server ttl by csId ' + csId + ': ' + err,
+                'Succeed to reset pc customer server ttl by csId ' + csId);
+
+            cbUtil.handleAffected(callback, err, 'ok', result);
+        });
+    },
+
     loadCSStatusByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSStatusKey(csOpenId);
         redis.get(key, function(err, result){
@@ -98,6 +110,18 @@ var CustomerServer = {
                 'Succeed to delete wc customer server by status csOpenId ' + csOpenId);
 
             cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    resetCSStatusTTLByCSOpenId: function(csOpenId, callback){
+        var key = csOpenIdToCSStatusKey(csOpenId);
+        redis.expire(key, 30, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
+                'Succeed to reset wc customer server ttl by csOpenId ' + csOpenId);
+
+            cbUtil.handleAffected(callback, err, 'ok', result);
         });
     },
 
