@@ -25,8 +25,9 @@ Service.loadByOpenid = function (openid, callback) {
             if (callback) callback(err);
             return;
         }
-
-        logger.debug('Succeed to load  userBiz [id=' + doc._id + ']');
+        if (doc){
+            logger.debug('Succeed to load  userBiz [id=' + doc._id + ']');
+        }
         if (callback) callback(null, doc);
     })
 };
