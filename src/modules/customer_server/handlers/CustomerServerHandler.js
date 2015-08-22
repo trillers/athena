@@ -35,8 +35,10 @@ var handle = function(user, message){
             if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
                 executeFn(user, message, function(err, data){
                     console.log(commandType + 'command finish');
-                    var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
-                    cskv.saveCSStatusByCSOpenId(user.wx_openid, status, function(){})
+                    if(!err){
+                        var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
+                        cskv.saveCSStatusByCSOpenId(user.wx_openid, status, function(){})
+                    }
                 });
                 return Promise.reject(new Error('isCmd'));
             }else{

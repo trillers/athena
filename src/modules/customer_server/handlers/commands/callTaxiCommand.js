@@ -11,12 +11,12 @@ module.exports = function(user, message, callback){
             var conversation = yield cskv.loadCSSByIdAsync(user.wx_openid);
             if(!conversation){
                 yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前没有会话');
-                return callback(null, null);
+                return callback(new Error('no session'), null);
             }
             var bindOrNot = yield common.validateUserBindAsync(conversation.initiator);
             if(!bindOrNot){
                 yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:请先绑定用户');
-                return callback(null, null);
+                return callback(new Error('user need bind'), null);
             }
             var json = {
                 type: 'ct',
