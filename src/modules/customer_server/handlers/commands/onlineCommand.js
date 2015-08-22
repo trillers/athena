@@ -1,10 +1,7 @@
 var cskv = require('../../kvs/CustomerServer');
 var wechatApi = require('../../../wechat/common/api').api;
 module.exports = function(user, message, callback){
-    cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'ol')
-        .then(function(){
-            return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
-        })
+        cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid)
         .then(function(){
             return cskv.pushWcCSSetAsync(user.wx_openid);
         })

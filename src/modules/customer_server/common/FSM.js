@@ -3,7 +3,7 @@ var Workflow = fsmModule.Workflow;
 var FSM = fsmModule.FSM;
 var stt = {
     'free': 'free',
-    'offline': 'offline',
+    'offline': 'off',
     'busy': 'busy',
     'case': 'case'
 }
@@ -15,9 +15,9 @@ var cmdWorkflow = FSM.create({
         {name: 'bindUser', from: 'busy', to: 'busy'},
         {name: 'rollback', from: 'case', to: 'busy'},
         {name: 'quit', from: 'busy', to: 'free'},
-        {name: 'online', from: 'offline', to: 'free'},
-        {name: 'offline', from: 'free, busy', to: 'offline'},
-        {name: 'callTaxi', from: '', to: 'case'}
+        {name: 'online', from: 'off', to: 'free'},
+        {name: 'offline', from: 'free, busy', to: 'off'},
+        {name: 'callTaxi', from: 'busy', to: 'case'}
     ]
 })
 FSM.registry(cmdWorkflow);
