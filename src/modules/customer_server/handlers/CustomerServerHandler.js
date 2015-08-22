@@ -18,6 +18,7 @@ var handle = function(user, message){
     cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)
     .then(function(st){
         stt = st || 'off';
+        user.status = stt;
         return cskv.loadPlaceCaseAsync(user.wx_openid)
     })
     .then(function(data){
