@@ -75,7 +75,7 @@ var CustomerServer = {
                 'Fail to reset pc customer server ttl by csId ' + csId + ': ' + err,
                 'Succeed to reset pc customer server ttl by csId ' + csId);
 
-            cbUtil.handleAffected(callback, err, 'ok', result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
@@ -121,7 +121,7 @@ var CustomerServer = {
                 'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
                 'Succeed to reset wc customer server ttl by csOpenId ' + csOpenId);
 
-            cbUtil.handleAffected(callback, err, 'ok', result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
