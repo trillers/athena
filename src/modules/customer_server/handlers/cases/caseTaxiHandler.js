@@ -52,6 +52,7 @@ function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
+        yield cskv.saveCSStatusByCSOpenId(user.wx_openid, 'busy');
         yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
