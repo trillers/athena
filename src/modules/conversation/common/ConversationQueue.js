@@ -3,6 +3,8 @@ var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
 var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
+var cmdWorkflow = require('../../customer_server/common/FSM').getWf('cmdWorkflow');
+
 function ConversationQueue(){
     EventEmitter.call(this);
     this.init();
@@ -94,6 +96,9 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     })
     .then(function(){
         return CustomerServerHandler.sendCustomerProfileAsync(result);
+    })
+    .then(function(){
+        cskv.saveCSStatusByCSOpenIdAsync(result.csId, 'busy');
     })
     .then(function(){
         return callback(null, result)

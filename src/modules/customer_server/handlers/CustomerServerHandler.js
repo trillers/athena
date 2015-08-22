@@ -31,7 +31,7 @@ var handle = function(user, message){
         var commandType = command.commandType(message);
         if(commandType) {
             var executeFn = command.commandHandler(commandType);
-            if(cmdWorkflow.canInWild(command.getActionName(commandType))){
+            if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
                 executeFn(user, message, function(err, data){
                     console.log(commandType + 'command finish');
                     var status = cmdWorkflow.transition(command.getActionName(commandType), stt)

@@ -5,15 +5,15 @@ var message = {
     Content:':ol',
     MsgType:'text'
 }
-var stt = 'of';
+var stt = 'off';
 var commandType = command.commandType(message);
 if(commandType) {
     console.log(command.getActionName(commandType))
     var executeFn = command.commandHandler(commandType);
-    if(cmdWorkflow.canInWild(command.getActionName(commandType))){
-        executeFn(user, message, function(err, data){
+    if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
+
             var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
-        });
+        console.log(status)
         console.log('ok')
     }else{
         console.log('illeage')

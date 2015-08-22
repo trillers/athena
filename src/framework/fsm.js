@@ -99,6 +99,9 @@ Workflow.prototype.cannot = function(e){
 }
 Workflow.prototype.canInWild = function(e, stt){
     if(!this.actionsMap[e]){
+        throw new Error('the action is illegal');
+    }
+    if(!stt || !(stt in this.statMap)){
         throw new Error('the stat is illegal');
     }
     if(this.actionsMap[e].froms[stt]){
