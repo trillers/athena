@@ -1,5 +1,6 @@
 var cskv = require('../kvs/CustomerServer');
 var redis = require('redis');
+var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
 var CustomerServerDispatcher = function(){
@@ -24,18 +25,24 @@ prototype.handleRedisMessage = function(channel, message){
     var prefix = key.slice(0, 6);
     console.log('prefix======'+ prefix);
     var csId = key.slice(6);
-    console.log(csId);
-    cskv.delCSSByIdAsync(csId)
-        .then(function(){
-            return cskv.remWcCSSetAsync(csId);
-        })
-        .then(function(){
-            cskv.saveCSStatusByCSOpenIdAsync(csId, 'of');
-        })
-        .catch(Error, function(err){
-            console.log('reset cs error');
-            console.log(err);
-        });
+    if(prefix == 'cs:st:') {
+        cskv.delCSSByIdAsync(csId)
+            .then(function () {
+                return cskv.remWcCSSetAsync(csId);
+            })
+            .then(function () {
+                cskv.saveCSStatusByCSOpenIdAsync(csId, 'of');
+            })
+            .then(function(){
+                wechatApi.sendText(csId, '[系统]长时间无交互，您已下线', function(err, result){
+                    if(callback) return callback(err, result);
+                });
+            })
+            .catch(Error, function (err) {
+                console.log('reset cs error');
+                console.log(err);
+            });
+    }
 }
 
 prototype.register = function(handler){
