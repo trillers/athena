@@ -157,14 +157,18 @@ var CustomerServer = {
             if (err) return cbUtil.handleSingleValue(callback, err, key);
             console.log('++++++++++++++++');
             console.log(key);
-            redis.del(key, function(err, result){
-                cbUtil.logCallback(
-                    err,
-                    'Fail to delete customer server session by id ' + id + ': ' + err,
-                    'Succeed to delete customer server session by id ' + id);
+            if(key.length > 0){
+                redis.del(key, function(err, result){
+                    cbUtil.logCallback(
+                        err,
+                        'Fail to delete customer server session by id ' + id + ': ' + err,
+                        'Succeed to delete customer server session by id ' + id);
 
-                cbUtil.handleSingleValue(callback, err, result);
-            });
+                    cbUtil.handleSingleValue(callback, err, result);
+                });
+            }else{
+                cbUtil.handleSingleValue(callback, err, null);
+            }
         });
     },
 
