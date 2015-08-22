@@ -21,7 +21,12 @@ prototype.redisClientInit = function(){
 prototype.handleRedisMessage = function(channel, message){
     var key = message;
     var index = key.indexOf(':', key.indexOf(':'));
+    console.log('handle expire');
+    console.log(index);
+    var prefix = key.slice(0, index);
+    console.log('prefix======'+ prefix);
     var csId = key.slice(index);
+    console.log(csId);
     cskv.delCSSByIdAsync(csId)
         .then(function(){
             return cskv.remWcCSSetAsync(csId);
