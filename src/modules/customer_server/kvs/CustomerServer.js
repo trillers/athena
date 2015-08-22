@@ -115,7 +115,7 @@ var CustomerServer = {
 
     resetCSStatusTTLByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSStatusKey(csOpenId);
-        redis.expire(key, 1800, function(err, result){
+        redis.expire(key, 30, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
@@ -214,7 +214,7 @@ var CustomerServer = {
                 'Fail to remove pc ' + csId+ ' from pc customer server  set : ' + err,
                 'Succeed to remove ' + csId + ' from pc customer server  set  ');
 
-            cbUtil.handleAffected(callback, err, csId, result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
@@ -272,7 +272,7 @@ var CustomerServer = {
                 'Fail to pop wc customer server  set ' + csOpenId + ': ' + err,
                 'Succeed to pop wc customer server  set ' + csOpenId);
 
-            cbUtil.handleAffected(callback, err, csOpenId, result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
