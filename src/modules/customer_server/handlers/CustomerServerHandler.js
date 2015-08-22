@@ -76,6 +76,9 @@ var handle = function(user, message){
             return wechatApi.sendTextAsync(user.wx_openid, '[系统]:您还没有建立会话');
         }
     })
+    .then(function(){
+            return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
+        })
     .catch(function(err){
         if(err && err.message != 'isCase' && err.message != 'isCmd' &&err.message != 'illegalOperation') console.log(err);
     })

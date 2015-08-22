@@ -67,6 +67,18 @@ var CustomerServer = {
         });
     },
 
+    resetCSStatusTTLByCSId: function(csId, callback){
+        var key = csIdToCSStatusKey(csId);
+        redis.expire(key, 1800, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to reset pc customer server ttl by csId ' + csId + ': ' + err,
+                'Succeed to reset pc customer server ttl by csId ' + csId);
+
+            cbUtil.handleAffected(callback, err, 'ok', result);
+        });
+    },
+
     loadCSStatusByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSStatusKey(csOpenId);
         redis.get(key, function(err, result){
@@ -98,6 +110,18 @@ var CustomerServer = {
                 'Succeed to delete wc customer server by status csOpenId ' + csOpenId);
 
             cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    resetCSStatusTTLByCSOpenId: function(csOpenId, callback){
+        var key = csOpenIdToCSStatusKey(csOpenId);
+        redis.expire(key, 1800, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
+                'Succeed to reset wc customer server ttl by csOpenId ' + csOpenId);
+
+            cbUtil.handleAffected(callback, err, 'ok', result);
         });
     },
 
@@ -133,14 +157,18 @@ var CustomerServer = {
             if (err) return cbUtil.handleSingleValue(callback, err, key);
             console.log('++++++++++++++++');
             console.log(key);
-            redis.del(key, function(err, result){
-                cbUtil.logCallback(
-                    err,
-                    'Fail to delete customer server session by id ' + id + ': ' + err,
-                    'Succeed to delete customer server session by id ' + id);
+            if(key.length > 0){
+                redis.del(key, function(err, result){
+                    cbUtil.logCallback(
+                        err,
+                        'Fail to delete customer server session by id ' + id + ': ' + err,
+                        'Succeed to delete customer server session by id ' + id);
 
-                cbUtil.handleSingleValue(callback, err, result);
-            });
+                    cbUtil.handleSingleValue(callback, err, result);
+                });
+            }else{
+                cbUtil.handleSingleValue(callback, err, null);
+            }
         });
     },
 
@@ -186,7 +214,7 @@ var CustomerServer = {
                 'Fail to remove pc ' + csId+ ' from pc customer server  set : ' + err,
                 'Succeed to remove ' + csId + ' from pc customer server  set  ');
 
-            cbUtil.handleAffected(callback, err, csId, result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
@@ -244,7 +272,7 @@ var CustomerServer = {
                 'Fail to pop wc customer server  set ' + csOpenId + ': ' + err,
                 'Succeed to pop wc customer server  set ' + csOpenId);
 
-            cbUtil.handleAffected(callback, err, csOpenId, result);
+            cbUtil.handleSingleValue(callback, err, result);
         });
     },
 
