@@ -35,7 +35,7 @@ prototype.handleRedisMessage = function(channel, message){
             })
             .then(function(){
                 wechatApi.sendText(csId, '[系统]:长时间无交互，您已下线', function(err, result){
-                    if(callback) return callback(err, result);
+                    console.log('[系统]:长时间无交互，您已下线 客服OpenId:' + csId);
                 });
             })
             .catch(Error, function (err) {

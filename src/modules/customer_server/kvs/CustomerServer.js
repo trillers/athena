@@ -115,7 +115,7 @@ var CustomerServer = {
 
     resetCSStatusTTLByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSStatusKey(csOpenId);
-        redis.expire(key, 30, function(err, result){
+        redis.expire(key, 1800, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
