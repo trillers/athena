@@ -8,13 +8,18 @@ var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
 var command = require('./commands');
 var wechatApi = require('../../wechat/common/api').api;
-
 var caseType = {
     'ct':caseTaxiHandler,
     'co':caseCoffeeHandler
 }
+var cmdWorkflow = require('../common/FSM').getWf('cmdWorkflow');
 var handle = function(user, message){
-    cskv.loadPlaceCaseAsync(user.wx_openid)
+    var stt;
+    cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)
+    .then(function(st){
+        stt = st;
+        return cskv.loadPlaceCaseAsync(user.wx_openid)
+    })
     .then(function(data){
         if(data){
             caseType[data.type](data, user, message);
@@ -26,10 +31,17 @@ var handle = function(user, message){
         var commandType = command.commandType(message);
         if(commandType) {
             var executeFn = command.commandHandler(commandType);
-            executeFn(user, message, function(err, data){
-                console.log(commandType + 'command finish');
-            });
-            return Promise.reject(new Error('isCmd'));
+            if(cmdWorkflow.canInWild(command.getActionName(commandType))){
+                executeFn(user, message, function(err, data){
+                    console.log(commandType + 'command finish');
+                    var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
+                    cskv.saveCSStatusByCSOpenId(user.wx_openid, status, function(){})
+                });
+                return Promise.reject(new Error('isCmd'));
+            }else{
+                wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前状态不能执行该操作');
+                return Promise.reject(new Error('illegalOperation'));
+            }
         }
         return;
     })
@@ -65,7 +77,7 @@ var handle = function(user, message){
         }
     })
     .catch(function(err){
-        if(err && err.message != 'isCase' && err.message != 'isCmd') console.log(err);
+        if(err && err.message != 'isCase' && err.message != 'isCmd' &&err.message != 'illegalOperation') console.log(err);
     })
 }
 

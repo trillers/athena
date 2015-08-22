@@ -38,6 +38,14 @@ pro.commandType = function(message){
     return null;
 }
 
+pro.getActionName = function(val){
+    for(var prop in commandSet){
+        if(commandSet[prop] === val){
+            return prop;
+        }
+    }
+}
+
 pro.commandHandler = function(command){
     return handlerSet[command];
 }
