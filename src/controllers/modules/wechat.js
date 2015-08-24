@@ -31,7 +31,7 @@ module.exports = function() {
         var self = this;
         var message = self.weixin;
         var user = yield ensureSignin(message, self, next);
-        this["wcUser"] = user;
+        this["wxUser"] = user;
         WechatOperationService.logActionAsync(message);
         yield next;
     });
@@ -40,12 +40,13 @@ module.exports = function() {
         console.log("3213213131231231312312312")
     //根据角色，分别派遣session，然后next
         var self = this;
+        var user = this.wxUser;
         var message = self.weixin;
         try{
             if(message.MsgType == 'event'){
                 switch(message.Event.toLowerCase()){
                     case 'subscribe':
-                        yield QrChannelDispatcher.dispatch(message, this.wcUser, self);
+                        yield QrChannelDispatcher.dispatch(message, user, self);
                         break;
                     case 'unsubscribe':
                         //var update = {};
