@@ -17,8 +17,8 @@ proto.compose = function(){
         yield middleware.apply(this, [_next]);
     }
     return function* (){
-        console.log("enter frankon entry--------------")
-        yield _next.call(this.frankon);
+        console.log("enter frankon entry--------------");
+        yield _next.call(this);
     }
 };
 proto.generateHandler = function(){
