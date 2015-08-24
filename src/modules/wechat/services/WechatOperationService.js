@@ -8,13 +8,15 @@ Service.logAction = function(msg, user, callback){
     wechatLog.save(function (err, doc, numberAffected) {
         if (err) {
             logger.error('failed to save wechat logger :'+ err +' \r\n');
-            return;
+            return callback(err, null);
         }
         if (numberAffected) {
             logger.debug('Succeed to create wechat logger target \r\n');
+            return callback(null, null);
         }
         else {
             logger.error('Fail to create wechat logger \r\n');
+            return callback(new Error("wechat log action no affect result"), null);
         }
     });
 

@@ -32,8 +32,9 @@ proto.generateHandler = function(){
 };
 var frankon = new Frankon();
 frankon.use(function* (next){
-    console.log("middleware1------begin")
-    yield next;
+    console.log("middleware1------begin");
+    yield function* (){console.log("2131")};
+    //yield next;
     console.log("middleware1------back")
 });
 frankon.use(function* (next){

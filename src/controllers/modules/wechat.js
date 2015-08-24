@@ -34,7 +34,7 @@ module.exports = function() {
         console.log('+++++++++++++++++');
         console.log(user);
         console.log(message);
-        yield WechatOperationService.logActionAsync(message);
+        WechatOperationService.logActionAsync(message);
         yield next;
     });
 
