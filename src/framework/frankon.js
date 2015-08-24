@@ -10,6 +10,7 @@ proto.use = function(fn){
 proto.compose = function(){
     var _next = function* (){
         console.log("enter frankon next--------------")
+        console.log(this);
         var me = this.frankon;
         if(!me.middlewares.length) return;
         var middleware = me.middlewares.shift();
