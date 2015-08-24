@@ -1,6 +1,24 @@
 console.log('1213231311312')
 var command = require('../src/modules/customer_server/handlers/commands');
-var cmdWorkflow = require('../src/modules/customer_server/common/FSM').getWf('cmdWorkflow');
+var FSM = require('../src/framework/fsm').FSM;
+var cmdWorkflow = FSM.create({
+    name: 'cmdWorkflow',
+    initial: null,
+    actions:[
+        {name: 'bindUser', from: 'busy', to: 'busy'},
+        {name: 'rollback', from: 'case', to: 'busy'},
+        {name: 'quit', from: 'busy', to: 'free'},
+        {name: 'online', from: 'off', to: 'free'},
+        {name: 'offline', from: ['free', 'busy'], to: 'off'},
+        {name: 'callTaxi', from: 'busy', to: 'case'},
+        {name: 'submitOrder', from: 'case', to: 'busy'}
+    ],
+    attach:{
+        onleavebusy: function(){
+
+        }
+    }
+})
 var message = {
     Content:':ol',
     MsgType:'text'

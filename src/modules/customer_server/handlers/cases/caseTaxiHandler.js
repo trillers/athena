@@ -52,6 +52,7 @@ function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
+        yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
         yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
@@ -62,6 +63,7 @@ function* cancelOrder(user, message){
     if(command.commandType(message) === command.commandSet.rollback){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:订单已取消');
+        yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
         return true;
     }
     return false;
