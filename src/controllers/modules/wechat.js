@@ -28,17 +28,21 @@ module.exports = function() {
     //require('../common/routes-wechat')(router);
 
     frankon.use(function* (next) {
+        var self = this;
+        var message = self.weixin;
+        var user = yield ensureSignin(message, self, next);
+        console.log('+++++++++++++++++');
+        console.log(user);
+        console.log(message);
+        yield WechatOperationService.logActionAsync(message);
+        yield next;
+    });
+
+    frankon.use(function* (next) {
     //根据角色，分别派遣session，然后next
         var self = this;
         var message = self.weixin;
-        console.log('start handle');
         try{
-            console.log('ensureSignin');
-            var user = yield ensureSignin(message, self, next);
-            console.log('+++++++++++++++++');
-            console.log(user);
-            console.log(message);
-            WechatOperationService.logActionAsync(message);
             if(message.MsgType == 'event'){
                 switch(message.Event.toLowerCase()){
                     case 'subscribe':
@@ -58,15 +62,12 @@ module.exports = function() {
                 console.log('message');
                 self.body = '';
                 CSDispatcher.dispatch(user, message);
-                yield next;
             }
         } catch (err){
             console.log('ensureSignin error:' + err);
         }
     });
-    frankon.use(function* (next) {
-        console.log("middlewara2 +++++++++++++++++++++++++++++")
-    })
+
     //frankon.use(function* (next) {
     //    //根 据消息类型分别处理
     //    //如果是用户消息，先查进行中的会话，有就发送
