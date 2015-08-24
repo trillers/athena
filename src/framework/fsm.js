@@ -89,9 +89,23 @@ Workflow.prototype.startup = function (){
     this.actionList.forEach(function(action){
         me[action.name] = function(stt, data){
             var stt = stt || me.current();
-            var result = me.transition(action.name, stt)
+            var listeners = me.listeners;
+            if(listeners) {
+                listeners.onbeforeevent && listeners.onbeforeevent.call(me, data);
+                ("onbefore" + action.name in listeners) && listeners["onbefore" + action.name].call(me, data);
+                listeners.onleavestate && listeners.onleavestate.call(me, data);
+                ("onleave" + stt in listeners) && listeners["onleave" + stt].call(me, data);
+            }
+            var result = me.transition(action.name, stt);
             if(result === stt) me.changed = true;
             this.curr = result;
+            if(listeners){
+                listeners.onenterstate && listeners.onenterstate.call(me, data);
+                ("onenter" + result in listeners) && listeners["onenter" + result].call(me, data);
+                listeners.onafterevent && listeners.onafterevent.call(me, data);
+                ("onafter" + action.name in listeners) && listeners["onafter" + action.name].call(me, data);
+            }
+
         }
     })
 }

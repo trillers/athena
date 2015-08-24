@@ -3,7 +3,7 @@ var command = require('../src/modules/customer_server/handlers/commands');
 var FSM = require('../src/framework/fsm').FSM;
 var cmdWorkflow = FSM.create({
     name: 'cmdWorkflow',
-    initial: null,
+    initial: "off",
     actions:[
         {name: 'bindUser', from: 'busy', to: 'busy'},
         {name: 'rollback', from: 'case', to: 'busy'},
@@ -14,11 +14,27 @@ var cmdWorkflow = FSM.create({
         {name: 'submitOrder', from: 'case', to: 'busy'}
     ],
     attach:{
-        onleavebusy: function(){
-
+        onleavestate: function(){
+            console.log("leave stat")
+        },
+        onenterstate: function(){
+            console.log("enter stat")
+        },
+        onleaveoff: function(){
+            console.log("leave off")
+        },
+        onenterfree: function(data){
+            console.log("enter off")
+        },
+        onbeforeevent: function(){
+            console.log("before event")
+        },
+        onbeforeonline: function(){
+            console.log("before online")
         }
     }
-})
+});
+cmdWorkflow.startup()
 var message = {
     Content:':ol',
     MsgType:'text'
@@ -29,9 +45,9 @@ if(commandType) {
     console.log(command.getActionName(commandType))
     var executeFn = command.commandHandler(commandType);
     if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
-
-            var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
-        console.log(status)
+        console.log(cmdWorkflow.online(null, {data: "123"}))
+            //var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
+        //console.log(status)
         console.log('ok')
     }else{
         console.log('illeage')
