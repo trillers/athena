@@ -11,10 +11,11 @@ proto.compose = function(){
     var _next = function* (){
         console.log("enter frankon next--------------")
         console.log(this);
+        console.log("index----------------" + this.middlewareIndex);
         var me = this.frankon;
         if(!me.middlewares.length) return;
-        var middleware = me.middlewares.slice(me.index, me.index+1);
-        me.index += 1;
+        var middleware = me.middlewares.slice(this.middlewareIndex, this.middlewareIndex+1);
+        this.middlewareIndex += 1;
         yield middleware.apply(this, [_next]);
     }
     return function* (){
@@ -32,8 +33,8 @@ proto.generateHandler = function(){
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
         }
-        this["frankon"] = me;
-        this.frankon.index = 0;
+        this['frankon'] = me;
+        this['middlewareIndex'] = 0;
         yield entryFn.apply(this, arguments);
     }
 }
