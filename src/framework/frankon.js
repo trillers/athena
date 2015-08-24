@@ -18,7 +18,7 @@ proto.compose = function(){
     }
     return function* (){
         console.log("enter frankon entry--------------")
-        yield _next();
+        yield _next.call(this);
     }
 };
 proto.generateHandler = function(){
@@ -26,6 +26,7 @@ proto.generateHandler = function(){
     var entryFn = me.compose();
     return function* (){
         console.log("enter frankon generator--------------")
+        console.log(this);
         me.ctx = this;
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
