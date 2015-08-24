@@ -1,4 +1,5 @@
 var fsmModule = require('../../../framework/fsm');
+var _ = require('underscore')
 var Workflow = fsmModule.Workflow;
 var FSM = fsmModule.FSM;
 var stt = {
@@ -11,7 +12,7 @@ var cmdWorkflow = FSM.create({
     name: 'cmdWorkflow',
     initial: null,
     actions:[
-        {name: 'viewState', from: Object.keys(stt), to: Object.keys(stt)},
+        {name: 'viewState', from: _.values(stt), to: Object.keys(stt)},
         {name: 'bindUser', from: 'busy', to: 'busy'},
         {name: 'rollback', from: 'case', to: 'busy'},
         {name: 'quit', from: 'busy', to: 'free'},
