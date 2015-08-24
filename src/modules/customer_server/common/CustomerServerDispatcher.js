@@ -31,7 +31,7 @@ prototype.handleRedisMessage = function(channel, message){
                 return cskv.remWcCSSetAsync(csId);
             })
             .then(function () {
-                cskv.saveCSStatusByCSOpenIdAsync(csId, 'of');
+                cskv.saveCSStatusByCSOpenIdAsync(csId, 'off');
             })
             .then(function(){
                 wechatApi.sendText(csId, '[系统]:长时间无交互，您已下线', function(err, result){
