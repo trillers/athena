@@ -39,6 +39,7 @@ module.exports = function() {
     });
 
     frankon.use(function* (next) {
+        console.log("3213213131231231312312312")
     //根据角色，分别派遣session，然后next
         var self = this;
         var message = self.weixin;
