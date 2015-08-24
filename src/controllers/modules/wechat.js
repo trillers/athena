@@ -14,7 +14,7 @@ var tokenConfig = productionMode ? {
     appid: settings.wechat.appKey,
     encodingAESKey: settings.wechat.encodingAESKey
 } : settings.wechat.token;
-var thunkify = require("thunkify")
+var thunkify = require("thunkify");
 var WechatAuthenticator = require('../../framework/WechatAuthenticator');
 var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
@@ -26,7 +26,7 @@ var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
 module.exports = function() {
     var router = new Router();
     //require('../common/routes-wechat')(router);
-e
+
     frankon.use(function* (next) {
     //根据角色，分别派遣session，然后next
         var self = this;
