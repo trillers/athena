@@ -32,7 +32,7 @@ proto.generateHandler = function(){
             return yield Promise.reject(new Error('Frankon error occur'));
         }
         this["frankon"] = me;
-        yield entryFn.apply(me, arguments);
+        yield entryFn.apply(this, arguments);
     }
 }
 module.exports = Frankon;
