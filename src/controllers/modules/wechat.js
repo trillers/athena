@@ -58,12 +58,15 @@ module.exports = function() {
                 console.log('message');
                 self.body = '';
                 CSDispatcher.dispatch(user, message);
+                yield next;
             }
         } catch (err){
             console.log('ensureSignin error:' + err);
         }
     });
-
+    frankon.use(function* (next) {
+        console.log("middlewara2 +++++++++++++++++++++++++++++")
+    })
     //frankon.use(function* (next) {
     //    //根 据消息类型分别处理
     //    //如果是用户消息，先查进行中的会话，有就发送
