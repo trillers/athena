@@ -17,8 +17,8 @@ proto.compose = function(){
         var middleware = me.middlewares.slice(this.middlewareIndex, this.middlewareIndex+1);
         this.middlewareIndex += 1;
         console.log("middleware is +++++++++++++")
-        console.log(middleware)
-        yield middleware.apply(this, [_next]);
+        console.log(middleware[0])
+        yield middleware[0].apply(this, [_next]);
     }
     return function* (){
         console.log("enter frankon entry--------------");
