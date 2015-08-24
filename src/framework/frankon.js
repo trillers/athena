@@ -27,7 +27,7 @@ proto.generateHandler = function(){
     return function* (){
         console.log("enter frankon generator--------------")
         console.log(this);
-        me.ctx = this;
+        //me.ctx = this;
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
         }
