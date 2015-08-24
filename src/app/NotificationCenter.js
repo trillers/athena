@@ -74,25 +74,6 @@ domain.action = function(actionName){
         return this.actionsMap[actionName] = new Action(actionName);
     }
 };
-var TestAction = domain.action('TestAction');
-
-var testInvocation = TestAction.newInstance({'data': '123'});
-testInvocation.onExecute(function(data){
-    console.log(data);
-});
-testInvocation.execute();
-
-TestAction.onExecute("123", function(data){
-    console.log("ok")
-    console.log(data)
-})
-TestAction.onExecute(function(data){
-    console.log("xxx")
-})
-TestAction.execute({
-    foo: "bar1",
-    channel: "123"
-})
 function _mixin(target, source){
     for(var prop in source){
         if(!target.hasOwnProperty(prop)){
@@ -103,3 +84,5 @@ function _mixin(target, source){
     }
     return target
 }
+
+module.exports = domain;
