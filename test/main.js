@@ -22,24 +22,23 @@ proto.generateHandler = function(){
     var me = this;
     var entryFn = me.compose();
     return function* (){
+        console.log("handle begin----------------------")
         me.ctx = this;
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
         }
         this["frankon"] = me;
-        co(function* (){
-            yield entryFn.apply(me, arguments);
-        })
+        yield entryFn.apply(me, arguments);
     }
 }
 var frankon = new Frankon();
 frankon.use(function* (next){
-    console.log("1231312321")
+    console.log("middleware1------begin")
     yield next;
+    console.log("middleware1------back")
 });
 frankon.use(function* (next){
-    console.log("xxxxxxx")
-
+    console.log("middleware2------begin")
 });
 co(function* (){
     yield frankon.generateHandler()();
