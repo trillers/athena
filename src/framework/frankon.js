@@ -18,7 +18,7 @@ proto.compose = function(){
     }
     return function* (){
         console.log("enter frankon entry--------------")
-        yield _next.call(this);
+        yield _next.call(this.frankon);
     }
 };
 proto.generateHandler = function(){
