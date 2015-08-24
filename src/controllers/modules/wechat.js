@@ -26,12 +26,14 @@ var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
 module.exports = function() {
     var router = new Router();
     //require('../common/routes-wechat')(router);
-
+e
     frankon.use(function* (next) {
     //根据角色，分别派遣session，然后next
         var self = this;
         var message = self.weixin;
+        console.log('start handle');
         try{
+            console.log('ensureSignin');
             var user = yield ensureSignin(message, self, next);
             console.log('+++++++++++++++++');
             console.log(user);
