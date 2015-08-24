@@ -29,7 +29,7 @@ proto.generateHandler = function(){
         this["frankon"] = me;
         yield entryFn.apply(me, arguments);
     }
-}
+};
 var frankon = new Frankon();
 frankon.use(function* (next){
     console.log("middleware1------begin")
