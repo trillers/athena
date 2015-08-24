@@ -53,7 +53,7 @@ module.exports = function() {
             console.log(message);
             WechatOperationService.logActionAsync(message);
             if(message.MsgType == 'event'){
-                switch(message.Event){
+                switch(message.Event.toLowerCase()){
                     case 'subscribe':
                         yield QrChannelDispatcher.dispatch(message, user, self);
                         break;
@@ -61,6 +61,9 @@ module.exports = function() {
                         //var update = {};
                         //update.wx_subscribe = 0;
                         self.body = '';
+                        break;
+                    case 'location':
+                        self.body = 'Hi! What can I do for you?';
                         break;
                 }
 
