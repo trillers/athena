@@ -63,7 +63,7 @@ module.exports = function() {
                         self.body = '';
                         break;
                     case 'location':
-                        self.body = message;
+                        self.body = 'Hi! What can I do for you?';
                         break;
                 }
 
