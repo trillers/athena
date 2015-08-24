@@ -1,55 +1,47 @@
-console.log('1213231311312')
-var command = require('../src/modules/customer_server/handlers/commands');
-var FSM = require('../src/framework/fsm').FSM;
-var cmdWorkflow = FSM.create({
-    name: 'cmdWorkflow',
-    initial: "off",
-    actions:[
-        {name: 'bindUser', from: 'busy', to: 'busy'},
-        {name: 'rollback', from: 'case', to: 'busy'},
-        {name: 'quit', from: 'busy', to: 'free'},
-        {name: 'online', from: 'off', to: 'free'},
-        {name: 'offline', from: ['free', 'busy'], to: 'off'},
-        {name: 'callTaxi', from: 'busy', to: 'case'},
-        {name: 'submitOrder', from: 'case', to: 'busy'}
-    ],
-    attach:{
-        onleavestate: function(){
-            console.log("leave stat")
-        },
-        onenterstate: function(){
-            console.log("enter stat")
-        },
-        onleaveoff: function(){
-            console.log("leave off")
-        },
-        onenterfree: function(data){
-            console.log("enter off")
-        },
-        onbeforeevent: function(){
-            console.log("before event")
-        },
-        onbeforeonline: function(){
-            console.log("before online")
+var co = require('co');
+function Frankon(){
+    this.middlewares = [];
+    this.ctx = {};
+}
+var proto = Frankon.prototype;
+proto.use = function(fn){
+    this.middlewares.push(fn);
+};
+proto.compose = function(){
+    var _next = function* (){
+        var me = this.frankon;
+        if(!me.middlewares.length) return;
+        var middleware = me.middlewares.shift();
+        yield middleware.apply(this, [_next]);
+    };
+    return function* () {
+        yield _next();
+    };
+};
+proto.generateHandler = function(){
+    var me = this;
+    var entryFn = me.compose();
+    return function* (){
+        me.ctx = this;
+        if(this.hasOwnProperty("frankon")){
+            return yield Promise.reject(new Error('Frankon error occur'));
         }
+        this["frankon"] = me;
+        co(function* (){
+            yield entryFn.apply(me, arguments);
+        })
     }
+}
+var frankon = new Frankon();
+frankon.use(function* (next){
+    console.log("1231312321")
+    yield next;
 });
-cmdWorkflow.startup()
-var message = {
-    Content:':ol',
-    MsgType:'text'
-}
-var stt = 'off';
-var commandType = command.commandType(message);
-if(commandType) {
-    console.log(command.getActionName(commandType))
-    var executeFn = command.commandHandler(commandType);
-    if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
-        console.log(cmdWorkflow.online(null, {data: "123"}))
-            //var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
-        //console.log(status)
-        console.log('ok')
-    }else{
-        console.log('illeage')
-    }
-}
+frankon.use(function* (next){
+    console.log("xxxxxxx")
+
+});
+co(function* (){
+    yield frankon.generateHandler()();
+})
+module.exports = Frankon;

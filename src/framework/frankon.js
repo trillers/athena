@@ -8,11 +8,11 @@ proto.use = function(fn){
     this.middlewares.push(fn);
 };
 proto.compose = function(){
-    var me = this.frankon;
     var _next = function* (){
+        var me = this.frankon;
         if(!me.middlewares.length) return;
         var middleware = me.middlewares.shift();
-        yield middleware.apply(this, _next);
+        yield middleware.apply(this, [_next]);
     }
     return function* (){
         yield _next();

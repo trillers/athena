@@ -35,49 +35,49 @@ module.exports = function() {
     //
     //});
 
-    //frankon.use(function* (next) {
-    //    //根 据消息类型分别处理
-    //    //如果是用户消息，先查进行中的会话，有就发送
-    //    //没有就查询待处理列表，没有就新建或者有就发送消息
+    frankon.use(function* (next) {
+        //根 据消息类型分别处理
+        //如果是用户消息，先查进行中的会话，有就发送
+        //没有就查询待处理列表，没有就新建或者有就发送消息
+
+    });
+
+    //var handler = function* (next) {
+    //    //根据角色，分别派遣session，然后next
+    //    var self = this;
+    //    var message = self.weixin;
+    //    try{
+    //        var user = yield ensureSignin(message, self, next);
+    //        console.log('+++++++++++++++++');
+    //        console.log(user);
+    //        console.log(message);
+    //        WechatOperationService.logActionAsync(message);
+    //        if(message.MsgType == 'event'){
+    //            switch(message.Event.toLowerCase()){
+    //                case 'subscribe':
+    //                    yield QrChannelDispatcher.dispatch(message, user, self);
+    //                    break;
+    //                case 'unsubscribe':
+    //                    //var update = {};
+    //                    //update.wx_subscribe = 0;
+    //                    self.body = '';
+    //                    break;
+    //                case 'location':
+    //                    self.body = 'Hi! What can I do for you?';
+    //                    break;
+    //            }
     //
-    //});
+    //        }else{
+    //            console.log('message');
+    //            self.body = '';
+    //            CSDispatcher.dispatch(user, message);
+    //        }
+    //    } catch (err){
+    //        console.log('ensureSignin error:' + err);
+    //    }
+    //}
 
-    var handler = function* (next) {
-        //根据角色，分别派遣session，然后next
-        var self = this;
-        var message = self.weixin;
-        try{
-            var user = yield ensureSignin(message, self, next);
-            console.log('+++++++++++++++++');
-            console.log(user);
-            console.log(message);
-            WechatOperationService.logActionAsync(message);
-            if(message.MsgType == 'event'){
-                switch(message.Event.toLowerCase()){
-                    case 'subscribe':
-                        yield QrChannelDispatcher.dispatch(message, user, self);
-                        break;
-                    case 'unsubscribe':
-                        //var update = {};
-                        //update.wx_subscribe = 0;
-                        self.body = '';
-                        break;
-                    case 'location':
-                        self.body = 'Hi! What can I do for you?';
-                        break;
-                }
-
-            }else{
-                console.log('message');
-                self.body = '';
-                CSDispatcher.dispatch(user, message);
-            }
-        } catch (err){
-            console.log('ensureSignin error:' + err);
-        }
-    }
-
-    //var handler = frankon.generateHandler();
+    var handler = frankon.generateHandler();
     var wechatMiddleware = wechat(tokenConfig).middleware(handler);
     router.all('/wechat', wechatMiddleware);
     return router.routes();
