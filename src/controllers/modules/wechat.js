@@ -31,9 +31,7 @@ module.exports = function() {
         var self = this;
         var message = self.weixin;
         var user = yield ensureSignin(message, self, next);
-        console.log('+++++++++++++++++');
-        console.log(user);
-        console.log(message);
+        this["wcUser"] = user;
         WechatOperationService.logActionAsync(message);
         yield next;
     });
@@ -47,7 +45,7 @@ module.exports = function() {
             if(message.MsgType == 'event'){
                 switch(message.Event.toLowerCase()){
                     case 'subscribe':
-                        yield QrChannelDispatcher.dispatch(message, user, self);
+                        yield QrChannelDispatcher.dispatch(message, this.wcUser, self);
                         break;
                     case 'unsubscribe':
                         //var update = {};
