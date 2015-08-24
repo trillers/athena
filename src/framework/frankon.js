@@ -22,14 +22,13 @@ proto.generateHandler = function(){
     var me = this;
     var entryFn = me.compose();
     return function* (){
+        console.log("enter frankon generator--------------")
         me.ctx = this;
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
         }
         this["frankon"] = me;
-        co(function* (){
-            yield entryFn.apply(me, arguments);
-        })
+        yield entryFn.apply(me, arguments);
     }
 }
 module.exports = Frankon;

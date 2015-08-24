@@ -22,7 +22,6 @@ proto.generateHandler = function(){
     var me = this;
     var entryFn = me.compose();
     return function* (){
-        console.log("handle begin----------------------")
         me.ctx = this;
         if(this.hasOwnProperty("frankon")){
             return yield Promise.reject(new Error('Frankon error occur'));
