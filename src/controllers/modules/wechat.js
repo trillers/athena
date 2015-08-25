@@ -20,6 +20,7 @@ var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
+var notificationCenter = require('../../framework/NotificationCenter')
 
 var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
 
@@ -35,6 +36,8 @@ module.exports = function() {
         WechatOperationService.logActionAsync(message);
         yield next;
     });
+
+    frankon.use(require('../../modules/wechat/middlewares/user-heartbeat'));
 
     frankon.use(function* (next) {
     //根据角色，分别派遣session，然后next
@@ -54,6 +57,7 @@ module.exports = function() {
                         break;
                     case 'location':
                         self.body = 'Hi! What can I do for you?';
+
                         break;
                 }
 
