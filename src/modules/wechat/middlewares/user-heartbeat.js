@@ -5,7 +5,7 @@ module.exports = function* (next){
         this middleware refresh this user
         analise the list and emit online and offline
     */
-    if(LocationEvtOrNot(message)){
+    if(LocationEvtOrNot(this.weixin)){
         console.log('have not enable')
     }
     yield next;
