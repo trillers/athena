@@ -62,7 +62,7 @@ module.exports = function() {
                 }
 
             }else{
-                self.body = '';
+                self.body = '接收成功';
                 console.log('================');
                 console.log('common message');
                 console.log(message);
