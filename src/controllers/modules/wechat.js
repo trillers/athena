@@ -63,6 +63,9 @@ module.exports = function() {
 
             }else{
                 self.body = '';
+                console.log('================');
+                console.log('common message');
+                console.log(message);
                 CSDispatcher.dispatch(user, message);
             }
         } catch (err){
