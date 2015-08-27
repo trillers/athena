@@ -32,6 +32,10 @@ var getPlaceCaseKey = function(openId){
     return 'pc:' + openId;
 }
 
+var getWelcomeStatusKey = function(openId){
+    return 'cs:ws:' + openId;
+}
+
 var CustomerServer = {
     loadCSStatusByCSId: function(csId, callback){
         var key = csIdToCSStatusKey(csId);
@@ -368,6 +372,40 @@ var CustomerServer = {
                 err,
                 'Fail to delete wc customer server place case by csId ' + csOpenId + ': ' + err,
                 'Succeed to delete wc customer server place case csId ' + csOpenId);
+
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    loadWelcomeStatus: function(openId, callback){
+        var key = getWelcomeStatusKey(openId);
+        redis.get(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to load welcome status: ' + err,
+                'Succeed to load welcome status');
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    saveWelcomeStatus: function(openId, st, callback){
+        var key = getWelcomeStatusKey(openId);
+        redis.set(key, st, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to save welcome status: ' + err,
+                'Succeed to save welcome status');
+            cbUtil.handleOk(callback, err, result, st);
+        });
+    },
+
+    delWelcomeStatus: function(openId, callback){
+        var key = getWelcomeStatusKey(openId);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to delete welcome status : ' + err,
+                'Succeed to delete welcome status');
 
             cbUtil.handleSingleValue(callback, err, result);
         });

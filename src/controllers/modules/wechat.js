@@ -9,6 +9,9 @@ var UserKv = require('../../modules/user/kvs/User');
 var CSDispatcher = require('../../modules/customer_server');
 var productionMode = settings.env.mode == 'production';
 var logger = require('../../app/logging').logger;
+var cskv = require('../../modules/customer_server/kvs/CustomerServer');
+var request = require('request');
+var UserLocationService = require('../../modules/location/services/UserLocationService');
 var tokenConfig = productionMode ? {
     token: settings.wechat.token,
     appid: settings.wechat.appKey,
@@ -57,7 +60,28 @@ module.exports = function() {
                         break;
                     case 'location':
                         console.log(message);
-                        self.body = 'Hi! What can I do for you?';
+                        var welcomeStatus = yield cskv.loadWelcomeStatusAsync(user.wx_openid);
+                        if(welcomeStatus == true){
+                            self.body = '';
+                        }else{
+                            self.body = 'welcome Dear! What can I do for you?';
+                            yield cskv.saveWelcomeStatusAsync(user.wx_openid, true);
+                            var location = {
+                                user: user.wx_openid,
+                                latitude: message.Latitude,
+                                longitude: message.Longitude
+                            }
+                            var url = settings.txLocationServer.host + '?location=' + location.latitude + ',' + location.longitude + '&key=' +settings.txLocationServer.key;
+                            request(url, function (error, response, body) {
+                                if (!error && response.statusCode == 200) {
+                                    location.address = body.result.address;
+                                    location.formatted_address = body.result.formatted_address.recommend;
+                                    UserLocationService.create(location, function(err, doc){
+                                        //TODO
+                                    })
+                                }
+                            })
+                        }
                         break;
                 }
 
@@ -69,7 +93,7 @@ module.exports = function() {
                 CSDispatcher.dispatch(user, message);
             }
         } catch (err){
-            console.log('ensureSignin error:' + err);
+            console.log('error:' + err);
         }
     });
 

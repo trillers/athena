@@ -34,16 +34,23 @@ ConversationQueue.prototype.init = function(){
         })
         .then(function(){
             me.on('taskFinish', function(data){
-                var conversation;
+                var conversation, customer;
                 cskv.pushWcCSSetAsync(data.csId)
                     .then(function(){
-                        return cskv.loadCSSByIdAsync(data.csId)
+                        return cskv.loadCSSByIdAsync(data.csId);
                     })
                     .then(function(session){
                         conversation = session;
                     })
                     .then(function(){
-                        return cskv.delCSSByIdAsync(data.csId)
+                        return cskv.loadCSSByIdAsync(data.csId);
+                    })
+                    .then(function(css){
+                        customer = css.initiator;
+                        return cskv.delCSSByIdAsync(data.csId);
+                    })
+                    .then(function(){
+                        return cskv.delWelcomeStatusAsync(customer);
                     })
                     .then(function(){
                         data['stt'] = 'fn';
