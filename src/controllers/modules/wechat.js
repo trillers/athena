@@ -56,8 +56,8 @@ module.exports = function() {
                         self.body = '';
                         break;
                     case 'location':
+                        console.log(message);
                         self.body = 'Hi! What can I do for you?';
-
                         break;
                 }
 
