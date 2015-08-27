@@ -61,7 +61,7 @@ module.exports = function() {
                     case 'location':
                         console.log(message);
                         var welcomeStatus = yield cskv.loadWelcomeStatusAsync(user.wx_openid);
-                        if(welcomeStatus == true){
+                        if(welcomeStatus == 'true'){
                             self.body = '';
                         }else{
                             self.body = 'welcome Dear! What can I do for you?';
