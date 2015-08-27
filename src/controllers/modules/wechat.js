@@ -74,9 +74,9 @@ module.exports = function() {
                             var url = settings.txLocationServer.host + '?location=' + location.latitude + ',' + location.longitude + '&key=' +settings.txLocationServer.key;
                             request(url, function (error, response, body) {
                                 if (!error && response.statusCode == 200) {
-                                    console.log(body);
-                                    location.address = body.result.address;
-                                    location.formatted_address = body.result.formatted_address.recommend;
+                                    var locationInfo = JSON.parse(body);
+                                    location.address = locationInfo.result.address;
+                                    location.formatted_address = locationInfo.result.formatted_address.recommend;
                                     UserLocationService.create(location, function(err, doc){
                                         //TODO
                                     })
