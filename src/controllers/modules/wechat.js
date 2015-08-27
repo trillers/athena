@@ -76,7 +76,7 @@ module.exports = function() {
                                 if (!error && response.statusCode == 200) {
                                     var locationInfo = JSON.parse(body);
                                     location.address = locationInfo.result.address;
-                                    location.formatted_address = locationInfo.result.formatted_address.recommend;
+                                    location.formatted_address = locationInfo.result.formatted_addresses.recommend;
                                     UserLocationService.create(location, function(err, doc){
                                         //TODO
                                     })
