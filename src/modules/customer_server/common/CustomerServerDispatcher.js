@@ -7,8 +7,8 @@ var CustomerServerDispatcher = function(){
     this.handlers = {};
     this.defaultHandler = null;
     this.nullHandler = null;
-    this.redisClient = redis.createClient();
-    this.redisClientInit();
+    //this.redisClient = redis.createClient();
+    //this.redisClientInit();
 }
 
 var prototype  = CustomerServerDispatcher.prototype;
