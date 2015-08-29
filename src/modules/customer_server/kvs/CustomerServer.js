@@ -73,12 +73,14 @@ var CustomerServer = {
 
     resetCSStatusTTLByCSId: function(csId, callback){
         var key = csIdToCSStatusKey(csId);
+        console.log('***********************');
+        console.log(key);
         redis.expire(key, 30, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to reset pc customer server ttl by csId ' + csId + ': ' + err,
                 'Succeed to reset pc customer server ttl by csId ' + csId);
-
+            console.log(result);
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
