@@ -12,6 +12,7 @@ function Action(name, channel){
     }
     this.listeners = [];
     EventEmitter.call(this);
+    this.constructor = Action
 };
 util.inherits(Action, EventEmitter);
 

@@ -8,6 +8,7 @@ module.exports = function* (next){
     if(LocationEvtOrNot(this.weixin)){
         console.log('have not enable')
     }
+
     yield next;
 }
 function LocationEvtOrNot(msg){
