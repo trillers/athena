@@ -73,14 +73,11 @@ var CustomerServer = {
 
     resetCSStatusTTLByCSId: function(csId, callback){
         var key = csIdToCSStatusKey(csId);
-        console.log('***********************');
-        console.log(key);
-        redis.expire(key, 30, function(err, result){
+        redis.expire(key, 1800, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to reset pc customer server ttl by csId ' + csId + ': ' + err,
                 'Succeed to reset pc customer server ttl by csId ' + csId);
-            console.log(result);
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
@@ -121,12 +118,14 @@ var CustomerServer = {
 
     resetCSStatusTTLByCSOpenId: function(csOpenId, callback){
         var key = csOpenIdToCSStatusKey(csOpenId);
-        redis.expire(key, 1800, function(err, result){
+        console.log('***********************');
+        console.log(key);
+        redis.expire(key, 30, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to reset wc customer server ttl by csOpenId ' + csOpenId + ': ' + err,
                 'Succeed to reset wc customer server ttl by csOpenId ' + csOpenId);
-
+            console.log(result);
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
