@@ -37,7 +37,10 @@ var handle = function(user, message){
                     console.log(commandType + 'command finish');
                     if(!err){
                         var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
-                        cskv.saveCSStatusByCSOpenId(user.wx_openid, status, function(){})
+                        cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, status)
+                            .then(function(){
+                                return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
+                            });
                     }
                 });
                 return Promise.reject(new Error('isCmd'));
