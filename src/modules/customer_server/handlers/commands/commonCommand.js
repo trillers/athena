@@ -4,7 +4,7 @@ function validateUserBind(openid, callback){
     userBizService.loadByOpenidAsync(openid)
     .then(function(userBiz){
         if(userBiz && userBiz.phone){
-            return callback(null, true);
+            return callback(null, userBiz);
         }
         return callback(null, false);
     })

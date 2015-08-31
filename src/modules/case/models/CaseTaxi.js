@@ -13,7 +13,9 @@ var schema = DomainBuilder
         driverPhone: {type: String, require: true},    //司机手机
         carLicensePlate: {type: String, require: true},//车牌照
         carModel: {type: String, require: true},       //车型
-        mileage: {type: Number}                        //里程数
+        mileage: {type: Number},                        //里程数
+        estimatedCost: {type: Number, require: true},   //预估费用
+        time: {type: Date, require: true}               //用车时间
     })
     .build();
 

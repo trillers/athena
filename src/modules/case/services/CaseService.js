@@ -36,7 +36,7 @@ Service.create = function* (json) {
         logger.debug('Succeed to create Case: ' + require('util').inspect(result) + '\r\n');
         return result;
     }catch(e){
-        logger.error('Fail to create Case: ' + require('util').inspect(result) + '\r\n');
+        logger.error('Fail to create Case');
     }
 };
 

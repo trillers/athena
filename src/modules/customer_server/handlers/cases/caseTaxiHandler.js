@@ -1,6 +1,6 @@
 var cskv = require('../../kvs/CustomerServer');
 var _ = require('underscore')._;
-var fillUseTime = stepFnGenerator('userTime');
+var fillUseTime = stepFnGenerator('time');
 var fillOrigin = stepFnGenerator('origin');
 var fillDestination = stepFnGenerator('destination');
 var command = require('../commands');
@@ -37,7 +37,8 @@ module.exports = function(data, user, message){
                 if (allDone(executedData)) {
                     console.log('**********************');
                     console.log(executedData);
-                    return yield createCaseToMango(executedData, user);
+                    redis.publish('call taxi', JSON.stringify(executedData.payload));
+                    //return yield createCaseToMango(executedData, user);
                 }
             } catch (e) {
                 console.log('Error Occur------------------')
@@ -86,7 +87,7 @@ function stepFnGenerator(type){
         var user = arguments[0][1];
         var message = arguments[0][2];
         var callback = arguments[0][3];
-        data[type] = message.Content;
+        data['payload'][type] = message.Content;
         data['step'] += 1;
         cskv.savePlaceCaseAsync(user.wx_openid, data)
         .then(function(){
