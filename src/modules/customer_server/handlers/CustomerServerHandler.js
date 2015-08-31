@@ -23,7 +23,9 @@ var handle = function(user, message){
     })
     .then(function(data){
         if(data){
-            caseType[data['payload'].type](data, user, message);
+            console.log(data);
+            var payload = JSON.parse(data.payload);
+            caseType[payload.type](data, user, message);
             return Promise.reject(new Error('isCase'));
         }
         return;
