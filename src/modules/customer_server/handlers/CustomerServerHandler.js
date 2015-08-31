@@ -9,7 +9,7 @@ var co = require('co');
 var command = require('./commands');
 var wechatApi = require('../../wechat/common/api').api;
 var caseType = {
-    'ct':caseTaxiHandler,
+    'tx':caseTaxiHandler,
     'co':caseCoffeeHandler
 }
 var cmdWorkflow = require('../common/FSM').getWf('cmdWorkflow');
@@ -23,9 +23,7 @@ var handle = function(user, message){
     })
     .then(function(data){
         if(data){
-            console.log(data);
-            var payload = JSON.parse(data.payload);
-            caseType[payload.type](data, user, message);
+            caseType[data['payload'].type](data, user, message);
             return Promise.reject(new Error('isCase'));
         }
         return;
