@@ -23,7 +23,7 @@ var handle = function(user, message){
     })
     .then(function(data){
         if(data){
-            caseType[data.type](data, user, message);
+            caseType[data['payload'].type](data, user, message);
             return Promise.reject(new Error('isCase'));
         }
         return;
