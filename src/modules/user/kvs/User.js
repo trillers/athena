@@ -20,6 +20,10 @@ var openidToAtKey = function(openid){
     return 'usr:oid:at' + openid;
 };
 
+var phoneToOidKey = function(phone){
+    return 'usr:ph:' + phone;
+};
+
 var idToFlagsKey = function(id){
     return 'usr:flags:' + id;
 };
@@ -87,6 +91,39 @@ var User = {
                 'Fail to get user id by openid ' + openid + ': ' + err,
                 'Succeed to get user id ' + result + ' by openid ' + openid);
             cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    linkPhoneToOpenId: function(phone, openId, callback){
+        var key = phoneToOidKey(phone);
+        redis.set(key, openId, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to link phone ' + phone + ' to openId ' + openId + ': ' + err,
+                'Succeed to link phone ' + phone + ' to openId ' + openId);
+            cbUtil.handleOk(callback, err, result);
+        });
+    },
+
+    loadOpenIdByPhone: function(phone, callback){
+        var key = phoneToOidKey(phone);
+        redis.get(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to load openId by phone:' + phone + 'err: ' + err,
+                'Succeed to load openId by phone:' + phone);
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    unLinkPhoneToOpenId: function(phone, callback){
+        var key = phoneToOidKey(phone);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to delete phone ' + phone + ' to openId : ' + err,
+                'Succeed to delete phone ' + phone + ' to openId ' );
+            cbUtil.handleOk(callback, err, result);
         });
     },
 

@@ -1,10 +1,10 @@
 var errorRegistry = require('./error-registry');
 
 /**
- * Retrieve rich-descriptive error message from server api error
- * @param err error thrown from server.
- * @param apiName api method name or short desc of server api
- * @returns {string} rich-descriptive error message of server invocation
+ * Retrieve rich-descriptive error message from wechat api error
+ * @param err error thrown from wechat, wechat-oauth, wechat-api and so on.
+ * @param apiName api method name or short desc of wechat api
+ * @returns {string} rich-descriptive error message of wechat invocation
  */
 var getErrorMessage = function(err, apiName){
     var apiNamePart = apiName ? apiName + ': ' : '';
@@ -15,9 +15,9 @@ var getErrorMessage = function(err, apiName){
 };
 
 /**
- * Generate a rich-descriptive error object from the result of server api invocation.
- * @param result the returning result of server api invocation.
- * @param apiName method name or short desc of server api
+ * Generate a rich-descriptive error object from the result of wechat api invocation.
+ * @param result the returning result of wechat api invocation.
+ * @param apiName method name or short desc of wechat api
  * @returns {Error} Error object if any, or null
  */
 var getResultError = function(result, apiName){
@@ -32,9 +32,9 @@ var getResultError = function(result, apiName){
 };
 
 /**
- * Throw error retrieved from result if server api invocation fails
- * @param result the returning result of server api invocation.
- * @param apiName method name or short desc of server api
+ * Throw error retrieved from result if wechat api invocation fails
+ * @param result the returning result of wechat api invocation.
+ * @param apiName method name or short desc of wechat api
  */
 var throwResultError = function(result, apiName){
     var err = getResultError(result, apiName);

@@ -10,6 +10,7 @@ registry
     .addChild('Coffee','co', '咖啡')
     .addChild('Taxi','tx', '用车')
     .up().item('CaseStatus', 'CaseStatus', '服务类型')
+    .addChild('Draft', 'df', '草稿')
     .addChild('UnPay','up', '未支付')
     .addChild('Payed','pd', '已支付')
     .addChild('Handle','hl', '处理中')

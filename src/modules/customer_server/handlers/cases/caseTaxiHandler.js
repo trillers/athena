@@ -5,11 +5,12 @@ var fillOrigin = stepFnGenerator('origin');
 var fillDestination = stepFnGenerator('destination');
 var command = require('../commands');
 var thunkify = require('thunkify');
-var Promise = require('bluebird')
+var Promise = require('bluebird');
 var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
-var co = require('co')
+var co = require('co');
+var redis = require('../../../../app/redis');
 
 //placeCase:openid  {type: ct, payload:{xxx: 1, yyy: 2}, step:2}
 var step = {
@@ -32,11 +33,12 @@ module.exports = function(data, user, message){
         var result = yield cancelOrder(user, message);
         if(!result) {
             try {
-                var executedData = yield fillFormAsync(codata.step, args)
+                var executedData = yield fillFormAsync(codata.step, args);
                 if (allDone(executedData)) {
+                    console.log('**********************');
+                    console.log(executedData);
                     return yield createCaseToMango(executedData, user);
                 }
-                ;
             } catch (e) {
                 console.log('Error Occur------------------')
                 console.log(e)
@@ -51,9 +53,11 @@ function allDone(data){
 function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
-        yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
+        redis.publish('call taxi', JSON.stringify(doc));
+        //yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
         yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
-        yield cskv.delPlaceCaseAsync(user.wx_openid);
+
+        //yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
         yield cskv.delPlaceCaseAsync(user.wx_openid);

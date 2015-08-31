@@ -11,7 +11,7 @@ var schema = DomainBuilder
     .withProperties({
         type: {type: String, enum: CaseEnum.valueList(), default: CaseEnum.Taxi.value(), require: true},
         desc: {type: String},
-        status: {type: String, enum: CaseStatusEnum.valueList(), default: CaseStatusEnum.UnPay.value()},
+        status: {type: String, enum: CaseStatusEnum.valueList(), default: CaseStatusEnum.Draft.value()},
         //commissionerId: {type: String, ref: 'Party', require: true},
         //responsibleId: {type: String, ref: 'Party', require: true},
         commissionerId: {type: String, ref: 'UserBiz', require: true},
@@ -19,9 +19,9 @@ var schema = DomainBuilder
         conversationId: {type: String, ref: 'Conversation', require: true},
         paymentMethod: {type: String},
         cost: {type: String},
-        useTime: {type: Date, default: new Date(), require: true},
-        place: {type: String, require: true},
-        evaluation: {type: String},
+        //useTime: {type: Date, default: new Date(), require: true},
+        //place: {type: String, require: true},
+        //evaluation: {type: String},
         subcase: {type: String, require: true}
     })
     .build();
