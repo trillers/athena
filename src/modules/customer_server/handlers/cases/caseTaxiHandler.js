@@ -10,7 +10,7 @@ var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
 var co = require('co');
-var redis = require('../../../../app/redis');
+var redis = require('redis').createClient();
 
 //placeCase:openid  {type: ct, payload:{xxx: 1, yyy: 2}, step:2}
 var step = {
@@ -37,7 +37,16 @@ module.exports = function(data, user, message){
                 if (allDone(executedData)) {
                     console.log('**********************');
                     console.log(executedData);
-                    redis.publish('call taxi', JSON.stringify(executedData.payload));
+                    var txCase = {
+                        name: 'callFastCar',
+                        from: executedData.payload.origin,
+                        to: executedData.payload.destination,
+                        startTime: executedData.payload.time,
+                        user: {
+                            phone: executedData.commissionerPhone
+                        }
+                    };
+                    redis.publish('call taxi', JSON.stringify(txCase));
                     //return yield createCaseToMango(executedData, user);
                 }
             } catch (e) {
@@ -54,14 +63,14 @@ function allDone(data){
 function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
-        redis.publish('call taxi', JSON.stringify(doc));
+        //redis.publish('call taxi', JSON.stringify(doc));
         //yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
         yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
 
         //yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
-        yield cskv.delPlaceCaseAsync(user.wx_openid);
+        yield cskv.delPlaceCaseAsync('tx', user.wx_openid);
     }
 }
 function* cancelOrder(user, message){
@@ -99,7 +108,7 @@ function stepFnGenerator(type){
         .then(function(data){
             callback(null, data);
         })
-        .catch(function(err){
+        .catch(Error, function(err){
             console.log(err);
             callback(err, null);
         })

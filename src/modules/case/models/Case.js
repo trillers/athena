@@ -21,6 +21,7 @@ var schema = DomainBuilder
         paymentMethod: {type: String},
         payTime: {type: Date},
         cost: {type: String},
+        caseNo: {type: String},
         //useTime: {type: Date, default: new Date(), require: true},
         //place: {type: String, require: true},
         //evaluation: {type: String},

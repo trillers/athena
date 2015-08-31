@@ -28,7 +28,7 @@ module.exports = function(user, message, callback){
                     commissionerId: userBiz._id,
                     commissionerPhone: userBiz.phone,
                     responsibleId: '滴滴打车',
-                    conversationId: css._id,
+                    conversationId: css._id
                 },
                 step: 1
             };
