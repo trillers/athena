@@ -3,13 +3,10 @@ var userkv = require('../../../user/kvs/User');
 var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
-var redis = require('../../../../app/redis');
+var redis = require('redis').createClient();
 
 module.exports = function(message){
     var data = JSON.parse(message);
-    if(data.err){
-        return;
-    }
     var phone = data.phone,
         status = data.status,
         driverName = data.driverName,
