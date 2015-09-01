@@ -388,7 +388,7 @@ var CustomerServer = {
 
     saveWelcomeStatus: function(openId, st, callback){
         var key = getWelcomeStatusKey(openId);
-        redis.set(key, st, function(err, result){
+        redis.set(key, st, 'EX', 1800, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to save welcome status: ' + err,
