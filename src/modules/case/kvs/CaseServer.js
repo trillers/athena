@@ -1,4 +1,4 @@
-var redis = require('../../../app/redis');
+var redis = require('../../../app/redis').client;
 var logger = require('../../../app/logging').logger;
 var _ = require('underscore');
 var Promise = require('bluebird');
@@ -46,4 +46,4 @@ var CaseServer = {
 
 CaseServer = Promise.promisifyAll(CaseServer);
 
-module.exports = CustomerServer;
+module.exports = CaseServer;

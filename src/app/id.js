@@ -1,7 +1,7 @@
 var SequenceGenerator = require('./sequence').sg;
 var SequenceObject = require('./sequence').so;
 var base62 = require('./base62');
-var redisClient = require('./redis');
+var redisClient = require('./redis').client;
 
 SequenceObject.prototype.toId = function() {
     return base62.encode(this.val*256);

@@ -10,8 +10,7 @@ var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
 var co = require('co');
-var settings = require('athena-settings').redis;
-var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var redis = require('../../../../app/redis').createClient();
 var carCaseWorkflow = require('../../../case/common/FSM').getWf('carCaseWorkflow');
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 

@@ -1,4 +1,4 @@
-var redis = require('../../../app/redis');
+var redis = require('../../../app/redis').client;
 var cbUtil = require('../../../framework/callback');
 
 var ACCESS_TOKEN = 'access';

@@ -45,4 +45,21 @@ redisClient.on('error'       , function(){
     system.memberDown(redisClient);
 });
 
-module.exports = redisClient;
+var createClient = function(){
+    var client;
+    if (settings.mode == 'single') {
+        client = redis.createClient(settings.port, settings.host, {} ); //TODO: need options
+    } else {
+        client = sentinel.createClient(settings.sentinel.hosts, settings.sentinel.masterName, {});
+    }
+
+    if (settings.auth != '') {
+        client.auth(settings.auth);
+    }
+
+    return client;
+}
+
+module.exports.client = redisClient;
+module.exports.createClient = createClient;
+

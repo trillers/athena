@@ -1,4 +1,4 @@
-var redis = require('../../../app/redis');
+var redis = require('../../../app/redis').client;
 var logger = require('../../../app/logging').logger;
 
 var accessTokenKey = function(){
