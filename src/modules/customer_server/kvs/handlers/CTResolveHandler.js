@@ -1,9 +1,13 @@
 var cskv = require('../CustomerServer');
+var caseKv = require('../../../case/kvs/CaseServer');
 var userkv = require('../../../user/kvs/User');
 var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
-var redis = require('redis').createClient();
+var caseTaxiService = require('../../../case/services/CaseTaxiService');
+var settings = require('athena-settings').redis;
+var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
 module.exports = function(message){
     var data = JSON.parse(message);
@@ -23,9 +27,16 @@ module.exports = function(message){
             return cskv.loadPlaceCaseAsync(csOpenId);
         })
         .then(function(data){
-            var txCase = data.payload;
+            var caseId = data.payload.caseId;
+            var caseStatus = {
+                caseId: caseId,
+                status: CaseStatusEnum.Applying.value()
+            }
+            yield cskv.delPlaceCaseAsync(css.csId);
+            yield caseKv.saveCaseStatusAsync(caseNo, phone, caseStatus);
             try{
-                yield caseService.createAsync(txCase);
+                var caseUpdate = {status: CaseStatusEnum.Applying.value(), caseNo: caseNo}
+                yield caseService.update(caseId, caseUpdate);
             } catch (err){
                 //todo
                 var cancelInfo = {caseNo: caseNo, phone: phone};
@@ -41,6 +52,6 @@ module.exports = function(message){
             yield wechatApi.sendTextAsync(css.initiator, replyToCustomer);
         })
         .catch(Error, function(err){
-            console.log('call taxi response err:' + err);
+            console.log('CTResolveHandler err:' + err);
         });
 }

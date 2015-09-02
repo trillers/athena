@@ -10,7 +10,10 @@ var fillFormThunk = thunkify(fillForm);
 var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
 var co = require('co');
-var redis = require('redis').createClient();
+var settings = require('athena-settings').redis;
+var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var carCaseWorkflow = require('../../../case/common/FSM').getWf('carCaseWorkflow');
+var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
 //placeCase:openid  {type: ct, payload:{xxx: 1, yyy: 2}, step:2}
 var step = {
@@ -46,7 +49,11 @@ module.exports = function(data, user, message){
                             phone: executedData.commissionerPhone
                         }
                     };
+                    var doc = yield createCaseToMango(executedData.payload, user);
                     redis.publish('call taxi', JSON.stringify(txCase));
+                    executedData.payload.caseId = doc._id;
+                    executedData.payload.status = CaseStatusEnum.Reviewing.value();
+                    return cskv.savePlaceCaseAsync(user.wx_openid, executedData);
                     //return yield createCaseToMango(executedData, user);
                 }
             } catch (e) {
@@ -66,11 +73,13 @@ function* createCaseToMango(data, user){
         //redis.publish('call taxi', JSON.stringify(doc));
         //yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
         yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
+        return doc;
 
         //yield cskv.delPlaceCaseAsync(user.wx_openid);
     }catch(err){
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
         yield cskv.delPlaceCaseAsync('tx', user.wx_openid);
+        return null
     }
 }
 function* cancelOrder(user, message){

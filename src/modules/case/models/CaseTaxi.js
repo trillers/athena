@@ -7,6 +7,7 @@ var schema = DomainBuilder
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
+        case: {type: String, ref: 'Case', require: true},            //关联caseId
         origin: {type: String, require: true},         //出发地
         destination: {type: String, require: true},    //目的地
         driverName: {type: String, require: true},     //司机姓名

@@ -30,9 +30,11 @@ Service.create = function* (json) {
     try{
         var subcaseService = subcaseServiceMap[CaseEnum.valueNames(json.type)];
         var abscase = new Case(json);
-        var resultArr = yield [abscase.save(), subcaseService.createAsync(json)];
-        var result = resultArr[0].toObject();
-        result.subcase = resultArr[1];
+        var result = yield abscase.save();
+        result = result.toObject();
+        json.case = result._id;
+        var subcase = yield subcaseService.createAsync(json);
+        result.subcase = subcase.toObject();
         logger.debug('Succeed to create Case: ' + require('util').inspect(result) + '\r\n');
         return result;
     }catch(e){
