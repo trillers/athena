@@ -34,6 +34,7 @@ module.exports = function() {
     frankon.use(function* (next) {
         var self = this;
         var message = self.weixin;
+        console.log('message');
         var user = yield ensureSignin(message, self, next);
         this["wxUser"] = user;
         WechatOperationService.logActionAsync(message);

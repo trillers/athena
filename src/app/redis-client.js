@@ -27,7 +27,6 @@ var errorlog = function (msg) {
 var redisClient = function(name){
     name = name || DEFAULT_NAME;
     if(clients[name]) return clients[name];
-    console.error(name);
     return clients[name] = createRedisClient(name);
 };
 

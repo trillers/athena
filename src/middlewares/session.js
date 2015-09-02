@@ -1,5 +1,6 @@
 var session = require('koa-generic-session');
 var redisStore = require('koa-redis');
+var settings = require('athena-settings').redis;
 
 module.exports = function(){
     return session({
@@ -8,7 +9,7 @@ module.exports = function(){
         cookie: {
             maxAge: 60000*60
         },
-        store: redisStore(),
+        store: redisStore({host: settings.host, port: settings.port, pass: settings.auth}),
         reconnectTimeout: 100
     });
 }

@@ -17,7 +17,7 @@ var schema = DomainBuilder
         carType: {type: String},                        //用车类型
         mileage: {type: Number},                        //里程数
         estimatedCost: {type: Number, require: true},   //预估费用
-        time: {type: Date, require: true}               //用车时间
+        time: {type: String, require: true}               //用车时间
     })
     .build();
 

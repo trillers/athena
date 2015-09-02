@@ -1,5 +1,6 @@
 var cskv = require('./CustomerServer');
 var redis = require('../../../app/redis-client')('sub');
+var co = require('co');
 var wechatApi = require('../../wechat/common/api').api;
 var ExpiredHandler = require('./handlers/ExpiredHandler');
 var CTResolveHandler = require('./handlers/CTResolveHandler');
@@ -7,7 +8,7 @@ var CTCarryHandler = require('./handlers/CTCarryHandler');
 var CTCarryHandler = require('./handlers/CTCarryHandler');
 var CTGetOnHandler = require('./handlers/CTGetOnHandler');
 var CTCompleteHandler = require('./handlers/CTCompleteHandler');
-var CTCancelHandler = require('./handlers/CTCancelHandler');
+//var CTCancelHandler = require('./handlers/CTCancelHandler');
 
 var MessageHandler = function(){
     this.redisClient = redis;
@@ -20,7 +21,7 @@ var ChannelHandlerMap = {
     'carry': CTCarryHandler,
     'getOn': CTGetOnHandler,
     'complete': CTCompleteHandler,
-    'cancel': CTCancelHandler
+    //'cancel': CTCancelHandler
 }
 
 var prototype  = MessageHandler.prototype;
@@ -37,7 +38,7 @@ prototype.redisClientInit = function(){
 }
 
 prototype.handleRedisMessage = function(channel, message){
-    ChannelHandlerMap[channel](message);
+    co(ChannelHandlerMap[channel](message));
 }
 
 module.exports = MessageHandler;
