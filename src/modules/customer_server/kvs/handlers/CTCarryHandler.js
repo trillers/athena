@@ -4,8 +4,7 @@ var userkv = require('../../../user/kvs/User');
 var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
-var settings = require('athena-settings').redis;
-var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var redis = require('../../../../app/redis-client')('pub');
 var caseTaxiService = require('../../../case/services/CaseTaxiService');
 
 module.exports = function(message){

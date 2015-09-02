@@ -3,6 +3,11 @@ var settings = require('athena-settings');
 var logger = require('./logging').logger;
 var system = require('./system');
 var application = require('./application');
+var redisClient = require('./redis-client');
+redisClient('default');
+redisClient('sub');
+redisClient('pub');
+
 
 system.addMember('application', application);
 system.startup();

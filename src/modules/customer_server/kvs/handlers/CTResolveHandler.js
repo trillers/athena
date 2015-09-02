@@ -5,8 +5,7 @@ var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
 var caseTaxiService = require('../../../case/services/CaseTaxiService');
-var settings = require('athena-settings').redis;
-var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var redis = require('../../../../app/redis-client')('pub');
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
 module.exports = function(message){

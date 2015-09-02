@@ -1,5 +1,4 @@
 var cskv = require('../kvs/CustomerServer');
-//var redis = require('redis');
 var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 

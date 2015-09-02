@@ -1,6 +1,5 @@
 var cskv = require('./CustomerServer');
-var settings = require('athena-settings').redis;
-var redis = require('redis').createClient(settings.port, settings.host, {auth_pass: settings.auth});
+var redis = require('../../../app/redis-client')('sub');
 var wechatApi = require('../../wechat/common/api').api;
 var ExpiredHandler = require('./handlers/ExpiredHandler');
 var CTResolveHandler = require('./handlers/CTResolveHandler');
