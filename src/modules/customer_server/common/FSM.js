@@ -23,4 +23,4 @@ var cmdWorkflow = FSM.create({
     ]
 });
 FSM.registry(cmdWorkflow);
-module.exports = FSM
+module.exports = FSM;
