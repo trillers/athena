@@ -1,4 +1,4 @@
-var redis = require('../../../app/redis').client;
+var redis = require('../../../app/redis');
 var logger = require('../../../app/logging').logger;
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
