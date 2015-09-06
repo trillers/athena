@@ -198,9 +198,12 @@ Service.getUserFromWechatAsync = getUserFromWechatAsync;
 Service.loadOrCreateFromWechat = function(openid, callback){
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){
+            console.log(1)
             return id && UserKv.loadByIdAsync(id);
         })
         .then(function(user){
+            console.log(2)
+            console.log(user)
             if (user) return user;
             return getUserFromWechatAsync(openid)
                 .then(function (userInfo) {
@@ -209,6 +212,7 @@ Service.loadOrCreateFromWechat = function(openid, callback){
                 .then(Service.createFromWechat);
         })
         .then(function(user){
+            console.log(3)
             if(callback) callback(null, user);
             return user;
         })
