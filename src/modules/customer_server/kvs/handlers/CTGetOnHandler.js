@@ -4,7 +4,7 @@ var userkv = require('../../../user/kvs/User');
 var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
-var caseTaxiService = require('../../../case/services/CaseTaxiService');
+var caseCarService = require('../../../case/services/CaseCarService');
 var redis = require('../../../../app/redis-client')('pub');
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
@@ -17,7 +17,7 @@ module.exports = function* (message){
     try {
         var caseStatus = yield caseKv.loadCaseStatusAsync(caseNo, phone);
         caseStatus.status = status;
-        var caseId = caseStatus.caseId;
+        caseId = caseStatus.caseId;
         yield caseKv.saveCaseStatusAsync(caseNo, phone, caseStatus);
         try {
             var caseUpdate = {status: status}
@@ -25,7 +25,7 @@ module.exports = function* (message){
         } catch (err) {
             //todo
             //var cancelInfo = {caseNo: caseNo, phone: phone};
-            //redis.publish('taxi cancel', JSON.stringify(cancelInfo));
+            //redis.publish('car_cancel', JSON.stringify(cancelInfo));
             return console.log('数据库订单更新到Inservice状态失败：caseNo:' + caseNo + ' phone:' + phone);
         }
     } catch(err){

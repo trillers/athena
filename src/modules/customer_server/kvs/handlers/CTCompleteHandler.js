@@ -5,7 +5,7 @@ var wechatApi = require('../../../wechat/common/api').api;
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
 var redis = require('../../../../app/redis-client')('pub');
-var caseTaxiService = require('../../../case/services/CaseTaxiService');
+var caseCarService = require('../../../case/services/CaseCarService');
 
 module.exports = function* (message){
     var data = JSON.parse(message);
@@ -15,7 +15,7 @@ module.exports = function* (message){
             status: CaseStatusEnum.UnPay.value(),
             cost: data.cost
         },
-        caseTaxiUpdate = {
+        caseCarUpdate = {
             mileage: data.mileage
         };
     try {
@@ -25,11 +25,11 @@ module.exports = function* (message){
         yield caseKv.delCaseStatusAsync(caseNo, phone);
         try {
             yield caseService.update(caseId, caseUpdate);
-            yield caseTaxiService.updateByConditionAsync({'case': caseId}, caseTaxiUpdate);
+            yield caseCarService.updateByConditionAsync({'case': caseId}, caseCarUpdate);
         } catch (err) {
             //todo
             //var cancelInfo = {caseNo: caseNo, phone: phone};
-            //redis.publish('taxi cancel', JSON.stringify(cancelInfo));
+            //redis.publish('car_cancel', JSON.stringify(cancelInfo));
             return console.log('数据库订单更新Complete状态失败, caseNo:' + caseNo + ' phone:' + phone);
         }
 

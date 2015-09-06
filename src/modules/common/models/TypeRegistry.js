@@ -8,7 +8,7 @@ registry
     .addChild('CustomerServer','cs', '客服')
     .up().item('Case', 'Case', '标准化服务')
     .addChild('Coffee','co', '咖啡')
-    .addChild('Taxi','tx', '用车')
+    .addChild('Car','car', '用车')
     .up().item('CaseStatus', 'CaseStatus', '服务类型')
     .addChild('Cancelled', 'cc', '已取消')
     .addChild('Draft', 'df', '草稿')

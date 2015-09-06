@@ -9,7 +9,7 @@ var schema = DomainBuilder
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
-        type: {type: String, enum: CaseEnum.valueList(), default: CaseEnum.Taxi.value(), require: true},
+        type: {type: String, enum: CaseEnum.valueList(), default: CaseEnum.Car.value(), require: true},
         desc: {type: String},
         status: {type: String, enum: CaseStatusEnum.valueList(), default: CaseStatusEnum.Draft.value()},
         //commissionerId: {type: String, ref: 'Party', require: true},

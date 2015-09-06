@@ -1,78 +1,78 @@
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var CaseTaxi = require('../models/CaseTaxi').model;
+var CaseCar = require('../models/CaseCar').model;
 var Promise = require('bluebird');
 
 var Service = {};
 
 Service.load = function (id, callback) {
-    CaseTaxi.findById(id).lean(true).exec(function (err, doc) {
+    CaseCar.findById(id).lean(true).exec(function (err, doc) {
         if (err) {
-            logger.error('Fail to load CaseTaxi [id=' + id + ']: ' + err);
+            logger.error('Fail to load CaseCar [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to load  CaseTaxi [id=' + id + ']');
+        logger.debug('Succeed to load  CaseCar [id=' + id + ']');
         if (callback) callback(null, doc);
     })
 };
 
 Service.create = function (json, callback) {
-    var caseTaxi = new CaseTaxi(json);
-    caseTaxi.save(function (err, doc, numberAffected) {
+    var caseCar = new CaseCar(json);
+    caseCar.save(function (err, doc, numberAffected) {
         if (err) {
             if (callback) callback(err);
             return;
         }
         if (numberAffected) {
-            logger.debug('Succeed to create CaseTaxi: ' + require('util').inspect(doc) + '\r\n');
+            logger.debug('Succeed to create CaseCar: ' + require('util').inspect(doc) + '\r\n');
             if (callback) callback(null, doc);
         }
         else {
-            logger.error('Fail to create CaseTaxi: ' + require('util').inspect(doc) + '\r\n');
-            if (callback) callback(new Error('Fail to create CaseTaxi'));
+            logger.error('Fail to create CaseCar: ' + require('util').inspect(doc) + '\r\n');
+            if (callback) callback(new Error('Fail to create CaseCar'));
         }
     });
 };
 
 Service.delete = function (id, callback) {
-    CaseTaxi.findByIdAndRemove(id, function (err, doc) {
+    CaseCar.findByIdAndRemove(id, function (err, doc) {
         if (err) {
-            logger.error('Fail to delete CaseTaxi [id=' + id + ']: ' + err);
+            logger.error('Fail to delete CaseCar [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to delete CaseTaxi [id=' + id + ']');
+        logger.debug('Succeed to delete CaseCar [id=' + id + ']');
         if (callback) callback(null, doc);
     });
 };
 
 Service.update = function (id, update, callback) {
-    CaseTaxi.findByIdAndUpdate(id, update, {new: true}, function (err, result){
+    CaseCar.findByIdAndUpdate(id, update, {new: true}, function (err, result){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseTaxi [id=' + id + ']');
+            logger.debug('Succeed to update CaseCar [id=' + id + ']');
             callback(null, result);
         }
     });
 };
 
 Service.updateByCondition = function (condition, update, callback) {
-    CaseTaxi.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
+    CaseCar.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseTaxi [id=' + doc._id + ']');
+            logger.debug('Succeed to update CaseCar [id=' + doc._id + ']');
             callback(null, doc);
         }
     });
 };
 
 Service.find = function (params, callback) {
-    var query = CaseTaxi.find();
+    var query = CaseCar.find();
 
     if (params.options) {
         query.setOptions(params.options);
@@ -107,7 +107,7 @@ Service.find = function (params, callback) {
 };
 
 Service.filter = function (params, callback) {
-    var query = CaseTaxi.find();
+    var query = CaseCar.find();
 
     if (params.options) {
         query.setOptions(params.options);

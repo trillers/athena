@@ -49,7 +49,7 @@ module.exports = function(data, user, message){
                         }
                     };
                     var doc = yield createCaseToMango(executedData.payload, user);
-                    redis.publish('call taxi', JSON.stringify(txCase));
+                    redis.publish('call_car', JSON.stringify(txCase));
                     executedData.payload.caseId = doc._id;
                     executedData.payload.status = CaseStatusEnum.Reviewing.value();
                     return cskv.savePlaceCaseAsync(user.wx_openid, executedData);
@@ -69,7 +69,7 @@ function allDone(data){
 function* createCaseToMango(data, user){
     try{
         var doc = yield caseService.create(data);
-        //redis.publish('call taxi', JSON.stringify(doc));
+        //redis.publish('call_taxi', JSON.stringify(doc));
         //yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
         yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
         return doc;

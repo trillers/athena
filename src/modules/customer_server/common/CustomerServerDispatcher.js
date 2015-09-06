@@ -1,4 +1,5 @@
 var cskv = require('../kvs/CustomerServer');
+var MessageHandler = require('../kvs/MessageHandler');
 var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
@@ -6,11 +7,14 @@ var CustomerServerDispatcher = function(){
     this.handlers = {};
     this.defaultHandler = null;
     this.nullHandler = null;
-    //this.redisClient = redis.createClient();
-    //this.redisClientInit();
+    this.init();
 }
 
 var prototype  = CustomerServerDispatcher.prototype;
+
+prototype.init = function(){
+    new MessageHandler();
+}
 
 prototype.redisClientInit = function(){
     var self = this;

@@ -3,13 +3,13 @@ var MessageService = require('../../message/services/MessageService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var cskv = require('../kvs/CustomerServer');
-var caseTaxiHandler = require('./cases/caseTaxiHandler');
+var caseCarHandler = require('./cases/caseCarHandler');
 var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
 var command = require('./commands');
 var wechatApi = require('../../wechat/common/api').api;
 var caseType = {
-    'tx':caseTaxiHandler,
+    'car':caseCarHandler,
     'co':caseCoffeeHandler
 }
 var cmdWorkflow = require('../common/FSM').getWf('cmdWorkflow');
@@ -48,8 +48,10 @@ var handle = function(user, message){
                 wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前状态不能执行该操作');
                 return Promise.reject(new Error('illegalOperation'));
             }
+        } else {
+            wechatApi.sendTextAsync(user.wx_openid, '[系统]:操作不合法');
+            return Promise.reject(new Error('invalidOperation'));
         }
-        return;
     })
     .then(function(){
         return cskv.loadCSSByIdAsync(user.wx_openid)

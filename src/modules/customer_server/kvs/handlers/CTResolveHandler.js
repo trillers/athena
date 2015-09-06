@@ -3,7 +3,7 @@ var caseKv = require('../../../case/kvs/CaseServer');
 var userkv = require('../../../user/kvs/User');
 var wechatApi = require('../../../wechat/common/api').api;
 var caseService = require('../../../case/services/CaseService');
-var caseTaxiService = require('../../../case/services/CaseTaxiService');
+var caseCarService = require('../../../case/services/CaseCarService');
 var redis = require('../../../../app/redis-client')('pub');
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
@@ -19,8 +19,8 @@ module.exports = function* (message){
         var openId = yield userkv.loadOpenIdByPhoneAsync(phone);
         css = yield cskv.loadCSSByIdAsync(openId);
         var csOpenId = css.csId;
-        var caseTaxi = yield cskv.loadPlaceCaseAsync(csOpenId);
-        var caseId = caseTaxi.payload.caseId;
+        var caseCar = yield cskv.loadPlaceCaseAsync(csOpenId);
+        var caseId = caseCar.payload.caseId;
         var caseStatus = {
             caseId: caseId,
             status: CaseStatusEnum.Applying.value()
@@ -33,7 +33,7 @@ module.exports = function* (message){
         } catch (err) {
             //todo
             var cancelInfo = {caseNo: caseNo, phone: phone};
-            redis.publish('taxi cancel', JSON.stringify(cancelInfo));
+            redis.publish('car_cancel', JSON.stringify(cancelInfo));
             yield wechatApi.sendTextAsync(css.csId, '订单保存到数据库失败，已自动取消订单，请重新下单！');
             return;
         }

@@ -2,7 +2,7 @@ var mongoose = require('../../../app/mongoose');
 var DomainBuilder = require('../../../framework/model/DomainBuilder');
 
 var schema = DomainBuilder
-    .i('CaseTaxi')
+    .i('CaseCar')
     .withBasis()
     .withLifeFlag()
     .withCreatedOn()

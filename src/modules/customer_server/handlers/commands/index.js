@@ -1,27 +1,27 @@
 var onlineCommand = require('./onlineCommand');
 var offlineCommand = require('./offlineCommand');
-var callTaxiCommand = require('./callTaxiCommand');
+var callCarCommand = require('./callCarCommand');
 var closeConvCommand = require('./closeConvCommand');
 var bindUserCommand = require('./bindUserCommand')
 var viewStateCommand = require('./viewStateCommand')
 var commandSet = {
-    viewState: 'vs',
-    bindUser: 'bu',
-    rollback: 'qu',
-    quit: 'cc',
-    online: 'ol',
-    offline: 'of',
-    callTaxi: 'ct'
+    viewState: 'state',
+    bindUser: 'bind',
+    rollback: 'back',
+    quit: 'close',
+    online: 'on',
+    offline: 'off',
+    callCar: 'car'
 }
 
 var handlerSet = {
-    'vs': viewStateCommand,
-    'qu': "nothing",
-    'bu': bindUserCommand,
-    'ol': onlineCommand,
-    'of': offlineCommand,
-    'ct': callTaxiCommand,
-    'cc': closeConvCommand
+    'state': viewStateCommand,
+    'back': "nothing",
+    'bind': bindUserCommand,
+    'on': onlineCommand,
+    'off': offlineCommand,
+    'car': callCarCommand,
+    'close': closeConvCommand
 }
 
 var Command = function(){
@@ -31,8 +31,8 @@ var Command = function(){
 var pro = Command.prototype;
 pro.commandType = function(message){
     if(message.MsgType == 'text'){
-        if(message.Content.length >= 3 && message.Content[0] === ":" && handlerSet[message.Content.slice(1, 3)]){
-            return message.Content.slice(1, 3);
+        if(message.Content.length >= 3 && message.Content[0] === ":" && handlerSet[message.Content.slice(1)]){
+            return message.Content.slice(1);
         }
     }
     return null;

@@ -1,5 +1,5 @@
 var Case = require('../models/Case').model;
-var caseTaxiService = require('./CaseTaxiService');
+var caseCarService = require('./CaseCarService');
 var caseCoffeeService = require('./CaseCoffeeService');
 var CaseEnum = require('../../common/models/TypeRegistry').item('Case');
 var CaseStatus = require('../../common/models/TypeRegistry').item('CaseStatus');
@@ -8,7 +8,7 @@ var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
 var wechat = require('../../wechat/common/api');
 var subcaseServiceMap = {
-    'Taxi': caseTaxiService,
+    'Car': caseCarService,
     'Coffee': caseCoffeeService
 }
 var Service = {};

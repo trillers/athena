@@ -23,7 +23,7 @@ module.exports = function(user, message, callback){
             var css = yield cskv.loadCSSByIdAsync(user.wx_openid);
             var json = {
                 payload: {
-                    type: CaseEnum.Taxi.value(),
+                    type: CaseEnum.Car.value(),
                     status: CaseStatusEnum.Draft.value(),
                     commissionerId: userBiz._id,
                     commissionerPhone: userBiz.phone,
