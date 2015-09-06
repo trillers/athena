@@ -196,6 +196,8 @@ var getUserFromWechatAsync = Promise.promisify(getUserFromWechat);
 Service.getUserFromWechatAsync = getUserFromWechatAsync;
 
 Service.loadOrCreateFromWechat = function(openid, callback){
+    console.log(openid);
+    console.log(UserKv.loadIdByOpenidAsync);
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){
             console.log(1)
