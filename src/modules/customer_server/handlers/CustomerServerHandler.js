@@ -29,14 +29,14 @@ var handle = function(user, message){
         return;
     })
     .then(function(){
-        var commandType = command.commandType(message);
-        if(commandType) {
-            var executeFn = command.commandHandler(commandType);
-            if(cmdWorkflow.canInWild(command.getActionName(commandType), stt)){
-                executeFn(user, message, function(err, data){
-                    console.log(commandType + 'command finish');
+        var com = command.getCommand(message);
+        if(com) {
+            if(cmdWorkflow.canInWild(command.getActionName(com.action), stt)){
+                var executeFn = command.commandHandler(com.action);
+                executeFn(user, com.arg, function(err, data){
+                    console.log(com.action + 'command finish');
                     if(!err){
-                        var status = cmdWorkflow.transition(command.getActionName(commandType), stt)
+                        var status = cmdWorkflow.transition(command.getActionName(com.action), stt)
                         cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, status)
                             .then(function(){
                                 return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
@@ -48,9 +48,6 @@ var handle = function(user, message){
                 wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前状态不能执行该操作');
                 return Promise.reject(new Error('illegalOperation'));
             }
-        } else {
-            wechatApi.sendTextAsync(user.wx_openid, '[系统]:操作不合法');
-            return Promise.reject(new Error('invalidOperation'));
         }
     })
     .then(function(){

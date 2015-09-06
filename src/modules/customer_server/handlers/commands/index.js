@@ -2,26 +2,38 @@ var onlineCommand = require('./onlineCommand');
 var offlineCommand = require('./offlineCommand');
 var callCarCommand = require('./callCarCommand');
 var closeConvCommand = require('./closeConvCommand');
-var bindUserCommand = require('./bindUserCommand')
-var viewStateCommand = require('./viewStateCommand')
+var bindUserCommand = require('./bindUserCommand');
+var viewStateCommand = require('./viewStateCommand');
+var modifyFromCommand = require('./modifyFromCommand');
+var modifyToCommand = require('./modifyToCommand');
+var submitCommand = require('./submitCommand');
+//var rollbackCommand = require('./rollbackCommand');
+
 var commandSet = {
     viewState: 'state',
     bindUser: 'bind',
     rollback: 'back',
-    quit: 'close',
+    close: 'close',
+    quit: 'quit',
     online: 'on',
     offline: 'off',
-    callCar: 'car'
+    callCar: 'car',
+    modifyFrom: 'from',
+    modifyTo: 'to',
+    submitOrder: 'submit'
 }
 
 var handlerSet = {
     'state': viewStateCommand,
-    'back': "nothing",
+    'back': '',
     'bind': bindUserCommand,
     'on': onlineCommand,
     'off': offlineCommand,
     'car': callCarCommand,
-    'close': closeConvCommand
+    'close': closeConvCommand,
+    'modifyFrom': modifyFromCommand,
+    'modifyTo': modifyToCommand,
+    'submit': submitCommand
 }
 
 var Command = function(){
@@ -29,11 +41,19 @@ var Command = function(){
 }
 
 var pro = Command.prototype;
-pro.commandType = function(message){
+pro.getCommand = function(message){
     if(message.MsgType == 'text'){
-        if(message.Content.length >= 3 && message.Content[0] === ":" && handlerSet[message.Content.slice(1)]){
-            return message.Content.slice(1);
+        var msgArr = message.Content.split(' ').filter(function(item){
+            return item !== '';
+        });
+        if(msgArr[0].length >= 3 && msgArr[0][0] === ":" && handlerSet[msgArr[0].slice(1)]){
+            var command = {
+                action: msgArr[0].slice(1),
+                arg: msgArr.length > 1 ? msgArr[1] : null
+            }
+            return command;
         }
+        return null;
     }
     return null;
 }

@@ -7,12 +7,9 @@ var command = require('../commands');
 var thunkify = require('thunkify');
 var Promise = require('bluebird');
 var fillFormThunk = thunkify(fillForm);
-var caseService = require('../../../case/services/CaseService');
 var wechatApi = require('../../../wechat/common/api').api;
 var co = require('co');
 var redis = require('../../../../app/redis-client')('pub');
-var carCaseWorkflow = require('../../../case/common/FSM').getWf('carCaseWorkflow');
-var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 
 //placeCase:openid  {type: ct, payload:{xxx: 1, yyy: 2}, step:2}
 var step = {
@@ -33,27 +30,21 @@ module.exports = function(data, user, message){
     var args = arguments;
     co(function* (){
         var result = yield cancelOrder(user, message);
+        yield orderRollback(user, message);
         if(!result) {
             try {
                 var executedData = yield fillFormAsync(codata.step, args);
                 if (allDone(executedData)) {
                     console.log('**********************');
                     console.log(executedData);
-                    var txCase = {
-                        name: 'callFastCar',
-                        from: executedData.payload.origin,
-                        to: executedData.payload.destination,
-                        startTime: executedData.payload.time,
-                        user: {
-                            phone: executedData.commissionerPhone
-                        }
-                    };
-                    var doc = yield createCaseToMango(executedData.payload, user);
-                    redis.publish('call_car', JSON.stringify(txCase));
-                    executedData.payload.caseId = doc._id;
-                    executedData.payload.status = CaseStatusEnum.Reviewing.value();
-                    return cskv.savePlaceCaseAsync(user.wx_openid, executedData);
-                    //return yield createCaseToMango(executedData, user);
+                    var reply = '[系统]:当前订单：</br>'
+                        + '-------------------------------------'
+                        + '起点：        ' + executedData.payload.origin + '</br>'
+                        + '终点：        ' + executedData.payload.destination + '</br>'
+                        + '用车时间：     ' + executedData.payload.time + '</br>';
+                    wechatApi.sendText(user.wx_openid, reply, function(err, result){
+                        if(callback) return callback(err, result);
+                    });
                 }
             } catch (e) {
                 console.log('Error Occur------------------')
@@ -66,23 +57,9 @@ module.exports = function(data, user, message){
 function allDone(data){
     return data.step === Object.keys(step).length + 1;
 }
-function* createCaseToMango(data, user){
-    try{
-        var doc = yield caseService.create(data);
-        //redis.publish('call_taxi', JSON.stringify(doc));
-        //yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单成功');
-        yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
-        return doc;
 
-        //yield cskv.delPlaceCaseAsync(user.wx_openid);
-    }catch(err){
-        yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:下单失败，请联系管理员');
-        yield cskv.delPlaceCaseAsync('tx', user.wx_openid);
-        return null
-    }
-}
 function* cancelOrder(user, message){
-    if(command.commandType(message) === command.commandSet.rollback){
+    if(command.getCommand(message).action === command.commandSet.quit){
         yield cskv.delPlaceCaseAsync(user.wx_openid);
         yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:订单已取消');
         yield cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'busy');
@@ -90,6 +67,13 @@ function* cancelOrder(user, message){
     }
     return false;
 }
+
+function* orderRollback(orderData, message){
+    if(command.getCommand(message).action === command.commandSet.rollback){
+        orderData.step = parseInt(orderData.step) - 1;
+    }
+}
+
 function fillForm(type, args, callback){
     if(step && step[type] && step[type]['fn']){
         return step[type]['fn']([].concat.call([].slice.call(args), callback));
