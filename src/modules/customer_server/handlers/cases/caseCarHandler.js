@@ -1,6 +1,6 @@
 var cskv = require('../../kvs/CustomerServer');
 var _ = require('underscore')._;
-var fillUseTime = stepFnGenerator('time');
+var fillUseTime = stepFnGenerator('useTime');
 var fillOrigin = stepFnGenerator('origin');
 var fillDestination = stepFnGenerator('destination');
 var command = require('../commands');
@@ -41,7 +41,7 @@ module.exports = function(data, user, message){
                         + '-------------------------------------'
                         + '起点：        ' + executedData.payload.origin + '</br>'
                         + '终点：        ' + executedData.payload.destination + '</br>'
-                        + '用车时间：     ' + executedData.payload.time + '</br>';
+                        + '用车时间：     ' + executedData.payload.useTime + '</br>';
                     wechatApi.sendText(user.wx_openid, reply, function(err, result){
                         if(callback) return callback(err, result);
                     });

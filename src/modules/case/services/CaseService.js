@@ -7,6 +7,7 @@ var settings = require('athena-settings');
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
 var wechat = require('../../wechat/common/api');
+var co = require('co');
 var subcaseServiceMap = {
     'Car': caseCarService,
     'Coffee': caseCoffeeService
@@ -17,7 +18,7 @@ Service.load = function* (id) {
     try {
         var doc = yield Case.findById(id).lean(true).exec();
         var subcaseService = subcaseServiceMap[CaseStatus.name(doc.type)];
-        var subcase = yield subcaseService.loadAysnc(doc.subcase);
+        var subcase = yield subcaseService.loadByCaseIdAysnc(doc._id);
         doc.subcase = subcase;
         logger.debug('Succeed to load  Case [id=' + id + ']');
         return doc;
@@ -65,7 +66,7 @@ Service.updateByCondition = function* (condition, update) {
 };
 
 Service.find = function* (params) {
-    var query = Conversation.find();
+    var query = Case.find();
 
     if (params.options) {
         query.setOptions(params.options);
@@ -94,7 +95,7 @@ Service.find = function* (params) {
 };
 
 Service.filter = function* (params) {
-    var query = Conversation.find();
+    var query = Case.find();
 
     if (params.options) {
         query.setOptions(params.options);

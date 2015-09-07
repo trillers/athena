@@ -19,7 +19,7 @@ module.exports = function(user, message, callback){
                         + '-------------------------------------'
                         + '起点：        ' + carOrder.payload.origin + '</br>'
                         + '终点：        ' + carOrder.payload.destination + '</br>'
-                        + '用车时间：     ' + carOrder.payload.time + '</br>';
+                        + '用车时间：     ' + carOrder.payload.useTime + '</br>';
                     wechatApi.sendText(user.wx_openid, reply, function(err, result){
                         if(callback) return callback(err, result);
                     });

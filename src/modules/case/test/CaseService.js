@@ -2,35 +2,42 @@ var assert = require("assert");
 var cs = require('../services/CaseService');
 var co = require('co')
 describe('CustomerServer', function() {
+    var caseCar = {
+        type: 'car',
+        desc: '这是一个用车单',
+        status: 'df',
+        commissionerId: 'id1',
+        commissionerPhone: '13208571443',
+        responsibleId: 'id2',
+        conversationId: 'id3',
+        useTime: '02-0404',
+        evaluation: '3.9',
+        origin: '回龙观',
+        destination: '西二旗',
+        carType: 'kc',
+    }, caseId;
 
-    it('create test', function (done) {
-        var mock = {
-            type: 'tx',
-            desc: '从西二旗到回龙观',
-            status: 'up',
-            commissionerId: 'id1',
-            responsibleId: 'id2',
-            conversationId: 'id3',
-            paymentMethod: '微信支付',
-            cost: 16.5,
-            useTime: new Date(),
-            place: '孵化器2号楼旗杆处',
-            evaluation: '好',
-            subcase: 'id4',
-            origin: 'huilongguan',
-            destination: 'xierqi',
-            driverName: 'zhangsan',
-            driverPhone: '138888888',
-            carLicensePlate: '7777',
-            carModel: '奔驰',
-            mileage: 20
-        }
-        co(function* (){
-            var data = yield cs.create(mock);
-            assert.ok(true);
-            done();
-        }).catch(function(err){
-            console.log(err)
-        })
-    });
+    /**
+     * does't throw
+     */
+    //it('create', function (done) {
+    //    co(function* (){
+    //        var data = yield cs.create(caseCar);
+    //        caseId = data._id;
+    //        assert.ok(!data._id);
+    //        done();
+    //    }).catch(function(err){
+    //        console.log(err)
+    //    })
+    //});
+    //
+    //it('load', function (done) {
+    //    co(function* (){
+    //        var data = yield cs.load(caseId);
+    //        assert.equal(data.evaluation, '3.9');
+    //        done();
+    //    }).catch(function(err){
+    //        console.log(err);
+    //    })
+    //});
 })
