@@ -20,24 +20,25 @@ describe('CustomerServer', function() {
     /**
      * does't throw
      */
-    //it('create', function (done) {
-    //    co(function* (){
-    //        var data = yield cs.create(caseCar);
-    //        caseId = data._id;
-    //        assert.ok(!data._id);
-    //        done();
-    //    }).catch(function(err){
-    //        console.log(err)
-    //    })
-    //});
-    //
-    //it('load', function (done) {
-    //    co(function* (){
-    //        var data = yield cs.load(caseId);
-    //        assert.equal(data.evaluation, '3.9');
-    //        done();
-    //    }).catch(function(err){
-    //        console.log(err);
-    //    })
-    //});
+    it('create', function (done) {
+        co(function* (){
+            var data = yield cs.create(caseCar);
+            console.log('aaaaaaa');
+            caseId = data._id;
+            assert.ok(!data._id);
+            done();
+        }).catch(function(err){
+            console.log(err)
+        })
+    });
+
+    it('load', function (done) {
+        co(function* (){
+            var data = yield cs.load(caseId);
+            assert.equal(data.evaluation, '3.9');
+            done();
+        }).catch(function(err){
+            console.log(err);
+        })
+    });
 })

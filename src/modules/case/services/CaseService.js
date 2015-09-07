@@ -32,6 +32,7 @@ Service.create = function* (json) {
         var subcaseService = subcaseServiceMap[CaseEnum.valueNames(json.type)];
         var abscase = new Case(json);
         var result = yield abscase.save();
+        console.log('bbbb');
         result = result.toObject();
         json.case = result._id;
         var subcase = yield subcaseService.createAsync(json);
