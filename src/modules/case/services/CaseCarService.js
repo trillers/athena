@@ -5,15 +5,15 @@ var Promise = require('bluebird');
 
 var Service = {};
 
-Service.load = function (id, callback) {
-    CaseCar.findById(id).lean(true).exec(function (err, doc) {
+Service.loadByCaseId = function (caseId, callback) {
+    CaseCar.find({case: caseId}).lean(true).exec(function (err, doc) {
         if (err) {
-            logger.error('Fail to load CaseCar [id=' + id + ']: ' + err);
+            logger.error('Fail to load CaseCar [caseId=' + caseId + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to load  CaseCar [id=' + id + ']');
+        logger.debug('Succeed to load  CaseCar [caseId=' + caseId + ']');
         if (callback) callback(null, doc);
     })
 };

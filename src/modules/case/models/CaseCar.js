@@ -10,14 +10,15 @@ var schema = DomainBuilder
         case: {type: String, ref: 'Case', require: true},            //关联caseId
         origin: {type: String, require: true},         //出发地
         destination: {type: String, require: true},    //目的地
-        driverName: {type: String, require: true},     //司机姓名
-        driverPhone: {type: String, require: true},    //司机手机
-        carLicensePlate: {type: String, require: true},//车牌照
-        carModel: {type: String, require: true},       //车型
+        driverName: {type: String},     //司机姓名
+        evaluation: {type: String},                    //司机评分
+        driverPhone: {type: String},    //司机手机
+        carLicensePlate: {type: String},//车牌照
+        carModel: {type: String},       //车型
         carType: {type: String},                        //用车类型
         mileage: {type: Number},                        //里程数
-        estimatedCost: {type: Number, require: true},   //预估费用
-        time: {type: String, require: true}               //用车时间
+        estimatedCost: {type: Number},   //预估费用
+        useTime: {type: String, require: true}               //用车时间
     })
     .build();
 

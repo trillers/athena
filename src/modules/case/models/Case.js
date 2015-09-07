@@ -25,7 +25,7 @@ var schema = DomainBuilder
         //useTime: {type: Date, default: new Date(), require: true},
         //place: {type: String, require: true},
         //evaluation: {type: String},
-        subcase: {type: String, require: true}
+        //subcase: {type: String, require: true}
     })
     .build();
 module.exports.schema = schema;

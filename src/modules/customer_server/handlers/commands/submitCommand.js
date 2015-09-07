@@ -17,7 +17,7 @@ module.exports = function(user, message, callback){
                 name: 'callFastCar',
                 from: carOrder.payload.origin,
                 to: carOrder.payload.destination,
-                startTime: carOrder.payload.time,
+                startTime: carOrder.payload.useTime,
                 user: {
                     phone: carOrder.commissionerPhone
                 }
