@@ -67,37 +67,37 @@ WechatEmitter.prototype.emit = function(context){
 
 /**
  * custom message: message
- * register a message listener for any type of messages
- * @param listener
+ * register a message handler for any type of messages
+ * @param handler
  */
-WechatEmitter.prototype.message = function(listener){ this.emitter.on('message', listener); };
+WechatEmitter.prototype.message = function(handler){ this.emitter.on('message', handler); };
 
 /**
  * unknow message: unknown
- * register a message listener for unknown type of messages
- * @param listener
+ * register a message handler for unknown type of messages
+ * @param handler
  */
-WechatEmitter.prototype.unknown = function(listener){ this.emitter.on('unknown', listener); };
+WechatEmitter.prototype.unknown = function(handler){ this.emitter.on('unknown', handler); };
 
 /**
  * msg type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
  */
-WechatEmitter.prototype.subscribe = function(listener){ this.emitter.on('subscribe', listener); };
-WechatEmitter.prototype.unsubscribe = function(listener){ this.emitter.on('unsubscribe', listener); };
-WechatEmitter.prototype.LOCATION = function(listener){ this.emitter.on('LOCATION', listener); };
-WechatEmitter.prototype.SCAN = function(listener){ this.emitter.on('SCAN', listener); };
-WechatEmitter.prototype.CLICK = function(listener){ this.emitter.on('CLICK', listener); };
-WechatEmitter.prototype.VIEW = function(listener){ this.emitter.on('VIEW', listener); };
+WechatEmitter.prototype.subscribe = function(handler){ this.emitter.on('subscribe', handler); };
+WechatEmitter.prototype.unsubscribe = function(handler){ this.emitter.on('unsubscribe', handler); };
+WechatEmitter.prototype.LOCATION = function(handler){ this.emitter.on('LOCATION', handler); };
+WechatEmitter.prototype.SCAN = function(handler){ this.emitter.on('SCAN', handler); };
+WechatEmitter.prototype.CLICK = function(handler){ this.emitter.on('CLICK', handler); };
+WechatEmitter.prototype.VIEW = function(handler){ this.emitter.on('VIEW', handler); };
 
 /**
  * msg type includes: text image voice video shortvideo location link
  */
-WechatEmitter.prototype.text = function(listener){ this.emitter.on('text', listener); };
-WechatEmitter.prototype.image = function(listener){ this.emitter.on('image', listener); };
-WechatEmitter.prototype.voice = function(listener){ this.emitter.on('voice', listener); };
-WechatEmitter.prototype.video = function(listener){ this.emitter.on('video', listener); };
-WechatEmitter.prototype.shortvideo = function(listener){ this.emitter.on('shortvideo', listener); };
-WechatEmitter.prototype.location = function(listener){ this.emitter.on('location', listener); };
-WechatEmitter.prototype.link = function(listener){ this.emitter.on('link', listener); };
+WechatEmitter.prototype.text = function(handler){ this.emitter.on('text', handler); };
+WechatEmitter.prototype.image = function(handler){ this.emitter.on('image', handler); };
+WechatEmitter.prototype.voice = function(handler){ this.emitter.on('voice', handler); };
+WechatEmitter.prototype.video = function(handler){ this.emitter.on('video', handler); };
+WechatEmitter.prototype.shortvideo = function(handler){ this.emitter.on('shortvideo', handler); };
+WechatEmitter.prototype.location = function(handler){ this.emitter.on('location', handler); };
+WechatEmitter.prototype.link = function(handler){ this.emitter.on('link', handler); };
 
 module.exports = WechatEmitter;
