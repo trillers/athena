@@ -44,7 +44,11 @@ module.exports = function() {
 
     frankon.use(require('../../modules/wechat/middlewares/user-heartbeat'));
 
+    var WechatEmitter = require('../../framework/WechatEmitter');
+    var wechatEmitter = new WechatEmitter();
     frankon.use(function* (next) {
+        require('../../modules/didi/handlers/CarOrder')(wechatEmitter);
+        wechatEmitter.emit(this);
     //根据角色，分别派遣session，然后next
         var self = this;
         var user = this.wxUser;
