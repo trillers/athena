@@ -2,22 +2,66 @@ var WechatEmitter = require('../../src/framework/WechatEmitter');
 var assert = require('assert');
 
 describe('custom messages', function() {
-    it('message', function (done) {
+    it('raw', function (done) {
         var emitter = new WechatEmitter();
         var context = {
             weixin: {MsgType: 'event', Event: 'subscribe'},
             user: {id: 'test', openid: 'asfsafadsf'}
         };
-        emitter.message(function (event, context) {
-            assert.equal(event, 'message');
+        emitter.raw(function (event, context) {
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'subscribe');
             console.info(event + '1');
             console.info(context);
         });
-        emitter.message(function (event, context) {
-            assert.equal(event, 'message');
+        emitter.raw(function (event, context) {
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'subscribe');
             console.info(event + '2');
+            console.info(context);
+        });
+        emitter.emit(context);
+        done();
+    })
+
+    it('event', function (done) {
+        var emitter = new WechatEmitter();
+        var context = {
+            weixin: {MsgType: 'event', Event: 'subscribe'},
+            user: {id: 'test', openid: 'asfsafadsf'}
+        };
+        emitter.event(function (event, context) {
+            assert.equal(event, 'event');
+            assert.equal(context.weixin.Event, 'subscribe');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.subscribe(function (event, context) {
+            assert.equal(event, 'subscribe');
+            assert.equal(context.weixin.Event, 'subscribe');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.emit(context);
+        done();
+    })
+
+    it('message', function (done) {
+        var emitter = new WechatEmitter();
+        var context = {
+            weixin: {MsgType: 'text', Content: 'hi'},
+            user: {id: 'test', openid: 'asfsafadsf'}
+        };
+        emitter.message(function (event, context) {
+            assert.equal(event, 'message');
+            assert.equal(context.weixin.Content, 'hi');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.text(function (event, context) {
+            assert.equal(event, 'text');
+            assert.equal(context.weixin.Content, 'hi');
+            console.info(event);
             console.info(context);
         });
         emitter.emit(context);
@@ -30,8 +74,8 @@ describe('custom messages', function() {
             weixin: { MsgType: 'event', Event: 'enter' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'enter');
             console.info(event);
             console.info(context);
@@ -54,8 +98,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'subscribe' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'subscribe');
             console.info(event);
             console.info(context);
@@ -76,8 +120,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'unsubscribe' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'unsubscribe');
             console.info(event);
             console.info(context);
@@ -98,8 +142,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'LOCATION' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'LOCATION');
             console.info(event);
             console.info(context);
@@ -120,8 +164,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'SCAN' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'SCAN');
             console.info(event);
             console.info(context);
@@ -142,8 +186,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'CLICK' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'CLICK');
             console.info(event);
             console.info(context);
@@ -164,8 +208,8 @@ describe('event messages', function(){
             weixin: { MsgType: 'event', Event: 'VIEW' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.Event, 'VIEW');
             console.info(event);
             console.info(context);
@@ -189,8 +233,8 @@ describe('messages', function(){
             weixin: { MsgType: 'text' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'text');
             console.info(event);
             console.info(context);
@@ -211,8 +255,8 @@ describe('messages', function(){
             weixin: { MsgType: 'image' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'image');
             console.info(event);
             console.info(context);
@@ -233,8 +277,8 @@ describe('messages', function(){
             weixin: { MsgType: 'voice' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'voice');
             console.info(event);
             console.info(context);
@@ -255,8 +299,8 @@ describe('messages', function(){
             weixin: { MsgType: 'video' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'video');
             console.info(event);
             console.info(context);
@@ -277,8 +321,8 @@ describe('messages', function(){
             weixin: { MsgType: 'shortvideo' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'shortvideo');
             console.info(event);
             console.info(context);
@@ -299,8 +343,8 @@ describe('messages', function(){
             weixin: { MsgType: 'location' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'location');
             console.info(event);
             console.info(context);
@@ -321,8 +365,8 @@ describe('messages', function(){
             weixin: { MsgType: 'link' },
             user: { id: 'test', openid: 'asfsafadsf' }
         };
-        emitter.message(function(event, context){
-            assert.equal(event, 'message');
+        emitter.raw(function(event, context){
+            assert.equal(event, 'raw');
             assert.equal(context.weixin.MsgType, 'link');
             console.info(event);
             console.info(context);
