@@ -25,7 +25,8 @@ var MSG_TYPES = {
 /**
  * event type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
  * msg type includes: text image voice video shortvideo location link
- * other type incudes: message (for all message), unknown
+ * other type incudes: raw (for all message), event (for all event),
+ * message (for all pure message), unknown.
  * @param context
  */
 WechatEmitter.prototype.emit = function(context){
@@ -34,7 +35,7 @@ WechatEmitter.prototype.emit = function(context){
     /*
      * emit event for general messages here
      */
-    this.emitter.emit('message', 'message', context);
+    this.emitter.emit('raw', 'raw', context);
 
     var msgType = msg.MsgType;
     var eventType = msg.Event;
@@ -43,6 +44,7 @@ WechatEmitter.prototype.emit = function(context){
      * emit event for specific types of messages here
      */
     if(msgType == 'event'){
+        this.emitter.emit('event', 'event', context);
         /**
          * event type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
          */
@@ -53,6 +55,7 @@ WechatEmitter.prototype.emit = function(context){
             this.emitter.emit('unknown', 'unknown', context);
         }
     }else{
+        this.emitter.emit('message', 'message', context);
         /**
          * msg type includes: text image voice video shortvideo location link
          */
@@ -66,8 +69,22 @@ WechatEmitter.prototype.emit = function(context){
 };
 
 /**
- * custom message: message
+ * custom message: raw
  * register a message handler for any type of messages
+ * @param handler
+ */
+WechatEmitter.prototype.raw = function(handler){ this.emitter.on('raw', handler); };
+
+/**
+ * custom message: event
+ * register a message handler for event type of messages
+ * @param handler
+ */
+WechatEmitter.prototype.event = function(handler){ this.emitter.on('event', handler); };
+
+/**
+ * custom message: message
+ * register a message handler for pure message type of messages
  * @param handler
  */
 WechatEmitter.prototype.message = function(handler){ this.emitter.on('message', handler); };
