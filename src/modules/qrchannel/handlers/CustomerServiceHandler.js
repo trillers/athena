@@ -11,12 +11,12 @@ var handle = function* (message, user, ctx, qrChannel){
         wx_subscribe: 1,
         wx_subscribe_time: new Date(),
         $inc: {'subscribeCount': 1},
-        role: UserRole.CustomerServer.value()
+        role: UserRole.CustomerService.value()
     };
 
     try{
         yield UserService.updateAsync(user.id, userUpdate);
-        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerServer.value());
+        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerService.value());
     } catch (err){
         logger.error(err);
     }

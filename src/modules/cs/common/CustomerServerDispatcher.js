@@ -1,16 +1,16 @@
-var cskv = require('../kvs/CustomerServer');
+var cskv = require('../kvs/CustomerService');
 var MessageHandler = require('../kvs/MessageHandler');
 var wechatApi = require('../../wechat/common/api').api;
 var Promise = require('bluebird');
 
-var CustomerServerDispatcher = function(){
+var CustomerServiceDispatcher = function(){
     this.handlers = {};
     this.defaultHandler = null;
     this.nullHandler = null;
     this.init();
 }
 
-var prototype  = CustomerServerDispatcher.prototype;
+var prototype  = CustomerServiceDispatcher.prototype;
 
 prototype.init = function(){
     new MessageHandler();
@@ -77,4 +77,4 @@ prototype.dispatch = function(user, message){
     handler && handler.handle(user, message);
 }
 
-module.exports = CustomerServerDispatcher;
+module.exports = CustomerServiceDispatcher;

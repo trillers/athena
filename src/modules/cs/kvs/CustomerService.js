@@ -36,7 +36,7 @@ var getWelcomeStatusKey = function(openId){
     return 'cs:ws:' + openId;
 }
 
-var CustomerServer = {
+var CustomerService = {
     loadCSStatusByCSId: function(csId, callback){
         var key = csIdToCSStatusKey(csId);
         redis.get(key, function(err, result){
@@ -410,6 +410,6 @@ var CustomerServer = {
     }
 };
 
-CustomerServer = Promise.promisifyAll(CustomerServer);
+CustomerService = Promise.promisifyAll(CustomerService);
 
-module.exports = CustomerServer;
+module.exports = CustomerService;

@@ -1,7 +1,7 @@
 var assert = require("assert");
-var cskv = require('../kvs/CustomerServer');
+var cskv = require('../kvs/CustomerService');
 
-describe('CustomerServer', function(){
+describe('CustomerService', function(){
     var csId = 'ABC7', csOpenId = '4x88adf888dddd88dd', openId = 'rrrrrrrr',
         wcCss = {csId: csOpenId, type: 'wc', openId: openId, expire: '33333'},
         pcCss = {csId: csId, type: 'pc', openId: openId, expire: '44444'},

@@ -1,4 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
+var UserRole = require('../common/models/TypeRegistry').item('UserRole');
+
 var RoleEmitter = function(){
     this.emitter = new EventEmitter();
 };
@@ -12,13 +14,13 @@ var RoleEmitter = function(){
  */
 RoleEmitter.prototype.emit = function(context){
     var user = context.user;
-    if(user.role=='customer'){ //TODO revise it soon
+    if(user.role == UserRole.Customer.value()){
         this.emitter.emit('customer', 'customer', context);
     }
-    if(user.role=='customer service'){ //TODO revise it soon
+    if(user.role == UserRole.CustomerService.value()){
         this.emitter.emit('cs', 'cs', context);
     }
-    if(user.role=='administrator'){ //TODO revise it soon
+    if(user.role == UserRole.Admin.value()){
         this.emitter.emit('admin', 'admin', context);
     }
     else{

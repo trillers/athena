@@ -1,4 +1,4 @@
-var cskv = require('../../kvs/CustomerServer');
+var cskv = require('../../kvs/CustomerService');
 var _ = require('underscore')._;
 var fillUseTime = stepFnGenerator('useTime');
 var fillOrigin = stepFnGenerator('origin');

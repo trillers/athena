@@ -9,7 +9,7 @@ var UserKv = require('../../modules/user/kvs/User');
 var CSDispatcher = require('../../modules/customer_server');
 var productionMode = settings.env.mode == 'production';
 var logger = require('../../app/logging').logger;
-var cskv = require('../../modules/customer_server/kvs/CustomerServer');
+var cskv = require('../../modules/customer_server/kvs/CustomerService');
 var request = require('request');
 var UserLocationService = require('../../modules/location/services/UserLocationService');
 var tokenConfig = productionMode ? {
@@ -37,7 +37,7 @@ module.exports = function() {
         console.log('message');
         console.log(message);
         var user = yield ensureSignin(message, self, next);
-        this["wxUser"] = user;
+        this["user"] = user;
         WechatOperationService.logActionAsync(message);
         yield next;
     });
@@ -46,7 +46,9 @@ module.exports = function() {
 
     var WechatEmitter = require('../../framework/WechatEmitter');
     var wechatEmitter = new WechatEmitter();
-    require('../../modules/didi/handlers/CarOrder')(wechatEmitter);
+    require('../../modules/assistant/handlers/AssistantHandler')(wechatEmitter);
+    require('../../modules/wechat/handlers/WechatOperationHandler')(wechatEmitter);
+
     frankon.use(function* (next) {
         wechatEmitter.emit(this);
         this.body = '';

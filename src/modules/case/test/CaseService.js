@@ -1,7 +1,7 @@
 var assert = require("assert");
 var cs = require('../services/CaseService');
 var co = require('co')
-describe('CustomerServer', function() {
+describe('CustomerService', function() {
     var caseCar = {
         type: 'car',
         desc: '这是一个用车单',

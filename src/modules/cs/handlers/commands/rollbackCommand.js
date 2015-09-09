@@ -1,4 +1,4 @@
-var cskv = require('../../kvs/CustomerServer');
+var cskv = require('../../kvs/CustomerService');
 var co = require('co');
 var caseCarHandler = require('../cases/caseCarHandler');
 

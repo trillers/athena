@@ -1,4 +1,4 @@
-var cskv = require('../../kvs/CustomerServer');
+var cskv = require('../../kvs/CustomerService');
 var wechatApi = require('../../../wechat/common/api').api;
 
 module.exports = function(user, message, callback){

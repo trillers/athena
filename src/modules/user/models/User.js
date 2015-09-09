@@ -13,7 +13,7 @@ var schema = DomainBuilder
     .withProperties({
         token: {type: String}
         , stt: {type: String, enum: UserState.values(), required: true}
-        , role: {type: String, enum: UserRole.valueList(), default: UserRole.RegularUser.value()}
+        , role: {type: String, enum: UserRole.valueList(), default: UserRole.Customer.value()}
         //, tag: [{type: String, ref: 'Tag'}]
 
         , wx_openid: {type: String} //weixin openid

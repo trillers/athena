@@ -1,4 +1,4 @@
-var cskv = require('../../kvs/CustomerServer');
+var cskv = require('../../kvs/CustomerService');
 //var taskQueue = require('../../../conversation/common/ConversationQueue');
 var wechatApi = require('../../../wechat/common/api').api;
 
