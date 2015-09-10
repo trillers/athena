@@ -22,7 +22,7 @@ module.exports = function(user, message, callback){
                 destination: carOrder.payload.destination
             };
             //var doc = yield createCaseToMango(carOrder.payload, user);
-            redis.publish('DDCallFastCar', JSON.stringify(carCase));
+            redis.publish('DDSubmitFastCarOrder', JSON.stringify(carCase));
             carOrder.payload.caseId = doc._id;
             carOrder.payload.status = CaseStatusEnum.Reviewing.value();
             cskv.savePlaceCaseAsync(user.wx_openid, carOrder)

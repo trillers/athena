@@ -11,46 +11,45 @@ var DDOrderApplyingTimeoutHandler = require('./handlers/DDOrderApplyingTimeoutHa
 var DDOrderInServiceHandler = require('./handlers/DDOrderInServiceHandler');
 var DDOrderCompletedHandler = require('./handlers/DDOrderCompletedHandler');
 
-var MessageHandler = function(){
+var RedisSubscribe = function(){
     this.redisClient = redis;
     this.redisClientInit();
 }
 
 /**
- * OrderRejected :
- * OrderSubmit
- * OrderApplying :
- * OrderUndertaken
- * OrderCancelled
- * OrderApplyingTimeout
- * OrderInService
- * OrderCompleted
+ * DDOrderRejected :
+ * DDOrderSubmit
+ * DDOrderApplying :
+ * DDOrderUndertaken
+ * DDOrderCancelled
+ * DDOrderApplyingTimeout
+ * DDOrderInService
+ * DDOrderCompleted
  */
 
 var ChannelHandlerMap = {
     '__keyevent@0__:expired': ExpiredHandler,
-    'ddrejected': DDOrderRejectedHandler,
-    'ddapplying': DDOrderApplyingHandler,
-    'ddundertaken': DDOrderUndertakenHandler,
-    'ddcancelled': DDOrderCancelledHandler,
-    'ddapplyingtimeout': DDOrderApplyingTimeoutHandler,
-    'ddinservice': DDOrderInServiceHandler,
-    'ddcomplete': DDOrderCompletedHandler
+    'DDOrderRejected': DDOrderRejectedHandler,
+    'DDOrderApplying': DDOrderApplyingHandler,
+    'DDOrderUndertaken': DDOrderUndertakenHandler,
+    'DDOrderCancelled': DDOrderCancelledHandler,
+    'DDOrderApplyingTimeout': DDOrderApplyingTimeoutHandler,
+    'DDOrderInService': DDOrderInServiceHandler,
+    'DDOrderCompleted': DDOrderCompletedHandler
 }
 
-var prototype  = MessageHandler.prototype;
+var prototype  = RedisSubscribe.prototype;
 
 prototype.redisClientInit = function(){
     var self = this;
     self.redisClient.subscribe('__keyevent@0__:expired');
-    self.redisClient.subscribe('ddrejected');
-    self.redisClient.subscribe('ddsubmit');
-    self.redisClient.subscribe('ddapplying');
-    self.redisClient.subscribe('ddundertaken');
-    self.redisClient.subscribe('ddcancelled');
-    self.redisClient.subscribe('ddapplyingtimeout');
-    self.redisClient.subscribe('ddinservice');
-    self.redisClient.subscribe('ddcomplete');
+    self.redisClient.subscribe('DDOrderRejected');
+    self.redisClient.subscribe('DDOrderApplying');
+    self.redisClient.subscribe('DDOrderUndertaken');
+    self.redisClient.subscribe('DDOrderCancelled');
+    self.redisClient.subscribe('DDOrderApplyingTimeout');
+    self.redisClient.subscribe('DDOrderInService');
+    self.redisClient.subscribe('DDOrderCompleted');
 
     self.redisClient.on('message', self.handleRedisMessage.bind(self));
 }
@@ -59,4 +58,4 @@ prototype.handleRedisMessage = function(channel, message){
     co(ChannelHandlerMap[channel](message));
 }
 
-module.exports = MessageHandler;
+module.exports = RedisSubscribe;

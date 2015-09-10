@@ -7,7 +7,8 @@ var viewStateCommand = require('./viewStateCommand');
 var modifyFromCommand = require('./modifyFromCommand');
 var modifyToCommand = require('./modifyToCommand');
 var submitCommand = require('./submitCommand');
-//var rollbackCommand = require('./rollbackCommand');
+var cancelCommand = require('./cancelCommand');
+var rollbackCommand = require('./rollbackCommand');
 
 var commandSet = {
     viewState: 'state',
@@ -20,12 +21,13 @@ var commandSet = {
     callCar: 'car',
     modifyFrom: 'from',
     modifyTo: 'to',
-    submitOrder: 'submit'
+    submitOrder: 'submit',
+    cancelOrder: 'cancel'
 }
 
 var handlerSet = {
     'state': viewStateCommand,
-    'back': '',
+    'back': rollbackCommand,
     'bind': bindUserCommand,
     'on': onlineCommand,
     'off': offlineCommand,
@@ -33,7 +35,8 @@ var handlerSet = {
     'close': closeConvCommand,
     'modifyFrom': modifyFromCommand,
     'modifyTo': modifyToCommand,
-    'submit': submitCommand
+    'submit': submitCommand,
+    'cancel': cancelCommand
 }
 
 var Command = function(){
