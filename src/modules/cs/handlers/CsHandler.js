@@ -5,6 +5,7 @@ var cskv = require('../kvs/CustomerService');
 var caseCarHandler = require('./cases/caseCarHandler');
 var caseCoffeeHandler = require('./cases/caseCoffeeHandler');
 var co = require('co');
+var Promise = require('bluebird');
 var command = require('./commands');
 var wechatApi = require('../../wechat/common/api').api;
 var caseType = {
@@ -88,6 +89,53 @@ var handle = function(user, message){
         })
 }
 
+function sendCustomerProfile(conversation, callback){
+    var userdoc;
+    userBizService.loadByOpenidAsync(conversation.initiator)
+        .then(function(user){
+            userdoc = _.pick(user, 'nickName', 'phone');
+            var res = '客户信息——————————————\n'+
+                '客户昵称：'+ (userdoc.nickName || '匿名') + '\n' +
+                '手机号码：'+ userdoc.phone;
+            return wechatApi.sendTextAsync(conversation.csId, res)
+        })
+        .then(function(){
+            callback(null, userdoc);
+        })
+        .catch(function(){
+            callback(new Error('Failed to send user profile'), null);
+        })
+}
+function sendHistoryMsgs(conversation, callback){
+    var msgs = []
+    var params = {
+        conditions: {
+            channel: conversation._id
+        }
+    }
+    messageService.filterAsync(params)
+        .then(function(docs){
+            msgs = docs;
+            return wechatApi.sendTextAsync(conversation.csId, '您已连接新客户=========')
+        })
+        .then(function(){
+            var promiseArr = [];
+            for(var i=0,len=msgs.length;i<len;i++){
+                var item = msgs[i];
+                promiseArr.push(wechatApi['send' + _firstCharUpper(MsgContentType.valueNames(item.contentType)) + 'Async'](conversation.csId, item.content))
+            }
+            Promise.all(promiseArr).then(function(){
+                console.log('Succeed to send history message')
+                callback(null, null)
+            }).catch(function(){
+                callback(new Error('Failed to send history message'), null)
+            })
+        })
+}
+function _firstCharUpper(str){
+    return str.charAt(0).toUpperCase() + str.slice(1)
+}
+
 module.exports = function(emitter){
     emitter.cs(function(event, context){
         console.log('emit customer service handler');
@@ -96,3 +144,6 @@ module.exports = function(emitter){
         handle(user, msg);
     });
 };
+
+module.exports.sendCustomerProfileAsync = Promise.promisify(sendCustomerProfile);
+module.exports.sendHistoryMsgsAsync = Promise.promisify(sendHistoryMsgs);

@@ -2,7 +2,7 @@ var cskv = require('../../customer_server/kvs/CustomerService');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
-var CustomerServiceHandler = require('../../customer_server/handlers/CustomerServiceHandler');
+var CustomerServiceHandler = require('../../cs/handlers/CsHandler');
 var cmdWorkflow = require('../../cs/common/FSM').getWf('cmdWorkflow');
 
 function ConversationQueue(){
