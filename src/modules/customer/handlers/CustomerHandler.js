@@ -51,7 +51,7 @@ var handle = function(user, message){
             console.log(e)
         })
 }
-function _fetchConversation(user){
+function _fetchConversation(user, callback){
     //var con = null, conQueue;
     //yield con = cskv.loadCSSByIdAsync(user.wx_openid);
     //if(con) return con;
@@ -77,7 +77,7 @@ function _fetchConversation(user){
                 console.log('have css');
                 return callback(null, conversation);
             }
-
+            console.log('----------------1111');
             return cskv.loadConQueueAsync();
         })
         .then(function(conQueue){
@@ -88,11 +88,13 @@ function _fetchConversation(user){
                     con = item;
                 }
             });
+            console.log('===================22222');
             if(con) return callback(null, con);
             var conversation = {
                 initiator: user.wx_openid,
                 createTime: new Date()
             }
+            console.log('*****************33333');
             conversationService.createAsync(conversation)
                 .then(function(conversation){
                     console.log('created conversation');
