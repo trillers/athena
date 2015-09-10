@@ -2,6 +2,7 @@ var path = require('path');
 var views = require('co-views');
 var render= views(path.join(__dirname, '../../views'), { map: { html: 'swig' }});
 var cskv = require('../../modules/customer_server/kvs/CustomerService');
+var userkv = require('../../modules/user/kvs/User');
 var userBizService = require('../../modules/user/services/UserBizService')
 var wechatApi = require('../../modules/wechat/common/api').api;
 module.exports=function(router){
@@ -20,7 +21,7 @@ module.exports=function(router){
         this.status = 200;
         this.body = {result: 'ok'}
         try{
-            var result = yield cskv.loadCSSByIdAsync(user.wx_openid)
+            var result = yield cskv.loadCSSByIdAsync(user.wx_openid);
             if(result){
                 var updateOrNot = yield userBizService.updateByConditionAsync({wx_openid: user.wx_openid}, {phone: phone})
                 if(!updateOrNot){
@@ -31,6 +32,7 @@ module.exports=function(router){
                     }
                     yield userBizService.createAsync(json);
                 }
+                yield userkv.loadOpenIdByPhoneAsync(phone, user.wx_openid);
                 yield wechatApi.sendTextAsync(result.csId, '[系统]:绑定用户成功');
             }
         }catch(e){

@@ -9,21 +9,20 @@ module.exports = function(user, message, callback){
         try{
             var carOrder = yield cskv.loadPlaceCaseAsync(user.wx_openid);
             if(!carOrder){
-                yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前没有可修改的用车订单');
+                yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:当前没有可提交的用车订单');
                 return callback(new Error('no car order'), null);
             }
 
             var carCase = {
-                name: 'callFastCar',
-                from: carOrder.payload.origin,
-                to: carOrder.payload.destination,
-                startTime: carOrder.payload.useTime,
-                user: {
-                    phone: carOrder.commissionerPhone
-                }
+                type: 'car',
+                commissionerPhone: carOrder.commissionerPhone,
+                conversationId: carOrder.conversationId,
+                useTime: carOrder.payload.useTime,
+                origin: carOrder.payload.origin,
+                destination: carOrder.payload.destination
             };
-            var doc = yield createCaseToMango(carOrder.payload, user);
-            redis.publish('call_car', JSON.stringify(carCase));
+            //var doc = yield createCaseToMango(carOrder.payload, user);
+            redis.publish('DDCallFastCar', JSON.stringify(carCase));
             carOrder.payload.caseId = doc._id;
             carOrder.payload.status = CaseStatusEnum.Reviewing.value();
             cskv.savePlaceCaseAsync(user.wx_openid, carOrder)
