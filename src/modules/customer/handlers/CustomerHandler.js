@@ -110,10 +110,24 @@ function _fetchConversation(user){
 _fetchConversationAsync = Promise.promisify(_fetchConversation);
 
 module.exports = function(emitter){
+    var customerEmitter = require('../CustomerEmitter');
     emitter.customer(function(event, context){
         console.log('emit customer handler');
         var user = context.user;
         var msg = context.weixin;
-        handle(user, msg);
+        var cvs = null;
+        var cvsId = yield getCurrentCustomerConversationId(user.id); //TODO
+        if(!cvsId){
+            cvs = yield createCustomerConversation(user.id); //TODO
+            yield setCurrentCustomerConversationId(cvs.id); //TODO
+            yield pushMessageToConversation(cvsId, msg); //TODO
+            customerEmitter.emit('message', cvs, msg);
+            customerEmitter.emit('conversation', cvs, msg);
+        }
+        else{
+            cvs = yield getCustomerConversationById(user.id); //TODO
+            yield pushMessageToConversation(cvs.id, msg); //TODO
+            customerEmitter.emit('message', cvs, msg);
+        }
     });
 };
