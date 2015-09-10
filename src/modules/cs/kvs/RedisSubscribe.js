@@ -3,25 +3,39 @@ var redis = require('../../../app/redis-client')('sub');
 var co = require('co');
 var wechatApi = require('../../wechat/common/api').api;
 var ExpiredHandler = require('./handlers/ExpiredHandler');
-var CTResolveHandler = require('./handlers/CTResolveHandler');
-var CTCarryHandler = require('./handlers/CTCarryHandler');
-var CTCarryHandler = require('./handlers/CTCarryHandler');
-var CTGetOnHandler = require('./handlers/CTGetOnHandler');
-var CTCompleteHandler = require('./handlers/CTCompleteHandler');
-//var CTCancelHandler = require('./handlers/CTCancelHandler');
+var DDOrderRejectedHandler = require('./handlers/DDOrderRejectedHandler');
+var DDOrderApplyingHandler = require('./handlers/DDOrderApplyingHandler');
+var DDOrderUndertakenHandler = require('./handlers/DDOrderUndertakenHandler');
+var DDOrderCancelledHandler = require('./handlers/DDOrderCancelledHandler');
+var DDOrderApplyingTimeoutHandler = require('./handlers/DDOrderApplyingTimeoutHandler');
+var DDOrderInServiceHandler = require('./handlers/DDOrderInServiceHandler');
+var DDOrderCompletedHandler = require('./handlers/DDOrderCompletedHandler');
 
 var MessageHandler = function(){
     this.redisClient = redis;
     this.redisClientInit();
 }
 
+/**
+ * OrderRejected :
+ * OrderSubmit
+ * OrderApplying :
+ * OrderUndertaken
+ * OrderCancelled
+ * OrderApplyingTimeout
+ * OrderInService
+ * OrderCompleted
+ */
+
 var ChannelHandlerMap = {
     '__keyevent@0__:expired': ExpiredHandler,
-    'resolve': CTResolveHandler,
-    'carry': CTCarryHandler,
-    'getOn': CTGetOnHandler,
-    'complete': CTCompleteHandler,
-    //'cancel': CTCancelHandler
+    'ddrejected': DDOrderRejectedHandler,
+    'ddapplying': DDOrderApplyingHandler,
+    'ddundertaken': DDOrderUndertakenHandler,
+    'ddcancelled': DDOrderCancelledHandler,
+    'ddapplyingtimeout': DDOrderApplyingTimeoutHandler,
+    'ddinservice': DDOrderInServiceHandler,
+    'ddcomplete': DDOrderCompletedHandler
 }
 
 var prototype  = MessageHandler.prototype;
@@ -29,11 +43,15 @@ var prototype  = MessageHandler.prototype;
 prototype.redisClientInit = function(){
     var self = this;
     self.redisClient.subscribe('__keyevent@0__:expired');
-    self.redisClient.subscribe('resolve');
-    self.redisClient.subscribe('carry');
-    self.redisClient.subscribe('getOn');
-    self.redisClient.subscribe('complete');
-    self.redisClient.subscribe('cancel');
+    self.redisClient.subscribe('ddrejected');
+    self.redisClient.subscribe('ddsubmit');
+    self.redisClient.subscribe('ddapplying');
+    self.redisClient.subscribe('ddundertaken');
+    self.redisClient.subscribe('ddcancelled');
+    self.redisClient.subscribe('ddapplyingtimeout');
+    self.redisClient.subscribe('ddinservice');
+    self.redisClient.subscribe('ddcomplete');
+
     self.redisClient.on('message', self.handleRedisMessage.bind(self));
 }
 

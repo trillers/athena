@@ -26,9 +26,7 @@ module.exports = function(user, message, callback){
             redis.publish('call_car', JSON.stringify(carCase));
             carOrder.payload.caseId = doc._id;
             carOrder.payload.status = CaseStatusEnum.Reviewing.value();
-            return cskv.savePlaceCaseAsync(user.wx_openid, carOrder);
-
-            cskv.savePlaceCaseAsync(user.wx_openid, json)
+            cskv.savePlaceCaseAsync(user.wx_openid, carOrder)
                 .then(function(){
                     var reply = '[系统]:用车需求已发送';
                     wechatApi.sendText(user.wx_openid, reply, function(err, result){
