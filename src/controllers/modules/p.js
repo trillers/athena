@@ -32,7 +32,7 @@ module.exports=function(router){
                     }
                     yield userBizService.createAsync(json);
                 }
-                yield userkv.loadOpenIdByPhoneAsync(phone, user.wx_openid);
+                yield userkv.linkPhoneToOpenIdAsync(phone, user.wx_openid);
                 yield wechatApi.sendTextAsync(result.csId, '[系统]:绑定用户成功');
             }
         }catch(e){
