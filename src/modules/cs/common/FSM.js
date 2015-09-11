@@ -23,6 +23,7 @@ var cmdWorkflow = FSM.create({
         {name: 'modifyFrom', from: 'case', to: 'busy'},
         {name: 'modifyTo', from: 'case', to: 'busy'},
         {name: 'close', from: 'busy', to: 'free'},
+        {name: 'cancelOrder', from: 'busy', to: 'busy'}
     ]
 });
 FSM.registry(cmdWorkflow);

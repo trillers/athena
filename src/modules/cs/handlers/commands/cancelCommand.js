@@ -1,6 +1,7 @@
 var cskv = require('../../kvs/CustomerService');
 var wechatApi = require('../../../wechat/common/api').api;
 var CaseService = require('../../../case/services/CaseService');
+var CaseStatusEnum = require('../../common/models/TypeRegistry').item('CaseStatus');
 var co = require('co');
 
 module.exports = function(user, message, callback){
@@ -12,22 +13,17 @@ module.exports = function(user, message, callback){
                 return callback(new Error('no session'), null);
             }
             var userBiz = yield common.validateUserBindAsync(conversation.initiator);
+            var params = {
+                conditions: {
+                    commissionerId: userBiz._id,
+                    status: {$nin: [CaseStatusEnum.Complete.value(), CaseStatusEnum.Close.value(), CaseStatusEnum.Cancel.value()]}
+                }
+            }
 
-            carOrder.payload.origin = message;
+            var caseArr = yield CaseService.find(params);
 
-            cskv.savePlaceCaseAsync(user.wx_openid, json)
-                .then(function(){
-                    var reply = '[系统]:当前订单：</br>'
-                        + '-------------------------------------'
-                        + '起点：        ' + carOrder.payload.origin + '</br>'
-                        + '终点：        ' + carOrder.payload.destination + '</br>'
-                        + '用车时间：     ' + carOrder.payload.useTime + '</br>';
-                    wechatApi.sendText(user.wx_openid, reply, function(err, result){
-                        if(callback) return callback(err, result);
-                    });
-                });
         }catch(e){
-            console.log(e)
+            console.log('cancelCommand err:' + e);
         }
 
     })

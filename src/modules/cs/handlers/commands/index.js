@@ -9,6 +9,7 @@ var modifyToCommand = require('./modifyToCommand');
 var submitCommand = require('./submitCommand');
 var cancelCommand = require('./cancelCommand');
 var rollbackCommand = require('./rollbackCommand');
+var quitCommand = require('./quitCommand');
 
 var commandSet = {
     viewState: 'state',
@@ -36,7 +37,8 @@ var handlerSet = {
     'modifyFrom': modifyFromCommand,
     'modifyTo': modifyToCommand,
     'submit': submitCommand,
-    'cancel': cancelCommand
+    'cancel': cancelCommand,
+    'quit': quitCommand
 }
 
 var Command = function(){
