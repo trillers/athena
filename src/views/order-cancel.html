@@ -6,10 +6,11 @@
 </head>
 <body>
 <span>order cancel</span>
+<input type="button"  onclick="WeixinJSBridge.call('closeWindow');" value="关闭"/>
 <script>
-    window.onload = function(){
-        WeixinJSBridge.invoke('closeWindow',{},function(res){});
-    }
+//    window.onload = function(){
+//        WeixinJSBridge.invoke('closeWindow',{},function(res){});
+//    }
 </script>
 </body>
 </html>
