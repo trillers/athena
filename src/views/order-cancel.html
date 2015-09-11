@@ -8,8 +8,9 @@
 <span>order cancel</span>
 <script>
     window.onload = function(){
-        alert('abc');
-        WeixinJSBridge.invoke('closeWindow',{},function(res){});
+        setTimeout(function(){
+            WeixinJSBridge.invoke('closeWindow',{},function(res){});
+        }, 1000);
     }
 </script>
 </body>
