@@ -7,7 +7,10 @@
 <body>
 <span>order cancel</span>
 <script>
-    WeixinJSBridge.invoke('closeWindow',{},function(res){});
+    window.onload = function(){
+        alert('abc');
+        WeixinJSBridge.invoke('closeWindow',{},function(res){});
+    }
 </script>
 </body>
 </html>
