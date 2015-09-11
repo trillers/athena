@@ -10,6 +10,11 @@ module.exports = function(app){
     require('./p')(pages_router);
     app.use(pages_router.routes());
 
+    var order_router = new router();
+    order_router.prefix('/order');
+    require('./order')(order_router);
+    app.use(order_router.routes());
+
     //wechat
     app.use(require('./wechat')());
 }

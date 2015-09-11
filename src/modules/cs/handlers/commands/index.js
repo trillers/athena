@@ -7,7 +7,7 @@ var viewStateCommand = require('./viewStateCommand');
 var modifyFromCommand = require('./modifyFromCommand');
 var modifyToCommand = require('./modifyToCommand');
 var submitCommand = require('./submitCommand');
-var cancelCommand = require('./cancelCommand');
+var orderCommand = require('./orderCommand');
 var rollbackCommand = require('./rollbackCommand');
 var quitCommand = require('./quitCommand');
 
@@ -23,7 +23,7 @@ var commandSet = {
     modifyFrom: 'from',
     modifyTo: 'to',
     submitOrder: 'submit',
-    cancelOrder: 'cancel'
+    viewOrder: 'order'
 }
 
 var handlerSet = {
@@ -37,7 +37,7 @@ var handlerSet = {
     'modifyFrom': modifyFromCommand,
     'modifyTo': modifyToCommand,
     'submit': submitCommand,
-    'cancel': cancelCommand,
+    'order': orderCommand,
     'quit': quitCommand
 }
 

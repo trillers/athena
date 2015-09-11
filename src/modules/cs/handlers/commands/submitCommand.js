@@ -3,6 +3,7 @@ var wechatApi = require('../../../wechat/common/api').api;
 var co = require('co');
 var CaseStatusEnum = require('../../../common/models/TypeRegistry').item('CaseStatus');
 var caseService = require('../../../case/services/CaseService');
+var redis = require('../../../../app/redis-client')('pub');
 
 module.exports = function(user, message, callback){
     co(function* (){
