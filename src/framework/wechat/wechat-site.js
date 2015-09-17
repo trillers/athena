@@ -86,7 +86,7 @@ WechatSite.prototype.SCAN = function(openid){
 WechatSite.prototype.LOCATION = function(openid, location){
     var userInfo = this.openidUserInfos[openid];
     var message = {};//TODO use stardard wechat format;
-    this.emitter.emit('CLICK', message);
+    this.emitter.emit('LOCATION', message);
 };
 
 WechatSite.prototype.CLICK = function(openid, key){
