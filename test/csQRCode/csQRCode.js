@@ -21,8 +21,10 @@ describe('create cs qr code', function () {
             forever: true
         };
         var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
-        request(url).pipe(fs.createWriteStream(path.join(__dirname, '../../public/qrcode/qrcode.png'))).on('close', function () {
-            wechatApi.uploadImage(path.join(__dirname, '../../public/qrcode/qrcode.png'), function (err, data) {
+        var imagePath = '../../public/qrcode/qrcode.png';
+        console.log(path.join(__dirname, imagePath));
+        request(url).pipe(fs.createWriteStream(path.join(__dirname, imagePath))).on('close', function () {
+            wechatApi.uploadImage(path.join(__dirname, imagePath), function (err, data) {
                 assert.ifError(err);
                 done();
             });
