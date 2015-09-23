@@ -47,7 +47,6 @@ module.exports = function() {
     var WechatEmitter = require('../../framework/WechatEmitter');
     var wechatEmitter = new WechatEmitter();
 
-    require('../../modules/qrchannel/handlers/CSQrCodeHandler')(wechatEmitter);
     require('../../modules/assistant/handlers/AssistantHandler')(wechatEmitter);
     require('../../modules/wechat/handlers/WechatOperationHandler')(wechatEmitter);
 

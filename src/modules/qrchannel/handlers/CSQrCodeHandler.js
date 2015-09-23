@@ -7,34 +7,27 @@ var request = require('request');
 var fs = require('fs');
 var logger = require('../../../app/logging').logger;
 
-module.exports = function(emitter){
-    emitter.message(function(event, context){
-        var message = context.weixin.Content;
-        var user = context.user;
-        console.log('+++++++++++++');
-        console.log(message);
-
-        if(message.trim() === '客服二维码'){
-            handler.autoCreate(null, function(err, qr){
-                var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
-                var qrCodePath = '../../../../public/qrCode/' + user.wx_openid + '.png';
-                request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
-                    wechatApi.uploadMedia(path.join(__dirname,  qrCodePath), 'image', function (err, data) {
-                        if(err){
-                            return logger.error('uploadImage err: ' + err);
+module.exports = function (message, user) {
+    if (message.trim() === '客服二维码') {
+        handler.autoCreate(null, function (err, qr) {
+            var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
+            var qrCodePath = '../../../../public/qrCode/' + user.wx_openid + '.png';
+            request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
+                wechatApi.uploadMedia(path.join(__dirname, qrCodePath), 'image', function (err, data) {
+                    if (err) {
+                        return logger.error('uploadImage err: ' + err);
+                    }
+                    console.log(data);
+                    var mediaId = data.media_id;
+                    console.log(user.wx_openid);
+                    console.log(mediaId);
+                    wechatApi.sendImage(user.wx_openid, mediaId, function (err, data) {
+                        if (err) {
+                            return logger.error('get cs qrCode send image err:' + err);
                         }
-                        console.log(data);
-                        var mediaId = data.media_id;
-                        console.log(user.wx_openid);
-                        console.log(mediaId);
-                        wechatApi.sendImage(user.wx_openid, mediaId, function(err, data){
-                            if(err){
-                                return logger.error('get cs qrCode send image err:' + err);
-                            }
-                        });
                     });
                 });
             });
-        }
-    });
+        });
+    }
 };
