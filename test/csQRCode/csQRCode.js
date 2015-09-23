@@ -20,7 +20,7 @@ describe('create cs qr code', function () {
             views: 0,
             forever: true
         };
-        var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
+        var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=gQGU8DoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2VFaGlVcGZrNEcyWktEVXB2R1pXAAIE8BQCVgMEgDoJAA==';
         var imagePath = '../../public/qrcode/qrcode.png';
         console.log(path.join(__dirname, imagePath));
         request(url).pipe(fs.createWriteStream(path.join(__dirname, imagePath))).on('close', function () {
