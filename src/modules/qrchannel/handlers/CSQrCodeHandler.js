@@ -19,7 +19,7 @@ module.exports = function(emitter){
                 var url = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=' + qr.ticket;
                 var qrCodePath = '../../../../public/qrCode/' + user.wx_openid + '.png';
                 request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
-                    wechatApi.uploadImage(path.join(__dirname, qrCodePath), function (err, data) {
+                    wechatApi.uploadMedia(path.join(__dirname,  qrCodePath), 'image', function (err, data) {
                         if(err){
                             return logger.error('uploadImage err: ' + err);
                         }

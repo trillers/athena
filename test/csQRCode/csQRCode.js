@@ -24,7 +24,7 @@ describe('create cs qr code', function () {
         var imagePath = '../../public/qrcode/qrcode.png';
         console.log(path.join(__dirname, imagePath));
         request(url).pipe(fs.createWriteStream(path.join(__dirname, imagePath))).on('close', function () {
-            wechatApi.uploadImage(path.join(__dirname, imagePath), function (err, data) {
+            wechatApi.uploadMedia(path.join(__dirname, imagePath), 'image', function (err, data) {
                 assert.ifError(err);
                 done();
             });
