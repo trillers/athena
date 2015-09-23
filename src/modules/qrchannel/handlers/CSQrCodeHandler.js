@@ -9,7 +9,7 @@ var logger = require('../../../app/logging').logger;
 
 module.exports = function(emitter){
     emitter.message(function(event, context){
-        var message = context.weixin;
+        var message = context.weixin.Content;
         var user = context.user;
         console.log('+++++++++++++');
         console.log(message);
