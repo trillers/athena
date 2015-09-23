@@ -21,12 +21,14 @@ module.exports = function(emitter){
                 request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
                     wechatApi.uploadImage(path.join(__dirname, qrCodePath), function (err, data) {
                         if(err){
-                            return logger.err('uploadImage err: ' + err);
+                            return logger.error('uploadImage err: ' + err);
                         }
                         var mediaId = data.media_id;
+                        console.log(user.wx_openid);
+                        console.log(mediaId);
                         wechatApi.sendImage(user.wx_openid, mediaId, function(err, data){
                             if(err){
-                                return logger.err('get cs qrCode send image err:' + err);
+                                return logger.error('get cs qrCode send image err:' + err);
                             }
                         });
                     });

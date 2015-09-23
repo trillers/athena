@@ -73,7 +73,7 @@ QrHandler.prototype.manualCreate = function(sceneId, customId, callback){
     var me = this;
     QrChannelService.loadBySceneId(50, function(err, qr){
         if(err){
-            logger.err('get teacher code err: ' + err);
+            logger.error('get teacher code err: ' + err);
             if(callback) callback(err);
             return;
         }
