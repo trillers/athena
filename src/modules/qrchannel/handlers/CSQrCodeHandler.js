@@ -23,6 +23,7 @@ module.exports = function(emitter){
                         if(err){
                             return logger.error('uploadImage err: ' + err);
                         }
+                        console.log(data);
                         var mediaId = data.media_id;
                         console.log(user.wx_openid);
                         console.log(mediaId);
