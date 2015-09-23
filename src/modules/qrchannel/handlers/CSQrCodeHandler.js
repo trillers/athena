@@ -11,6 +11,8 @@ module.exports = function(emitter){
     emitter.message(function(event, context){
         var message = context.weixin;
         var user = context.user;
+        console.log('+++++++++++++');
+        console.log(message);
 
         if(message.trim() === '客服二维码'){
             handler.autoCreate(null, function(err, qr){
