@@ -33,12 +33,12 @@ module.exports = function() {
 
     frankon.use(function* (next) {
         var self = this;
-        var message = self.weixin;
-        console.log('message');
-        console.log(message);
+        //var message = self.weixin;
+        //console.log('message');
+        //console.log(message);
         var user = yield ensureSignin(message, self, next);
         this["user"] = user;
-        WechatOperationService.logActionAsync(message);
+        //WechatOperationService.logActionAsync(message);
         yield next;
     });
 
@@ -46,6 +46,7 @@ module.exports = function() {
 
     var WechatEmitter = require('../../framework/WechatEmitter');
     var wechatEmitter = new WechatEmitter();
+
     require('../../modules/assistant/handlers/AssistantHandler')(wechatEmitter);
     require('../../modules/wechat/handlers/WechatOperationHandler')(wechatEmitter);
 

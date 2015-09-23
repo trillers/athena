@@ -125,5 +125,6 @@ node_modules
 
 public/components
 web/build
+public/qrCode/*
 
 
