@@ -3,7 +3,6 @@ var logger = require('../../../app/logging').logger;
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
 
-
 /**
  * getCurrentCustomerConversationId
  * createCustomerConversation
@@ -67,5 +66,7 @@ var kvs = {
 
     getCustomerConversationById: function(id, callback){}
 };
+
+kvs = Promise.promisifyAll(kvs);
 
 module.exports = kvs;
