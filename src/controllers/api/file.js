@@ -29,8 +29,6 @@ module.exports = function(router){
     * */
     router.post('/upload', function* (){
         var self = this;
-        console.log(this);
-        console.log(self.req.body);
         console.log(self.req.files);
         var file = self.req.files.file;
         var fileJson = {
@@ -51,11 +49,11 @@ module.exports = function(router){
         }
         //var files = self.req.files;
         //for(var key in files){
-            //var file = files[key];
-            //var fileName = Math.random() + '.' + file.extension;
-            //var newPath = path.join(__dirname, '../../../public/qrCode',  fileName);
-            //console.log(newPath);
-            //fs.renameSync(file.path, newPath);  //重命名
+        //    var file = files[key];
+        //    var fileName = Math.random() + '.' + file.extension;
+        //    var newPath = path.join(__dirname, '../../../public/qrCode',  fileName);
+        //    console.log(newPath);
+        //    fs.renameSync(file.path, newPath);  //重命名
         //}
     });
 
