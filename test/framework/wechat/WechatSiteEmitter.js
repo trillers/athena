@@ -1,4 +1,5 @@
 var assert = require('chai').assert;
+var wxutil = require('./util');
 var WechatSiteEmitter = require('../../../src/framework/wechat/wechat-site-emitter');
 var Wechat = require('../../../src/framework/wechat/index');
 var siteEmitter = require('../../../src/modules/assistant/site-emitter');
