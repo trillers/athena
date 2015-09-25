@@ -138,6 +138,37 @@ Service.filter = function (params, callback) {
     });
 };
 
+Service.filter = function (params, callback) {
+    var query = Conversation.find();
+
+    if (params.options) {
+        query.setOptions(params.options);
+    }
+
+    if (params.sort) {
+        query.sort(params.sort);
+    }
+
+    if (params.page) {
+        var skip = (params.page.no - 1) * params.page.size;
+        var limit = params.page.size;
+        if (skip) query.skip(skip);
+        if (limit) query.limit(limit);
+    }
+
+    if (params.conditions) {
+        query.find(params.conditions);
+    }
+    query.lean(true);
+    query.exec(function (err, docs) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (callback) callback(null, docs);
+    });
+};
 
 Service = Promise.promisifyAll(Service);
 

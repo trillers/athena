@@ -8,6 +8,7 @@ var wechatApi = require('../../wechat/common/api').api;
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent')
 var Promise = require('bluebird');
 var co = require('co');
+var ConversationKv = require('../../conversation/kvs/Conversation');
 
 var handle = function(user, message){
     console.log('ru handle start');
@@ -116,17 +117,16 @@ module.exports = function(emitter){
         var user = context.user;
         var msg = context.weixin;
         var cvs = null;
-        var cvsId = yield getCurrentCustomerConversationId(user.id); //TODO
+        var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
         if(!cvsId){
-            cvs = yield createCustomerConversation(user.id); //TODO
-            yield setCurrentCustomerConversationId(user.id, cvs.id); //TODO
-            yield pushMessageToConversation(cvsId, msg); //TODO
+            cvs = yield conversationService.createAsync({});
+            yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
             customerEmitter.emit('message', cvs, msg);
             customerEmitter.emit('conversation', cvs, msg);
         }
         else{
-            cvs = yield getCustomerConversationById(user.id); //TODO
-            yield pushMessageToConversation(cvs.id, msg); //TODO
+            cvs = yield loadByIdAsync(cvsId);
+            //yield pushMessageToConversation(cvs.id, msg); //TODO
             customerEmitter.emit('message', cvs, msg);
         }
     });
