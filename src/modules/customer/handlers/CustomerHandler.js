@@ -114,22 +114,39 @@ module.exports = function(emitter){
     var customerEmitter = require('../CustomerEmitter');
     emitter.customer(function(event, context){
         console.log('emit customer handler');
-        var user = context.user;
-        var msg = context.weixin;
-        var cvs = null;
-        var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
-        if(!cvsId){
-            //cvs = yield createCustomerConversation(user.id); //TODO
-            cvs = yield conversationService.createAsync({});
-            yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
-            yield pushMessageToConversation(cvsId, msg); //TODO
-            customerEmitter.emit('message', cvs, msg);
-            customerEmitter.emit('conversation', cvs, msg);
-        }
-        else{
-            cvs = yield loadByIdAsync(user.id);
-            yield pushMessageToConversation(cvs.id, msg); //TODO
-            customerEmitter.emit('message', cvs, msg);
-        }
+        co(function* (){
+            var user = context.user;
+            var msg = context.weixin;
+            var cvs = null;
+            var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
+            if(!cvsId){
+                cvs = yield conversationService.createAsync({
+                    initiator: user.id, createTime: new Date()
+                });
+                yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
+                yield messageService.createAsync({
+                    from: user.id,
+                    to: null,
+                    channel: cvsId,
+                    contentType: event,
+                    content: msg.Content || null,
+                    mediaId: msg.mediaId || null
+                });
+                customerEmitter.emit('message', cvs, msg);
+                customerEmitter.emit('conversation', cvs, msg);
+            }
+            else{
+                cvs = yield loadByIdAsync(cvs.id);
+                yield messageService.createAsync({
+                    from: user.id,
+                    to: null,
+                    channel: cvs.id,
+                    contentType: event,
+                    content: msg.Content || null,
+                    mediaId: msg.mediaId || null
+                });
+                customerEmitter.emit('message', cvs, msg);
+            }
+        });
     });
 };
