@@ -58,6 +58,10 @@ var kvs = {
         });
     },
 
+    loadById: function(cvsId, callback){
+        var key = cvsIdToObjectKey(cvs.id);
+    },
+
     pushMessage: function(cvsId, msg, callback){
         var key = cvsIdToMessagesKey(cvsId);
     },
