@@ -8,7 +8,6 @@ var cbUtil = require('../../../framework/callback');
  * getCurrentCustomerConversationId
  * createCustomerConversation
  * setCurrentCustomerConversationId
- * pushMessageToConversation
  * getCustomerConversationById
  *
  */
@@ -27,7 +26,6 @@ var cvsIdToMessagesKey = function(cvsId){
 var kvs = {
 
     getCurrentId: function(userId, callback){
-        var key = userIdToCvsIdKey(userId);
         redis.get(key, function(err, result){
             cbUtil.logCallback(
                 err,
@@ -59,14 +57,15 @@ var kvs = {
         });
     },
 
-    pushMessage: function(cvsId, msg, callback){
-        var key = cvsIdToMessagesKey(cvsId);
-    },
+    getCurrentCustomerConversationId: function(id, callback){},
 
-    getMessages: function(cvsId, callback){
-        var key = cvsIdToMessagesKey(id);
-    }
+    createCustomerConversation: function(id, callback){},
 
+    setCurrentCustomerConversationId: function(id, callback){},
+
+    pushMessageToConversation: function(id, callback){},
+
+    getCustomerConversationById: function(id, callback){}
 };
 
 module.exports = kvs;
