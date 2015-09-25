@@ -13,6 +13,14 @@ var WechatClient = function(wechat, config){
     this.sessions = {};
 };
 
+WechatClient.prototype.isSignedIn = function(){
+    return this.signedIn;
+};
+
+WechatClient.prototype.getSignedInUser = function(){
+    return this.user;
+};
+
 WechatClient.prototype.signin = function(username){
     var user = null;
     if(typeof username == 'string'){
@@ -22,7 +30,7 @@ WechatClient.prototype.signin = function(username){
         user = username;
     }
 
-    if(!user || !user.getRegistered()){
+    if(!user || !user.isRegistered()){
         return null;
     }
 
@@ -37,9 +45,9 @@ WechatClient.prototype.signout = function(){
     this.signedIn = false;
 };
 
-WechatClient.prototype.enterSite = function(id){
-    var siteClient = this.getSiteClient(site.getId());
-    if(!siteClient) throw new Error('Site client ' +id+ + ' does not exist');
+WechatClient.prototype.enterSite = function(siteId){
+    var siteClient = this._getSiteClient(siteId);
+    if(!siteClient) throw new Error('Site client ' +siteId + ' does not exist');
     siteClient.enter();
 
     return siteClient;
@@ -54,12 +62,12 @@ WechatClient.prototype.scanSite = function(qrcode){
 
     if(!site) return null;
 
-    var siteClient = this.getSiteClient(site.getId());
+    var siteClient = this._getSiteClient(site.getId());
     if(siteClient){
         siteClient.SCAN();
     }
     else{
-        siteClient = this.createSiteClient(site);
+        siteClient = this._createSiteClient(site);
         siteClient.subscribe();
     }
 
@@ -71,11 +79,11 @@ WechatClient.prototype.scanSite = function(qrcode){
  * @param id wechat site id
  * @returns {WechatSiteClient|exports|module.exports}
  */
-WechatClient.prototype.subscribeSite = function(id){
-    var site = this.wechat.getSiteById(id);
-    if(!site) throw new Error('wechat site ' +id+ ' does not exist');
+WechatClient.prototype.subscribeSite = function(siteId){
+    var site = this.wechat.getSiteById(siteId);
+    if(!site) throw new Error('wechat site ' +siteId+ ' does not exist');
 
-    var siteClient = this.createSiteClient(site);
+    var siteClient = this._createSiteClient(site);
     siteClient.subscribe();
 
     return siteClient;
@@ -86,7 +94,7 @@ WechatClient.prototype.subscribeSite = function(id){
  * @param siteId
  * @returns {*}
  */
-WechatClient.prototype.getSiteClient = function(siteId) {
+WechatClient.prototype._getSiteClient = function(siteId) {
     return this.sessions[siteId];
 };
 
@@ -95,7 +103,7 @@ WechatClient.prototype.getSiteClient = function(siteId) {
  * @param site
  * @returns {WechatSiteClient|exports|module.exports}
  */
-WechatClient.prototype.createSiteClient = function(site) {
+WechatClient.prototype._createSiteClient = function(site) {
     var siteClient = new WechatSiteClient(site, this);
     this.sessions[site.getId()] = siteClient;
     return siteClient;

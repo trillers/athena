@@ -35,7 +35,7 @@ WechatSite.prototype.getName = function(){return this.info.name;};
 WechatSite.prototype.setName = function(name){this.info.name = name;};
 WechatSite.prototype.getHeadimgurl = function(){return this.info.headimgurl;};
 WechatSite.prototype.setHeadimgurl = function(headimgurl){this.info.headimgurl = headimgurl;};
-WechatSite.prototype.getRegistered = function(){return this.info.registered};
+WechatSite.prototype.isRegistered = function(){return this.info.registered};
 WechatSite.prototype._setRegistered = function(registered){this.info.registered = registered;};
 WechatSite.prototype.getQrcode = function(){return this.info.qrcode};
 WechatSite.prototype._setQrcode = function(qrcode){this.info.qrcode = qrcode;};
@@ -67,54 +67,210 @@ WechatSite.prototype.subscribe = function(userId){
         subscribed: 1,
         subscribe_time: new Date()
     };
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'subscribe'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('subscribe', message);
+    return openid;
 };
 
 WechatSite.prototype.unsubscribe = function(openid){
     this.openidUserInfos[openid].subscribed = 0;
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'unsubscribe'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('unsubscribe', message);
 };
 
 WechatSite.prototype.SCAN = function(openid){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'SCAN'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('SCAN', message);
 };
 
 WechatSite.prototype.LOCATION = function(openid, location){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'LOCATION'
+        , Latitude: location.latitude
+        , Longitude: location.longitude
+        , Precision: location.precision
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('LOCATION', message);
 };
 
 WechatSite.prototype.CLICK = function(openid, key){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'CLICK'
+        , EventKey: key
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('CLICK', message);
 };
 
 WechatSite.prototype.VIEW = function(openid, key){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'VIEW'
+        , EventKey: key
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('VIEW', message);
 };
 
 WechatSite.prototype.enter = function(openid){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'enter'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('enter', message);
 };
 
 WechatSite.prototype.exit = function(openid){
-    var userInfo = this.openidUserInfos[openid];
-    var message = {};//TODO use stardard wechat format;
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: new Date()
+        , MsgType: 'event'
+        , Event: 'exit'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
     this.emitter.emit('exit', message);
 };
 
-WechatSite.prototype.onReceive = function(message){
+/**
+ * @private
+ * 发送消息（包括所有非事件消息）
+ * @param message
+ */
+WechatSite.prototype.sendMessage = function(message){
+    message.ToUserName = this.id;
+    message.MsgId = '0000000000' + new Date().getTime(); //TODO
+    this.emitter.emit('raw', message);
     this.emitter.emit('message', message);
+    this.emitter.emit(message.MsgType, message);
+};
+
+/**
+ * 发送文本消息
+ * Content 文本消息内容
+ * @param message
+ */
+WechatSite.prototype.sendText = function(message){
+    message.MsgType = 'text';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送图片消息
+ * PicUrl 图片链接
+ * MediaId  图片消息媒体id，可以调用多媒体文件下载接口拉取数据。
+ * @param message
+ */
+WechatSite.prototype.sendImage = function(message){
+    message.MsgType = 'image';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送语音消息
+ * MediaId  图片消息媒体id，可以调用多媒体文件下载接口拉取数据。
+ * Format   语音格式，如amr，speex等
+ * @param message
+ */
+WechatSite.prototype.sendVoice = function(message){
+    message.MsgType = 'voice';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送视频消息
+ * MediaId  图片消息媒体id，可以调用多媒体文件下载接口拉取数据。
+ * ThumbMediaId   视频消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据。
+ * @param message
+ */
+WechatSite.prototype.sendVideo = function(message){
+    message.MsgType = 'video';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送小视频消息
+ * MediaId  图片消息媒体id，可以调用多媒体文件下载接口拉取数据。
+ * ThumbMediaId   视频消息缩略图的媒体id，可以调用多媒体文件下载接口拉取数据。
+ * @param message
+ */
+WechatSite.prototype.sendShortVideo = function(message){
+    message.MsgType = 'shortvideo';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送地理位置消息
+ * Location_X	地理位置维度
+ * Location_Y	地理位置经度
+ * Scale	地图缩放大小
+ * Label	地理位置信息
+ * @param message
+ */
+WechatSite.prototype.sendLocation = function(message){
+    message.MsgType = 'location';
+    this.sendMessage(message);
+};
+
+/**
+ * 发送链接消息
+ * Title	    消息标题
+ * Description	消息描述
+ * Url	        消息链接
+ * @param message
+ */
+WechatSite.prototype.sendLink = function(message){
+    message.MsgType = 'link';
+    this.sendMessage(message);
+};
+
+WechatSite.prototype.on = function(event, handler){
+    this.emitter.on(event, handler);
 };
 
 WechatSite.prototype._createOpenid = function(userId){

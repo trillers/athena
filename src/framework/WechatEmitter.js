@@ -22,6 +22,51 @@ var MSG_TYPES = {
     ,link:  'link'
 };
 
+WechatEmitter.prototype.bindEvent = function(type, site) {
+    var me = this;
+    site.on(type, function(message){
+        var context = {weixin: message};
+        me.emitter.emit('raw', 'raw', context);
+        me.emitter.emit('event', 'event', context);
+        me.emitter.emit(type, type, context);
+    });
+};
+WechatEmitter.prototype.bindMessage = function(type, site) {
+    var me = this;
+    site.on(type, function(message){
+        var context = {weixin: message};
+        me.emitter.emit('raw', 'raw', context);
+        me.emitter.emit('message', 'message', context);
+        me.emitter.emit(type, type, context);
+    });
+};
+
+WechatEmitter.prototype.bindSite = function(site) {
+    /*
+     * bind and trigger event type message
+     */
+    this.bindEvent('subscribe', site);
+    this.bindEvent('unsubscribe', site);
+    this.bindEvent('LOCATION', site);
+    this.bindEvent('SCAN', site);
+    this.bindEvent('CLICK', site);
+    this.bindEvent('VIEW', site);
+    this.bindEvent('enter', site);
+    this.bindEvent('exit', site);
+
+    /*
+     * bind and trigger non-event type message
+     */
+    this.bindMessage('text', site);
+    this.bindMessage('image', site);
+    this.bindMessage('voice', site);
+    this.bindMessage('video', site);
+    this.bindMessage('shortvideo', site);
+    this.bindMessage('location', site);
+    this.bindMessage('link', site);
+};
+
+
 /**
  * event type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
  * msg type includes: text image voice video shortvideo location link
@@ -29,7 +74,7 @@ var MSG_TYPES = {
  * message (for all pure message), unknown.
  * @param context
  */
-WechatEmitter.prototype.emit = function(context){
+WechatEmitter.prototype.relay = function(context){
     var msg = context.weixin;
 
     /*

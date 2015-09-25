@@ -28,7 +28,7 @@ WechatUser.prototype.getNickname = function(){return this.info.nickname;};
 WechatUser.prototype.setNickname = function(nickname){this.info.nickname = nickname;};
 WechatUser.prototype.getHeadimgurl = function(){return this.info.headimgurl;};
 WechatUser.prototype.setHeadimgurl = function(headimgurl){this.info.headimgurl = headimgurl;};
-WechatUser.prototype.getRegistered = function(){return this.info.registered};
+WechatUser.prototype.isRegistered = function(){return this.info.registered};
 WechatUser.prototype._setRegistered = function(registered){this.info.registered = registered;};
 
 module.exports = WechatUser;

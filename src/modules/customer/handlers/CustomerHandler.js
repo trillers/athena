@@ -119,7 +119,7 @@ module.exports = function(emitter){
         var cvsId = yield getCurrentCustomerConversationId(user.id); //TODO
         if(!cvsId){
             cvs = yield createCustomerConversation(user.id); //TODO
-            yield setCurrentCustomerConversationId(cvs.id); //TODO
+            yield setCurrentCustomerConversationId(user.id, cvs.id); //TODO
             yield pushMessageToConversation(cvsId, msg); //TODO
             customerEmitter.emit('message', cvs, msg);
             customerEmitter.emit('conversation', cvs, msg);

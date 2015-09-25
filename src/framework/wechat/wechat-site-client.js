@@ -16,7 +16,7 @@ var WechatSiteClient = function(site, client){
 WechatSiteClient.prototype.getOpenid = function(){return this.openid;};
 
 WechatSiteClient.prototype.subscribe = function(){
-    this.site.subscribe(this.openid);
+    this.openid = this.site.subscribe(this.client.user.getId());
     this.enter();
 };
 
@@ -28,7 +28,7 @@ WechatSiteClient.prototype.unsubscribe = function(){
 
 WechatSiteClient.prototype.SCAN = function(){
     this.site.SCAN(this.openid);
-    this.enter();
+    this.site.enter();
 };
 
 WechatSiteClient.prototype.CLICK = function(key){
@@ -39,23 +39,29 @@ WechatSiteClient.prototype.VIEW = function(key){
     this.site.VIEW(this.openid, key);
 };
 
+WechatSiteClient.prototype.enter = function(){
+    this.site.enter(this.openid);
+    this.open = true;
+};
+
 WechatSiteClient.prototype.exit = function(){
     this.site.exit(this.openid);
     this.open = false;
 };
 
-WechatSiteClient.prototype.send = function(message){
+WechatSiteClient.prototype.sendText = function(message){
     message.FromUserName = this.openid;
-    //message.ToUserName = this.openid;
-    this.site.onReceive(message);
+    this.site.sendText(message);
 };
 
-WechatSiteClient.prototype.message = function(handler){
-
+WechatSiteClient.prototype.sendImage = function(message){
+    message.FromUserName = this.openid;
+    this.site.sendImage(message);
 };
 
-WechatSiteClient.prototype.onReceive = function(message){
-
+WechatSiteClient.prototype.sendVoice = function(message){
+    message.FromUserName = this.openid;
+    this.site.sendVoice(message);
 };
 
 module.exports = WechatSiteClient;

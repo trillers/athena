@@ -43,68 +43,10 @@ module.exports = function() {
     });
 
     frankon.use(require('../../modules/wechat/middlewares/user-heartbeat'));
-
-    var WechatEmitter = require('../../framework/WechatEmitter');
-    var wechatEmitter = new WechatEmitter();
-    require('../../modules/assistant/handlers/AssistantHandler')(wechatEmitter);
-    require('../../modules/wechat/handlers/WechatOperationHandler')(wechatEmitter);
-
+    var emitter = require('../../modules/assistant/site-emitter');
     frankon.use(function* (next) {
-        wechatEmitter.emit(this);
+        emitter.relay(this);
         this.body = '';
-    ////根据角色，分别派遣session，然后next
-    //    var self = this;
-    //    var user = this.wxUser;
-    //    var message = self.weixin;
-    //    try{
-    //        if(message.MsgType == 'event'){
-    //            switch(message.Event.toLowerCase()){
-    //                case 'subscribe':
-    //                    yield QrChannelDispatcher.dispatch(message, user, self);
-    //                    break;
-    //                case 'unsubscribe':
-    //                    //var update = {};
-    //                    //update.wx_subscribe = 0;
-    //                    self.body = '';
-    //                    break;
-    //                case 'location':
-    //                    console.log(message);
-    //                    var welcomeStatus = yield cskv.loadWelcomeStatusAsync(user.wx_openid);
-    //                    if(welcomeStatus == 'true' || user.role == 'cs'){
-    //                        self.body = '';
-    //                    }else{
-    //                        self.body = 'welcome Dear! What can I do for you?';
-    //                        yield cskv.saveWelcomeStatusAsync(user.wx_openid, true);
-    //                        var location = {
-    //                            user: user.wx_openid,
-    //                            latitude: message.Latitude,
-    //                            longitude: message.Longitude
-    //                        }
-    //                        var url = settings.txLocationServer.host + '?location=' + location.latitude + ',' + location.longitude + '&key=' +settings.txLocationServer.key;
-    //                        request(url, function (error, response, body) {
-    //                            if (!error && response.statusCode == 200) {
-    //                                var locationInfo = JSON.parse(body);
-    //                                location.address = locationInfo.result.address;
-    //                                location.formatted_address = locationInfo.result.formatted_addresses.recommend;
-    //                                UserLocationService.create(location, function(err, doc){
-    //                                    //TODO
-    //                                })
-    //                            }
-    //                        })
-    //                    }
-    //                    break;
-    //            }
-    //
-    //        }else{
-    //            self.body = 'success';
-    //            console.log('================');
-    //            console.log('common message');
-    //            console.log(message);
-    //            CSDispatcher.dispatch(user, message);
-    //        }
-    //    } catch (err){
-    //        console.log('error:' + err);
-    //    }
     });
 
     var handler = frankon.generateHandler();
