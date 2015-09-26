@@ -9,11 +9,12 @@ var schema = DomainBuilder
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
-        from: {type: String, ref: 'User', required: true},
-        to: {type: String, ref: 'User'},
-        channel: {type: String, require: true},
+        from: {type: String, required: true}, // server id or user id
+        to: {type: String},  // server id or user id
+        channel: {type: String, require: true}, //cvs id
         contentType: {type: String,enum: MsgContentType.valueList(), default:  MsgContentType.text.value()},
-        content: {type: String}  //mediaId
+        content: {type: String},  //text content
+        mediaId: {type: String}  //media id
     })
     .build();
 module.exports.schema = schema;
