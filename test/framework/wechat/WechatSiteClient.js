@@ -10,10 +10,12 @@ describe('unsubscribe', function() {
         site.on('unsubscribe', function(message){
             console.log('===unsubscribe===');
             console.log(message);
+            console.log('\r\n');
         });
         site.on('exit', function(message){
             console.log('===exit===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
         var siteClient = client.subscribeSite(site.getId());
@@ -23,6 +25,7 @@ describe('unsubscribe', function() {
         assert.notOk(siteClient.site);
 
         console.log(siteClient);
+        console.log('\r\n');
         done();
     })
 
@@ -36,6 +39,7 @@ describe('exit', function() {
         site.on('exit', function(message){
             console.log('===exit===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
 
@@ -44,6 +48,7 @@ describe('exit', function() {
 
         siteClient.exit();
         console.log(siteClient);
+        console.log('\r\n');
         done();
     })
 
@@ -58,6 +63,7 @@ describe('sendText', function() {
             assert.equal(message.Content, 'hello');
             console.log('=== text message ===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
 
@@ -82,6 +88,7 @@ describe('sendImage', function() {
             assert.equal(message.MediaId, 'asdfasdfasdf');
             console.log('=== image message ===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
 
@@ -107,6 +114,7 @@ describe('sendVoice', function() {
             assert.equal(message.MediaId, 'asdfasdfasdf');
             console.log('=== voice message ===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
 
@@ -121,5 +129,3 @@ describe('sendVoice', function() {
         done();
     })
 })
-
-

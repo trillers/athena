@@ -9,6 +9,7 @@ describe('registerSite', function() {
         assert.ok(site);
         assert.ok(site.isRegistered());
         console.log(site);
+        console.log('\r\n');
         done();
     })
 })

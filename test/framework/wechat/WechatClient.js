@@ -8,6 +8,7 @@ describe('createClient', function() {
         var clientA = platform.createClient({});
         assert.ok(clientA);
         console.log(clientA);
+        console.log('\r\n');
         done();
     })
 })
@@ -23,6 +24,7 @@ describe('signin', function() {
         assert.ok(clientA.isSignedIn());
         assert.ok(clientA.getSignedInUser());
         console.log(clientA);
+        console.log('\r\n');
         done();
     })
 
@@ -33,6 +35,7 @@ describe('signin', function() {
         assert.notOk(clientA.isSignedIn());
         assert.notOk(clientA.getSignedInUser());
         console.log(clientA);
+        console.log('\r\n');
         done();
     })
 
@@ -49,6 +52,7 @@ describe('signout', function() {
         assert.notOk(clientA.isSignedIn());
         assert.notOk(clientA.getSignedInUser());
         console.log(clientA);
+        console.log('\r\n');
         done();
     })
 
@@ -62,16 +66,19 @@ describe('subscribeSite', function() {
         site.on('subscribe', function(message){
             console.log('===subscribe===');
             console.log(message);
+            console.log('\r\n');
         });
         site.on('enter', function(message){
             console.log('===enter===');
             console.log(message);
+            console.log('\r\n');
         });
         assert.ok(site.getId());
 
         var siteClient = client.subscribeSite(site.getId());
         assert.ok(siteClient);
         console.log(siteClient);
+        console.log('\r\n');
         done();
     })
 

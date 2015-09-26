@@ -1,5 +1,5 @@
-var UserService = require('../modules/user/services/UserService');
-var logger = require('../app/logging').logger;
+var WechatUserService = require('./WechatUserService');
+var logger = require('../../../app/logging').logger;
 
 var defaults = {
     userKey: 'user' //wxsession key of user info
@@ -40,13 +40,14 @@ Authenticator.prototype = {
 
     loadOrCreateWechatUser: function(message, ctx, callback){
         var me = this;
-        UserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
+        WechatUserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
             if(err){
                 logger.error('Fail to sign in from wechat: ' + err);
                 callback(err);
             }
             else{
                 me.setAuthentication(ctx, user);
+                console.error(user);
                 callback(null, user);
             }
         });

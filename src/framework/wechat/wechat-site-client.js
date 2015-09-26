@@ -15,8 +15,8 @@ var WechatSiteClient = function(site, client){
 
 WechatSiteClient.prototype.getOpenid = function(){return this.openid;};
 
-WechatSiteClient.prototype.subscribe = function(){
-    this.openid = this.site.subscribe(this.client.user.getId());
+WechatSiteClient.prototype.subscribe = function(openid){
+    this.openid = this.site.subscribe(this.client.user.getId(), openid);
     this.enter();
 };
 

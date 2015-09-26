@@ -1,5 +1,12 @@
 var EventEmitter = require('events').EventEmitter;
 
+var generateMsgCreateTime = function(){
+    return Math.floor((new Date().getTime())/1000);
+};
+var generateMsgId = function(){
+    return new Date().getTime();
+};
+
 /**
  * Wechat site is a 订阅号/服务号 server which can interact with wechat user's client
  * @constructor
@@ -58,9 +65,21 @@ WechatSite.prototype.getUserInfo = function(openid){
     return this.openidUserInfos[openid];
 };
 
-WechatSite.prototype.subscribe = function(userId){
-    var openid = this.idOpenids[userId];
-    openid || (openid = this._createOpenid(userId))
+WechatSite.prototype._ensureOpenid = function(userId, openid){
+    if(openid){
+        this.idOpenids[userId] || (this.idOpenids[userId] = openid);
+    }
+    else{
+        openid = this.idOpenids[userId];
+        openid || (openid = this.idOpenids[userId] = this.wechat._nextId(this.id))
+    }
+    return openid;
+};
+
+WechatSite.prototype.subscribe = function(userId, openid){
+    openid = this._ensureOpenid(userId, openid);
+    //var openid = this.idOpenids[userId];
+    //openid || (openid = this._createOpenid(userId))
 
     this.openidUserInfos[openid] = {
         openid: openid,
@@ -70,7 +89,7 @@ WechatSite.prototype.subscribe = function(userId){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'subscribe'
     };
@@ -85,7 +104,7 @@ WechatSite.prototype.unsubscribe = function(openid){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'unsubscribe'
     };
@@ -98,7 +117,7 @@ WechatSite.prototype.SCAN = function(openid){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'SCAN'
     };
@@ -111,7 +130,7 @@ WechatSite.prototype.LOCATION = function(openid, location){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'LOCATION'
         , Latitude: location.latitude
@@ -127,7 +146,7 @@ WechatSite.prototype.CLICK = function(openid, key){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'CLICK'
         , EventKey: key
@@ -141,7 +160,7 @@ WechatSite.prototype.VIEW = function(openid, key){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'VIEW'
         , EventKey: key
@@ -155,7 +174,7 @@ WechatSite.prototype.enter = function(openid){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'enter'
     };
@@ -168,7 +187,7 @@ WechatSite.prototype.exit = function(openid){
     var message = {
         ToUserName: this.id
         , FromUserName: openid
-        , CreateTime: new Date()
+        , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'exit'
     };
@@ -184,7 +203,8 @@ WechatSite.prototype.exit = function(openid){
  */
 WechatSite.prototype.sendMessage = function(message){
     message.ToUserName = this.id;
-    message.MsgId = '0000000000' + new Date().getTime(); //TODO
+    message.CreateTime = '' + generateMsgCreateTime();
+    message.MsgId = '' + generateMsgId();
     this.emitter.emit('raw', message);
     this.emitter.emit('message', message);
     this.emitter.emit(message.MsgType, message);

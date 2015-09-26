@@ -36,9 +36,9 @@ module.exports = function() {
         var message = self.weixin;
         console.log('message');
         console.log(message);
-        var user = yield ensureSignin(message, self, next);
-        this["user"] = user;
-        WechatOperationService.logActionAsync(message);
+        //var user = yield ensureSignin(message, self, next);
+        //this["user"] = user;
+        //WechatOperationService.logActionAsync(message);
         yield next;
     });
 
