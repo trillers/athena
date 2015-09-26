@@ -16,7 +16,7 @@ var cvs = {
 var cvsId;
 
 setTimeout(function(){
-    describe('createMessage', function(){
+    describe('createConversation', function(){
 
         it('success to create txt message', function(done){
             MessageService.create(txtMsg, function(err, data){
