@@ -1,6 +1,6 @@
-var subClient = require('../app/redis-client')('sub');
-var pubClient = require('../app/redis-client')('pub');
-var service = require('./service');
+var subClient = require('../../../app/redis-client')('sub');
+var pubClient = require('../../../app/redis-client')('pub');
+var service = require('../services/botService');
 var pubSubService = {
     pubClient: pubClient,
     subClient: subClient
@@ -57,14 +57,14 @@ pubSubService.readProfile = function(bid, callback){
 };
 pubSubService.onAddContact = function(callback){
     this[channels.onAddContact][nextId] = callback;
-    pubSubService.pubClient.publish(channels.onAddContact);
+    pubSubService.pubClient.publish(channels.onAddContact, {});
 };
 pubSubService.onReceive = function(callback){
     this[channels.onReceive][nextId] = callback;
-    pubSubService.pubClient.publish(channels.onReceive);
+    pubSubService.pubClient.publish(channels.onReceive, {});
 };
 var id = 0;
 function nextId(){
-    return id++;
+    return id++
 }
 module.exports = pubSubService;

@@ -9,7 +9,7 @@ Service.send = function(msg, callback){
     proxy.send(msg, callback);
 };
 /**
- * leverage sBot to read user,s profile
+ * leverage sBot to read a user,s profile
  * @param bid:String
  * @param callback
  */
