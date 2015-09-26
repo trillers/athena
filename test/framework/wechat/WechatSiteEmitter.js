@@ -30,6 +30,8 @@ describe('bindSite', function() {
             Content: 'I am henry'
         });
 
-        done();
+        setTimeout(function(){
+            done();
+        }, 2000);
     })
 })

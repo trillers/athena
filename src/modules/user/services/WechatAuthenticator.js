@@ -16,8 +16,7 @@ var Authenticator = function(options){
 
 Authenticator.prototype = {
     authenticated: function(ctx){
-        var user = ctx.wxsession && ctx.wxsession[this.userKey];
-        return user;
+        return ctx.wxsession && ctx.wxsession[this.userKey];
     },
 
     clearAuthentication: function(ctx){
@@ -31,11 +30,11 @@ Authenticator.prototype = {
     ensureSignin: function(message, ctx, callback){
         var user = this.authenticated(ctx);
         if(user){
-            console.log('has been authenticated');
+            console.warn('has been authenticated');
             callback(null, user);
         }
         else{
-            console.log('need to be authenticated');
+            console.warn('need to be authenticated');
             this.loadOrCreateWechatUser(message, ctx, callback);
         }
     },
@@ -49,7 +48,6 @@ Authenticator.prototype = {
             }
             else{
                 me.setAuthentication(ctx, user);
-                console.error(user);
                 callback(null, user);
             }
         });

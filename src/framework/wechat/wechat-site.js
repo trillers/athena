@@ -293,7 +293,13 @@ WechatSite.prototype._ensureOpenid = function(userId, openid){
 };
 
 WechatSite.prototype._ensureSession = function(openid){
-    return this.sessions[openid] || (this.sessions[openid] = {});
+    if(!this.sessions[openid]){
+        this.sessions[openid] = {
+            __id: this.wechat._nextId('site-user-session')
+        };
+    }
+
+    return this.sessions[openid];
 };
 
 module.exports = WechatSite;
