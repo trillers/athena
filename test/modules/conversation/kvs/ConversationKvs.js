@@ -1,5 +1,5 @@
 var assert = require("assert");
-var cskv = require('../../../src/modules/conversation/kvs/Conversation');
+var cskv = require('../../../../src/modules/conversation/kvs/Conversation');
 
 /**
  * Conversation kvs test
