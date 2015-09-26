@@ -92,6 +92,33 @@ setTimeout(function(){
         });
     });
 
+    describe('updateMessageByCondition', function(){
+
+        it('success to update txt message by condition', function(done){
+            var update = {content: 'condition update'};
+            var condition = {
+                _id: txtMsgId
+            }
+            MessageService.updateByCondition(condition, update, function(err, data){
+                assert.ok(!err);
+                assert.equal(data.content, update.content);
+                done();
+            });
+        });
+
+        it('success to update media message by condition', function(done){
+            var update = {content: 'condition update'};
+            var condition = {
+                _id: mediaMsgId
+            }
+            MessageService.updateByCondition(condition, update, function(err, data){
+                assert.ok(!err);
+                assert.equal(data.content, update.content);
+                done();
+            });
+        });
+    });
+
     describe('findMessage', function(){
         var params = {
             condition:{

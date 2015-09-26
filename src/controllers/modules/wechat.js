@@ -23,7 +23,6 @@ var authenticator = new WechatAuthenticator({});
 var authEnsureSignin = thunkify(authenticator.ensureSignin);
 var customerDispatcher = require('../../modules/customer_server');
 var frankon = new Frankon();
-var notificationCenter = require('../../framework/NotificationCenter')
 
 var ensureSignin = thunkify(authenticator.ensureSignin.bind(authenticator));
 
