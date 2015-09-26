@@ -17,7 +17,7 @@ var WechatSite = function(wechat, info){
     this.openidUserInfos = {};
     this.wechat = wechat;
     this.id = wechat._nextId('site');
-
+    this.sessions = {};
     var errors = [];
     info.code || (errors.push('need code'));
     info.name || (errors.push('need name'));
@@ -47,6 +47,7 @@ WechatSite.prototype._setRegistered = function(registered){this.info.registered 
 WechatSite.prototype.getQrcode = function(){return this.info.qrcode};
 WechatSite.prototype._setQrcode = function(qrcode){this.info.qrcode = qrcode;};
 
+
 /**
  * user id -> openid
  * @param userId
@@ -65,21 +66,8 @@ WechatSite.prototype.getUserInfo = function(openid){
     return this.openidUserInfos[openid];
 };
 
-WechatSite.prototype._ensureOpenid = function(userId, openid){
-    if(openid){
-        this.idOpenids[userId] || (this.idOpenids[userId] = openid);
-    }
-    else{
-        openid = this.idOpenids[userId];
-        openid || (openid = this.idOpenids[userId] = this.wechat._nextId(this.id))
-    }
-    return openid;
-};
-
 WechatSite.prototype.subscribe = function(userId, openid){
     openid = this._ensureOpenid(userId, openid);
-    //var openid = this.idOpenids[userId];
-    //openid || (openid = this._createOpenid(userId))
 
     this.openidUserInfos[openid] = {
         openid: openid,
@@ -293,8 +281,19 @@ WechatSite.prototype.on = function(event, handler){
     this.emitter.on(event, handler);
 };
 
-WechatSite.prototype._createOpenid = function(userId){
-    return this.idOpenids[userId] = this.wechat._nextId(this.id);
+WechatSite.prototype._ensureOpenid = function(userId, openid){
+    if(openid){
+        this.idOpenids[userId] || (this.idOpenids[userId] = openid);
+    }
+    else{
+        openid = this.idOpenids[userId];
+        openid || (openid = this.idOpenids[userId] = this.wechat._nextId(this.id))
+    }
+    return openid;
+};
+
+WechatSite.prototype._ensureSession = function(openid){
+    return this.sessions[openid] || (this.sessions[openid] = {});
 };
 
 module.exports = WechatSite;

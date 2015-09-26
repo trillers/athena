@@ -31,9 +31,11 @@ Authenticator.prototype = {
     ensureSignin: function(message, ctx, callback){
         var user = this.authenticated(ctx);
         if(user){
+            console.log('has been authenticated');
             callback(null, user);
         }
         else{
+            console.log('need to be authenticated');
             this.loadOrCreateWechatUser(message, ctx, callback);
         }
     },

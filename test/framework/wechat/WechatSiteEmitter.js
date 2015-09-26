@@ -15,7 +15,6 @@ describe('bindSite', function() {
 
 
         site.on('text', function(message){
-            assert.equal(message.Content, 'hello');
             console.log('=== text message ===');
             console.log(message);
             console.log('\r\n');
@@ -24,7 +23,11 @@ describe('bindSite', function() {
 
 
         siteClient.sendText({
-            Content: 'hello'
+            Content: 'hi'
+        });
+
+        siteClient.sendText({
+            Content: 'I am henry'
         });
 
         done();
