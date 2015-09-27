@@ -12,7 +12,7 @@ var schema = DomainBuilder
         from: {type: String, required: true}, // server id or user id
         to: {type: String},  // server id or user id
         channel: {type: String, require: true}, //cvs id
-        contentType: {type: String,enum: MsgContentType.valueList(), default:  MsgContentType.text.value()},
+        contentType: {type: String, enum: MsgContentType.valueList(), default: MsgContentType.text.value()},
         content: {type: String},  //text content
         mediaId: {type: String}  //media id
     })

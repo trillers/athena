@@ -15,9 +15,15 @@ var cvs = {
     , closeTime: new Date()
 }
 
-var cvsId;
+var cvsId = null;
 
-setTimeout(function(){
+before(function(done){
+    setTimeout(function(){
+        done();
+    },3000);
+})
+
+
     describe('createConversation', function(){
 
         it('success to create conversation', function(done){
@@ -33,7 +39,8 @@ setTimeout(function(){
     });
 
     describe('loadConversation', function(){
-
+        var cvsId = null;
+        before();
         it('success to load conversation', function(done){
             ConversationService.load(cvsId, function(err, data){
                 assert.ok(!err);
@@ -123,5 +130,3 @@ setTimeout(function(){
 
     });
 
-    run();
-}, 8000);

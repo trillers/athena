@@ -22,12 +22,13 @@ Service.create = function (json, callback) {
     var message = new Message(json);
     message.save(function (err, doc, numberAffected) {
         if (err) {
+            logger.error('Fail to create Message: ' + err + '\r\n');
             if (callback) callback(err);
             return;
         }
         if (numberAffected) {
             logger.debug('Succeed to create Message: ' + require('util').inspect(doc) + '\r\n');
-            if (callback) callback(null, doc);
+            if (callback) callback(null, doc.toObject());
         }
         else {
             logger.error('Fail to create Message: ' + require('util').inspect(doc) + '\r\n');

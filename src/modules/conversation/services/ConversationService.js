@@ -18,6 +18,19 @@ Service.load = function (id, callback) {
     })
 };
 
+Service.loadById = function (id, callback) {
+    Conversation.findById(id).exec(function (err, doc) {
+        if (err) {
+            logger.error('Fail to load Conversation [id=' + id + ']: ' + err);
+            if (callback) callback(err);
+            return;
+        }
+
+        logger.debug('Succeed to load  Conversation [id=' + id + ']');
+        if (callback) callback(null, doc ? doc.toObject() : null);
+    })
+};
+
 Service.create = function (json, callback) {
     var conversation = new Conversation(json);
     conversation.save(function (err, doc, numberAffected) {
@@ -95,38 +108,6 @@ Service.find = function (params, callback) {
 
 
     //TODO: specify select list, exclude comments in list view
-    query.lean(true);
-    query.exec(function (err, docs) {
-        if (err) {
-            callback(err);
-            return;
-        }
-
-        if (callback) callback(null, docs);
-    });
-};
-
-Service.filter = function (params, callback) {
-    var query = Conversation.find();
-
-    if (params.options) {
-        query.setOptions(params.options);
-    }
-
-    if (params.sort) {
-        query.sort(params.sort);
-    }
-
-    if (params.page) {
-        var skip = (params.page.no - 1) * params.page.size;
-        var limit = params.page.size;
-        if (skip) query.skip(skip);
-        if (limit) query.limit(limit);
-    }
-
-    if (params.conditions) {
-        query.find(params.conditions);
-    }
     query.lean(true);
     query.exec(function (err, docs) {
         if (err) {

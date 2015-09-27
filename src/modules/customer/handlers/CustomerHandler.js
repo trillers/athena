@@ -113,7 +113,6 @@ _fetchConversationAsync = Promise.promisify(_fetchConversation);
 module.exports = function(emitter){
     var customerEmitter = require('../CustomerEmitter');
     emitter.customer(function(event, context){
-        console.log('emit customer handler');
         co(function* (){
             var user = context.user;
             var msg = context.weixin;
@@ -128,7 +127,7 @@ module.exports = function(emitter){
                     from: user.id,
                     to: null,
                     channel: cvsId,
-                    contentType: event,
+                    contentType: msg.MsgType,
                     content: msg.Content || null,
                     mediaId: msg.mediaId || null
                 });
@@ -136,17 +135,19 @@ module.exports = function(emitter){
                 customerEmitter.emit('conversation', cvs, msg);
             }
             else{
-                cvs = yield loadByIdAsync(cvs.id);
+                cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
                 yield messageService.createAsync({
                     from: user.id,
                     to: null,
                     channel: cvs.id,
-                    contentType: event,
+                    contentType: msg.MsgType,
                     content: msg.Content || null,
                     mediaId: msg.mediaId || null
                 });
                 customerEmitter.emit('message', cvs, msg);
             }
+        }).catch(function(e){
+            console.error(e.stack);
         });
     });
 };

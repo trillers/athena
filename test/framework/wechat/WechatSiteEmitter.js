@@ -3,6 +3,14 @@ var wxutil = require('./util');
 var WechatSiteEmitter = require('../../../src/framework/wechat/wechat-site-emitter');
 var Wechat = require('../../../src/framework/wechat/index');
 var siteEmitter = require('../../../src/modules/assistant/site-emitter');
+var mongoose = require('../../../src/app/mongoose');
+var redis = require('../../../src/app/redis');
+
+before(function(done){
+    setTimeout(function(){
+        done();
+    },3000);
+})
 
 describe('bindSite', function() {
     it('sendText', function (done) {
@@ -26,12 +34,12 @@ describe('bindSite', function() {
             Content: 'hi'
         });
 
-        siteClient.sendText({
-            Content: 'I am henry'
-        });
+        //siteClient.sendText({
+        //    Content: 'I am henry'
+        //});
 
         setTimeout(function(){
             done();
-        }, 2000);
+        }, 1000);
     })
 })
