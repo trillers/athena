@@ -19,28 +19,30 @@ pubSubService.register = function(type){
  */
 Object.keys(channels).forEach(function(channel){
     pubSubService.register(channel);
-    pubSubService.subClient.subscribe(channel);
+    pubSubService.subClient.subscribe('sbot:' + channel);
 });
 /**
  * when a msg is arriving
  */
 pubSubService.subClient.on('message', function(channel, msg){
+    var msg = JSON.parse(msg);
+    channel = channel.split(':')[1];
     if(channel === channels.send){
-        this[channel + 'CbMap'][msg.data.MsgId].call(null, msg.err, msg.data);
-        delete this[channel + 'CbMap'][msg.data.MsgId];
+        pubSubService[channel + 'CbMap'][msg.data.MsgId].call(null, msg.err, msg.data);
+        delete pubSubService[channel + 'CbMap'][msg.data.MsgId];
     }
     if(channel === channels.readProfile){
-        this[channel + 'CbMap'][msg.data.bid].call(null, msg.err, msg.data);
-        delete this[channel + 'CbMap'][msg.data.bid];
+        pubSubService[channel + 'CbMap'][msg.data.bid].call(null, msg.err, msg.data);
+        delete pubSubService[channel + 'CbMap'][msg.data.bid];
     }
     if(channel === channels.onAddContact){
-        for(var prop in this[channel + 'CbMap']){
-            this[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
+        for(var prop in pubSubService[channel + 'CbMap']){
+            pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
         }
     }
     if(channel === channels.onReceive){
-        for(var prop in this[channel + 'CbMap']){
-            this[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
+        for(var prop in pubSubService[channel + 'CbMap']){
+            pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
         }
     }
 });
@@ -53,14 +55,14 @@ pubSubService.send = function(msg, callback){
 };
 pubSubService.readProfile = function(bid, callback){
     this[channels.readProfile + 'CbMap'][bid] = callback;
-    pubSubService.pubClient.publish(channels.readProfile, bid);
+    pubSubService.pubClient.publish(channels.readProfile, JSON.stringify({bid: bid}));
 };
 pubSubService.onAddContact = function(callback){
-    this[channels.onAddContact][nextId] = callback;
+    this[channels.onAddContact + 'CbMap'][nextId()] = callback;
     pubSubService.pubClient.publish(channels.onAddContact, {});
 };
 pubSubService.onReceive = function(callback){
-    this[channels.onReceive][nextId] = callback;
+    this[channels.onReceive + 'CbMap'][nextId()] = callback;
     pubSubService.pubClient.publish(channels.onReceive, {});
 };
 var id = 0;
