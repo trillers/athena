@@ -1,15 +1,15 @@
 var User = require('../models/User').model;
 var UserHelper = require('../models/User').helper;
-var UserState = require('../framework/model/enums').UserState;
+var UserState = require('../../../framework/model/enums').UserState;
 var UserKv = require('../kvs/User');
-var time = require('../app/time');
+var time = require('../../../app/time');
 var settings = require('athena-settings');
-var logger = require('../app/logging').logger;
-var u = require('../app/util');
-var wechat = require('../app/wechat/api');
+var logger = require('../../../app/logging').logger;
+var u = require('../../../app/util');
+var wechat = require('../../wechat/common/api');
 var Service = {};
 var Promise = require('bluebird');
-var cbUtil = require('../framework/callback');
+var cbUtil = require('../../../framework/callback');
 
 var generateUserToken = function(uid){
     var key = settings.secretKey;
@@ -198,34 +198,6 @@ Service.deleteByOpenid = function(openid, callback){
         })
         .catch(Error, function (err) {
             logger.error('Fail to delete user by openid: ' + err);
-            if(callback) callback(err);
-        });
-};
-
-Service.createOrUpdateFromWechatOAuth = function(oauth, callback){
-    var newUserJson = null;
-    var openid = oauth.openid;
-    return getUserFromWechatAsync(openid)
-        .then(function (userJson) {
-            return newUserJson = UserHelper.mergeUserInfo(oauth, userJson);
-        })
-        .then(function(userJson){
-            return UserKv.loadIdByOpenidAsync(openid);
-        })
-        .then(function(id){
-            if(id){
-                return Service.updateFromWechat(id, newUserJson);
-            }
-            else{
-                return Service.createFromWechat(newUserJson);
-            }
-        })
-        .then(function(userJson){
-            if(callback) callback(null, userJson);
-            return userJson;
-        })
-        .catch(Error, function (err) {
-            logger.error('Fail to create or update user by openid: ' + err);
             if(callback) callback(err);
         });
 };

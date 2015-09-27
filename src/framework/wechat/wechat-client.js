@@ -79,12 +79,12 @@ WechatClient.prototype.scanSite = function(qrcode){
  * @param id wechat site id
  * @returns {WechatSiteClient|exports|module.exports}
  */
-WechatClient.prototype.subscribeSite = function(siteId){
+WechatClient.prototype.subscribeSite = function(siteId, openid){
     var site = this.wechat.getSiteById(siteId);
     if(!site) throw new Error('wechat site ' +siteId+ ' does not exist');
 
     var siteClient = this._createSiteClient(site);
-    siteClient.subscribe();
+    siteClient.subscribe(openid);
 
     return siteClient;
 };

@@ -15,8 +15,8 @@ var WechatSiteClient = function(site, client){
 
 WechatSiteClient.prototype.getOpenid = function(){return this.openid;};
 
-WechatSiteClient.prototype.subscribe = function(){
-    this.openid = this.site.subscribe(this.client.user.getId());
+WechatSiteClient.prototype.subscribe = function(openid){
+    this.openid = this.site.subscribe(this.client.user.getId(), openid);
     this.enter();
 };
 
@@ -51,17 +51,26 @@ WechatSiteClient.prototype.exit = function(){
 
 WechatSiteClient.prototype.sendText = function(message){
     message.FromUserName = this.openid;
-    this.site.sendText(message);
+    var me = this;
+    process.nextTick(function(){
+        me.site.sendText(message);
+    });
 };
 
 WechatSiteClient.prototype.sendImage = function(message){
     message.FromUserName = this.openid;
-    this.site.sendImage(message);
+    var me = this;
+    process.nextTick(function(){
+        me.site.sendImage(message);
+    });
 };
 
 WechatSiteClient.prototype.sendVoice = function(message){
     message.FromUserName = this.openid;
-    this.site.sendVoice(message);
+    var me = this;
+    process.nextTick(function(){
+        me.site.sendVoice(message);
+    });
 };
 
 module.exports = WechatSiteClient;

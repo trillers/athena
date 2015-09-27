@@ -10,23 +10,28 @@ describe('bindSite', function() {
         var client = wxutil.newSignedInClient(platform);
         var site = wxutil.newRegisteredSite(platform);
         siteEmitter.bindSite(site);
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var siteClient = client.subscribeSite(site.getId(), openid);
 
-        var siteClient = client.subscribeSite(site.getId());
 
-
-
-        //site.on('text', function(message){
-        //    assert.equal(message.Content, 'hello');
-        //    console.log('=== text message ===');
-        //    console.log(message);
-        //});
-        //assert.ok(site.getId());
+        site.on('text', function(message){
+            console.log('=== text message ===');
+            console.log(message);
+            console.log('\r\n');
+        });
+        assert.ok(site.getId());
 
 
         siteClient.sendText({
-            Content: 'hello'
+            Content: 'hi'
         });
 
-        done();
+        siteClient.sendText({
+            Content: 'I am henry'
+        });
+
+        setTimeout(function(){
+            done();
+        }, 2000);
     })
 })

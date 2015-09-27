@@ -1,5 +1,5 @@
-var UserService = require('../modules/user/services/UserService');
-var logger = require('../app/logging').logger;
+var WechatUserService = require('./WechatUserService');
+var logger = require('../../../app/logging').logger;
 
 var defaults = {
     userKey: 'user' //wxsession key of user info
@@ -16,8 +16,7 @@ var Authenticator = function(options){
 
 Authenticator.prototype = {
     authenticated: function(ctx){
-        var user = ctx.wxsession && ctx.wxsession[this.userKey];
-        return user;
+        return ctx.wxsession && ctx.wxsession[this.userKey];
     },
 
     clearAuthentication: function(ctx){
@@ -31,16 +30,18 @@ Authenticator.prototype = {
     ensureSignin: function(message, ctx, callback){
         var user = this.authenticated(ctx);
         if(user){
+            console.warn('has been authenticated');
             callback(null, user);
         }
         else{
+            console.warn('need to be authenticated');
             this.loadOrCreateWechatUser(message, ctx, callback);
         }
     },
 
     loadOrCreateWechatUser: function(message, ctx, callback){
         var me = this;
-        UserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
+        WechatUserService.loadOrCreateFromWechat(message.FromUserName, function(err, user){
             if(err){
                 logger.error('Fail to sign in from wechat: ' + err);
                 callback(err);

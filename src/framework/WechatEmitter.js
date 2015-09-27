@@ -25,7 +25,8 @@ var MSG_TYPES = {
 WechatEmitter.prototype.bindEvent = function(type, site) {
     var me = this;
     site.on(type, function(message){
-        var context = {weixin: message};
+        var wxsession = site._ensureSession(message.FromUserName);
+        var context = {weixin: message, wxsession: wxsession};
         me.emitter.emit('raw', 'raw', context);
         me.emitter.emit('event', 'event', context);
         me.emitter.emit(type, type, context);
@@ -34,7 +35,8 @@ WechatEmitter.prototype.bindEvent = function(type, site) {
 WechatEmitter.prototype.bindMessage = function(type, site) {
     var me = this;
     site.on(type, function(message){
-        var context = {weixin: message};
+        var wxsession = site._ensureSession(message.FromUserName);
+        var context = {weixin: message, wxsession: wxsession};
         me.emitter.emit('raw', 'raw', context);
         me.emitter.emit('message', 'message', context);
         me.emitter.emit(type, type, context);
