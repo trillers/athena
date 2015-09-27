@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <input id="input" type="text" value="测试三连击。。。"/>
+    <p>fdsafdsafds</p>
+    <input id="start" type="button" value="开始"/>
+    <script>
+        var element = document.querySelector("body"),
+                ev;
+        if(document.createEvent ) {
+            ev = document.createEvent("MouseEvents");
+            ev.initMouseEvent("click", true, false, window,0,0,0,0,0,false,false,false,false,2,null);
+            try{
+                element.dispatchEvent(ev);
+            }catch(e){
+                console.error(e)
+            }
+        } else {
+            ev = document.createEventObject();
+            ev.button = 2;
+            element.fireEvent('onclick', ev);
+        }
+        //element.rightClick()
+    </script>
+</body>
+</html>

@@ -94,9 +94,25 @@ WechatEmitter.prototype.relay = function(context){
         this.emitter.emit('event', 'event', context);
         /**
          * event type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
+         * custom event type includes: qr qrsubscribe qrSCAN
          */
         if(EVENT_TYPES[eventType]){
-            this.emitter.emit(eventType, eventType, context);
+            if('subscribe' == eventType && msg.EventKey){
+                var index = msg.EventKey.indexOf("_") + 1;
+                msg.SceneId = msg.EventKey.substring(index);
+                this.emitter.emit('qr', 'qr', context);
+                var customEventType = 'qrsubscribe';
+                this.emitter.emit(customEventType, customEventType, context);
+            }
+            else if('SCAN' == eventType && msg.EventKey) {
+                msg.SceneId = msg.EventKey;
+                this.emitter.emit('qr', 'qr', context);
+                var customEventType = 'qrSCAN';
+                this.emitter.emit(customEventType, customEventType, context);
+            }
+            else{
+                this.emitter.emit(eventType, eventType, context);
+            }
         }
         else{
             this.emitter.emit('unknown', 'unknown', context);
@@ -159,7 +175,7 @@ WechatEmitter.prototype.VIEW = function(handler){ this.emitter.on('VIEW', handle
  * msg type includes: qr, qrSubscribe, qrSCAN
  */
 WechatEmitter.prototype.qr = function(handler){ this.emitter.on('qr', handler); };
-WechatEmitter.prototype.qrSubscribe = function(handler){ this.emitter.on('qrSubscribe', handler); };
+WechatEmitter.prototype.qrsubscribe = function(handler){ this.emitter.on('qrsubscribe', handler); };
 WechatEmitter.prototype.qrSCAN = function(handler){ this.emitter.on('qrSCAN', handler); };
 
 /**
