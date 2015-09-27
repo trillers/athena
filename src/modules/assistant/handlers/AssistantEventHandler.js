@@ -28,20 +28,19 @@ module.exports = function(emitter){
             var sceneId = context.weixin.SceneId;
             co(function*(){
                 try{
-                    var success = false, reply = '';
+                    var success = false, reply = '系统繁忙，请稍后重试！';
                     var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
                     console.log(qr);
                     if(qr){
                         switch(qr.type){
                             case 'cs':
+                                console.log('cs handler');
                                 reply = '欢迎成为客服人员！';
                                 success = yield QrChannelService.RegistryCS(user);
                                 break;
                             //TODO another qr type
                         }
-                        if(!success){
-                            reply = '系统繁忙，请稍后重试！';
-                        }
+                        console.log('success');
                         wechatApi.sendText(user.wx_openid, reply);
 
                     }
