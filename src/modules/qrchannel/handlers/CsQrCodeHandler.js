@@ -1,5 +1,5 @@
 var qrHandler = require('../common/QrHandler');
-var handler = new qrHandler(false, 'csr', null);
+var handler = new qrHandler(false, 'cs', null);
 var path = require('path');
 var assert = require('assert');
 var wechatApi = require('../../wechat/common/api').api;
