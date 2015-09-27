@@ -144,6 +144,7 @@ WechatEmitter.prototype.message = function(handler){ this.emitter.on('message', 
 WechatEmitter.prototype.unknown = function(handler){ this.emitter.on('unknown', handler); };
 
 /**
+ * EVENT type of event
  * msg type includes: subscribe unsubscribe LOCATION SCAN CLICK VIEW
  */
 WechatEmitter.prototype.subscribe = function(handler){ this.emitter.on('subscribe', handler); };
@@ -152,6 +153,14 @@ WechatEmitter.prototype.LOCATION = function(handler){ this.emitter.on('LOCATION'
 WechatEmitter.prototype.SCAN = function(handler){ this.emitter.on('SCAN', handler); };
 WechatEmitter.prototype.CLICK = function(handler){ this.emitter.on('CLICK', handler); };
 WechatEmitter.prototype.VIEW = function(handler){ this.emitter.on('VIEW', handler); };
+
+/**
+ * CUSTOM EVENT type of event
+ * msg type includes: qr, qrSubscribe, qrSCAN
+ */
+WechatEmitter.prototype.qr = function(handler){ this.emitter.on('qr', handler); };
+WechatEmitter.prototype.qrSubscribe = function(handler){ this.emitter.on('qrSubscribe', handler); };
+WechatEmitter.prototype.qrSCAN = function(handler){ this.emitter.on('qrSCAN', handler); };
 
 /**
  * msg type includes: text image voice video shortvideo location link
