@@ -20,7 +20,7 @@ describe('custom messages', function() {
             console.info(event + '2');
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -42,7 +42,7 @@ describe('custom messages', function() {
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -64,7 +64,7 @@ describe('custom messages', function() {
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -86,7 +86,7 @@ describe('custom messages', function() {
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 })
@@ -110,7 +110,7 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -132,7 +132,7 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -154,7 +154,7 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -176,7 +176,7 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -198,7 +198,7 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -220,10 +220,61 @@ describe('event messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
+    it('qrsubscribe', function(done){
+        var emitter = new WechatEmitter();
+        var context = {
+            weixin: { MsgType: 'event', Event: 'subscribe', EventKey: 'qrscene_1000', Ticket: '11000' },
+            user: { id: 'test', openid: 'asfsafadsf' }
+        };
+        emitter.qr(function(event, context){
+            assert.equal(event, 'qr');
+            assert.equal(context.weixin.Event, 'subscribe');
+            assert.equal(context.weixin.SceneId, '1000');
+            assert.equal(context.weixin.Ticket, '11000');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.qrsubscribe(function(event, context){
+            assert.equal(event, 'qrsubscribe');
+            assert.equal(context.weixin.Event, 'subscribe');
+            assert.equal(context.weixin.SceneId, '1000');
+            assert.equal(context.weixin.Ticket, '11000');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.relay(context);
+        done();
+    })
+
+    it('qrSCAN', function(done){
+        var emitter = new WechatEmitter();
+        var context = {
+            weixin: { MsgType: 'event', Event: 'SCAN', EventKey: '1000', Ticket: '11000' },
+            user: { id: 'test', openid: 'asfsafadsf' }
+        };
+        emitter.qr(function(event, context){
+            assert.equal(event, 'qr');
+            assert.equal(context.weixin.Event, 'SCAN');
+            assert.equal(context.weixin.SceneId, '1000');
+            assert.equal(context.weixin.Ticket, '11000');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.qrSCAN(function(event, context){
+            assert.equal(event, 'qrSCAN');
+            assert.equal(context.weixin.Event, 'SCAN');
+            assert.equal(context.weixin.SceneId, '1000');
+            assert.equal(context.weixin.Ticket, '11000');
+            console.info(event);
+            console.info(context);
+        });
+        emitter.relay(context);
+        done();
+    })
 })
 
 describe('messages', function(){
@@ -245,7 +296,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -267,7 +318,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -289,7 +340,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -311,7 +362,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -333,7 +384,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -355,7 +406,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 
@@ -377,7 +428,7 @@ describe('messages', function(){
             console.info(event);
             console.info(context);
         });
-        emitter.emit(context);
+        emitter.relay(context);
         done();
     })
 })
