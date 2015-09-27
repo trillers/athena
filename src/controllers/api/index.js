@@ -19,4 +19,9 @@ module.exports = function(app){
     require('./qr')(qr_router);
     app.use(qr_router.routes());
 
+    //file
+    var file_router = new router();
+    file_router.prefix('/api/file');
+    require('./file')(file_router);
+    app.use(file_router.routes());
 }
