@@ -16,6 +16,7 @@ require('../../customer/handlers/CustomerHandler')(roleEmitter);
 
 module.exports = function(emitter){
     emitter.qr(function(event, context){
+        console.log('qr event emit');
         authenticator.ensureSignin(context.weixin, context, function(err, user){
             if(err){
                 logger.error('Fail to sigin with user: ' + err);
@@ -23,12 +24,13 @@ module.exports = function(emitter){
             else{
                 context.user = user;
             }
-
+            console.log(user);
             var sceneId = context.weixin.SceneId;
             co(function*(){
                 try{
                     var success = false, reply = '';
                     var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
+                    console.log(qr);
                     if(qr){
                         switch(qr.type){
                             case 'cs':
