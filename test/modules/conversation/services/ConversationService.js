@@ -6,7 +6,7 @@ var ConversationState = require('../../../../src/modules/common/models/TypeRegis
 /**
  * ConversationService unit test
  * **/
-var cvsId, initiator = new Date().getTime();
+var initiator = new Date().getTime();
 
 var cvs = {
     stt: ConversationState.Started.value()
@@ -24,12 +24,21 @@ before(function (done) {
 });
 
 describe('createConversation', function () {
+    var cvsId = null;
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
 
     it('success to create conversation', function (done) {
         ConversationService.create(cvs, function (err, data) {
             assert.ok(!err);
             assert.ok(data);
-            assert.ok(data._id);
             cvsId = data._id;
             assert.equal(data.csId, cvs.csId);
             done();
@@ -38,6 +47,27 @@ describe('createConversation', function () {
 });
 
 describe('loadConversation', function () {
+    var cvsId = null;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
 
     it('success to load conversation', function (done) {
         ConversationService.load(cvsId, function (err, data) {
@@ -50,6 +80,27 @@ describe('loadConversation', function () {
 });
 
 describe('updateConversation', function () {
+    var cvsId = null;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
 
     it('success to update conversation', function (done) {
         var update = {csId: 'cs456'};
@@ -63,6 +114,27 @@ describe('updateConversation', function () {
 });
 
 describe('updateConversationByCondition', function () {
+    var cvsId = null;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
 
     it('success to update conversation by condition', function (done) {
         var update = {csId: 'cs789'};
@@ -78,9 +150,33 @@ describe('updateConversationByCondition', function () {
 });
 
 describe('findConversation', function () {
+    var cvsId = null;
+    var findInitiator = new Date().getTime();
+    cvs.initiator = findInitiator;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
+
     var params = {
         conditions: {
-            initiator: initiator
+            initiator: findInitiator
         },
         page: {
             no: 1,
@@ -99,9 +195,33 @@ describe('findConversation', function () {
 });
 
 describe('filterConversation', function () {
+    var cvsId = null;
+    var filterInitiator = new Date().getTime();
+    cvs.initiator = filterInitiator;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        ConversationService.deleteAsync(cvsId)
+            .then(function(){
+                done()
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
+
     var params = {
         conditions: {
-            initiator: initiator
+            initiator: filterInitiator
         },
         page: {
             no: 1,
@@ -109,7 +229,7 @@ describe('filterConversation', function () {
         }
     }
     it('success to filter conversation', function (done) {
-        ConversationService.find(params, function (err, data) {
+        ConversationService.filter(params, function (err, data) {
             assert.ok(!err);
             console.log(data.length);
             assert.equal(data.length, 1);
@@ -119,6 +239,17 @@ describe('filterConversation', function () {
 });
 
 describe('delConversation', function () {
+    var cvsId = null;
+    before(function (done) {
+        ConversationService.createAsync(cvs)
+            .then(function (data) {
+                cvsId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
 
     it('success to del txt conversation', function (done) {
         ConversationService.delete(cvsId, function (err, data) {

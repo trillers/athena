@@ -6,7 +6,7 @@ var MsgContentType = require('../../../../src/modules/common/models/TypeRegistry
  * MessageService unit test
  * **/
 
-var txtMsgId, mediaMsgId, channel = new Date().getTime();
+var channel = new Date().getTime();
 var txtMsg = {
     from: 'adc453',
     to: null,
@@ -32,12 +32,25 @@ before(function (done) {
 });
 
 describe('createMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+            .catch(Error, function(err){
+                console.log(err);
+            });
+    });
 
     it('success to create txt message', function (done) {
         MessageService.create(txtMsg, function (err, data) {
             assert.ok(!err);
             assert.ok(data);
-            assert.ok(data._id);
             txtMsgId = data._id;
             assert.equal(data.content, txtMsg.content);
             done();
@@ -48,7 +61,6 @@ describe('createMessage', function () {
         MessageService.create(mediaMsg, function (err, data) {
             assert.ok(!err);
             assert.ok(data);
-            assert.ok(data._id);
             mediaMsgId = data._id;
             assert.equal(data.mediaId, mediaMsg.mediaId);
             done();
@@ -57,6 +69,32 @@ describe('createMessage', function () {
 });
 
 describe('loadMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+    });
 
     it('success to load txt message', function (done) {
         MessageService.load(txtMsgId, function (err, data) {
@@ -76,6 +114,32 @@ describe('loadMessage', function () {
 });
 
 describe('updateMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+    });
 
     it('success to update txt message', function (done) {
         var update = {content: 'new content'};
@@ -98,6 +162,32 @@ describe('updateMessage', function () {
 });
 
 describe('updateMessageByCondition', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+    });
 
     it('success to update txt message by condition', function (done) {
         var update = {content: 'condition update'};
@@ -125,6 +215,33 @@ describe('updateMessageByCondition', function () {
 });
 
 describe('findMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+    });
+
     var params = {
         conditions: {
             channel: channel
@@ -145,6 +262,32 @@ describe('findMessage', function () {
 });
 
 describe('filterMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
+
+    after(function (done) {
+        MessageService.deleteAsync(txtMsgId)
+            .then(function(){
+                return MessageService.deleteAsync(mediaMsgId);
+
+            })
+            .then(function(){
+                done();
+            })
+    });
     var params = {
         conditions: {
             channel: channel
@@ -155,7 +298,7 @@ describe('filterMessage', function () {
         }
     }
     it('success to filter message', function (done) {
-        MessageService.find(params, function (err, data) {
+        MessageService.filter(params, function (err, data) {
             assert.ok(!err);
             console.log(data.length);
             assert.equal(params.page.size, data.length);
@@ -165,6 +308,21 @@ describe('filterMessage', function () {
 });
 
 describe('delMessage', function () {
+    var txtMsgId = null, mediaMsgId = null;
+    before(function (done) {
+        MessageService.createAsync(txtMsg)
+            .then(function (data) {
+                txtMsgId = data._id;
+                return MessageService.createAsync(mediaMsg);
+            })
+            .then(function (data) {
+                mediaMsgId = data._id;
+                done();
+            })
+            .catch(Error, function (err) {
+                console.log(err);
+            })
+    });
 
     it('success to del txt message', function (done) {
         MessageService.delete(txtMsgId, function (err, data) {
