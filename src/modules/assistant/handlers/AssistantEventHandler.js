@@ -24,7 +24,6 @@ module.exports = function(emitter){
             else{
                 context.user = user;
             }
-            console.log(user);
             var sceneId = context.weixin.SceneId;
             co(function*(){
                 try{
@@ -44,8 +43,6 @@ module.exports = function(emitter){
                                 break;
                             //TODO another qr type
                         }
-                        console.log('success');
-                        console.log(user.wx_openid);
                         wechatApi.sendText(user.wx_openid, reply, function(err){
                             console.log(err);
                             //TODO
@@ -54,7 +51,8 @@ module.exports = function(emitter){
                     }
                     else{
                         reply = '该二维码已失效';
-                        wechatApi.sendText(user.wx_openid, reply, function(){
+                        wechatApi.sendText(user.wx_openid, reply, function(err){
+                            console.log(err);
                             //TODO
                         });
                     }
