@@ -36,7 +36,11 @@ module.exports = function(emitter){
                             case 'cs':
                                 console.log('cs handler');
                                 reply = '欢迎成为客服人员！';
-                                success = yield QrChannelService.RegistryCS(user);
+                                try {
+                                    success = yield QrChannelService.RegistryCS(user);
+                                }catch(err){
+                                    console.log(err);
+                                }
                                 break;
                             //TODO another qr type
                         }
