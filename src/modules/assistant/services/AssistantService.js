@@ -8,11 +8,11 @@ var Service = {};
 
 Service.RegistryCS = function* (user) {
     var userUpdate = {
-        role: UserRole.CustomerServer.value()
+        role: UserRole.CustomerService.value()
     };
     try{
         yield UserService.updateAsync(user.id, userUpdate);
-        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerServer.value());
+        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerService.value());
         return true;
     } catch (err){
         logger.error(err);
