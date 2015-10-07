@@ -43,11 +43,12 @@ module.exports = function(emitter){
                                 break;
                             //TODO another qr type
                         }
-                        wechatApi.sendText(user.wx_openid, reply, function(err){
-                            console.log(err);
-                            //TODO
-                        });
-
+                        if(success){
+                            wechatApi.sendText(user.wx_openid, reply, function(err){
+                                console.log(err);
+                                //TODO
+                            });
+                        }
                     }
                     else{
                         reply = '该二维码已失效';
