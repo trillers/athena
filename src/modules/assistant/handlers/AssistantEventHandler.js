@@ -37,7 +37,7 @@ module.exports = function(emitter){
                                 console.log('cs handler');
                                 reply = '欢迎成为客服人员！';
                                 try {
-                                    success = yield QrChannelService.RegistryCS(user);
+                                    success = yield AssistantService.RegistryCS(user);
                                 }catch(err){
                                     console.log(err);
                                 }
