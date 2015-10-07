@@ -12,7 +12,6 @@ Service.RegistryCS = function* (user) {
     };
     try{
         yield UserService.updateAsync(user.id, userUpdate);
-        yield UserKv.updateUserRoleByIdAsync(user.id, UserRole.CustomerService.value());
         return true;
     } catch (err){
         logger.error(err);
