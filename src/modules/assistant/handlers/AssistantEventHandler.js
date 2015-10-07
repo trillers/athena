@@ -45,12 +45,18 @@ module.exports = function(emitter){
                             //TODO another qr type
                         }
                         console.log('success');
-                        wechatApi.sendText(user.wx_openid, reply);
+                        console.log(user.wx_openid);
+                        wechatApi.sendText(user.wx_openid, reply, function(err){
+                            console.log(err);
+                            //TODO
+                        });
 
                     }
                     else{
                         reply = '该二维码已失效';
-                        wechatApi.sendText(user.wx_openid, reply);
+                        wechatApi.sendText(user.wx_openid, reply, function(){
+                            //TODO
+                        });
                     }
                 }catch(err){
                     logger.err('qr event handler err: ' + err);
