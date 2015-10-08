@@ -1,4 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
+var WechatSiteApi = require('./wechat-site-api');
 
 var generateMsgCreateTime = function(){
     return Math.floor((new Date().getTime())/1000);
@@ -18,6 +19,9 @@ var WechatSite = function(wechat, info){
     this.wechat = wechat;
     this.id = wechat._nextId('site');
     this.sessions = {};
+    this.sceneIds = {};
+    this.tempSceneIds = {};
+
     var errors = [];
     info.code || (errors.push('need code'));
     info.name || (errors.push('need name'));
@@ -32,6 +36,8 @@ var WechatSite = function(wechat, info){
         headimgurl: info.headimgurl || 'http://www.jf258.com/uploads/2014-03-30/233454270.jpg', //in case of no icon, use default icon
         registered: false
     };
+
+    this.api = new WechatSiteApi(this);
 };
 WechatSite.prototype.getJson = function(){return this.info};
 WechatSite.prototype.getId = function(){return this.info.id;};
@@ -65,6 +71,27 @@ WechatSite.prototype.getOpenid = function(userId){
 WechatSite.prototype.getUserInfo = function(openid){
     return this.openidUserInfos[openid];
 };
+
+//WechatSite.prototype.subscribe = function(userId, openid){
+//    openid = this._ensureOpenid(userId, openid);
+//
+//    this.openidUserInfos[openid] = {
+//        openid: openid,
+//        subscribed: 1,
+//        subscribe_time: new Date()
+//    };
+//    var message = {
+//        ToUserName: this.id
+//        , FromUserName: openid
+//        , CreateTime: generateMsgCreateTime()
+//        , MsgType: 'event'
+//        , Event: 'subscribe'
+//    };
+//    this.emitter.emit('raw', message);
+//    this.emitter.emit('event', message);
+//    this.emitter.emit('subscribe', message);
+//    return openid;
+//};
 
 WechatSite.prototype.subscribe = function(userId, openid){
     openid = this._ensureOpenid(userId, openid);
@@ -108,6 +135,44 @@ WechatSite.prototype.SCAN = function(openid){
         , CreateTime: generateMsgCreateTime()
         , MsgType: 'event'
         , Event: 'SCAN'
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
+    this.emitter.emit('SCAN', message);
+};
+
+WechatSite.prototype.qrsubscribe = function(sceneId, userId, openid){
+    openid = this._ensureOpenid(userId, openid);
+
+    this.openidUserInfos[openid] = {
+        openid: openid,
+        subscribed: 1,
+        subscribe_time: new Date()
+    };
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: generateMsgCreateTime()
+        , MsgType: 'event'
+        , Event: 'subscribe'
+        , EventKey: 'qrscene_'+ sceneId
+        , Ticket: '' + new Date().getTime()
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
+    this.emitter.emit('subscribe', message);
+    return openid;
+};
+
+WechatSite.prototype.qrSCAN = function(sceneId, openid){
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: generateMsgCreateTime()
+        , MsgType: 'event'
+        , Event: 'SCAN'
+        , EventKey: ''+sceneId
+        , Ticket: '' + new Date().getTime()
     };
     this.emitter.emit('raw', message);
     this.emitter.emit('event', message);
@@ -281,6 +346,10 @@ WechatSite.prototype.on = function(event, handler){
     this.emitter.on(event, handler);
 };
 
+WechatSite.prototype.getApi = function(){
+    return this.api;
+};
+
 WechatSite.prototype._ensureOpenid = function(userId, openid){
     if(openid){
         this.idOpenids[userId] || (this.idOpenids[userId] = openid);
@@ -300,6 +369,14 @@ WechatSite.prototype._ensureSession = function(openid){
     }
 
     return this.sessions[openid];
+};
+
+WechatSite.prototype._isGeneratedSceneId = function(sceneId){
+    return this.sceneIds[sceneId];
+};
+
+WechatSite.prototype._isGeneratedTempSceneId = function(sceneId){
+    return this.tempSceneIds[sceneId];
 };
 
 module.exports = WechatSite;

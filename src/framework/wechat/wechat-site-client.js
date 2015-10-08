@@ -31,6 +31,16 @@ WechatSiteClient.prototype.SCAN = function(){
     this.site.enter();
 };
 
+WechatSiteClient.prototype.qrsubscribe = function(sceneId, openid){
+    this.openid = this.site.qrsubscribe(sceneId, this.client.user.getId(), openid);
+    this.enter();
+};
+
+WechatSiteClient.prototype.qrSCAN = function(sceneId){
+    this.site.qrSCAN(sceneId, this.openid);
+    this.site.enter();
+};
+
 WechatSiteClient.prototype.CLICK = function(key){
     this.site.CLICK(this.openid, key);
 };

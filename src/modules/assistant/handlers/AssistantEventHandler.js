@@ -4,17 +4,23 @@ var logger = require('../../../app/logging').logger;
 var WechatAuthenticator = require('../../user/services/WechatAuthenticator');
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
 var authenticator = new WechatAuthenticator({});
-var RoleEmitter = require('../RoleEmitter');
-var roleEmitter = new RoleEmitter();
 var AssistantService = require('../services/AssistantService');
 var wechatApi = require('../../wechat/common/api').api;
-var co = require('co');
-
-require('../../cs/handlers/CsHandler')(roleEmitter);
-require('../../admin/handlers/AdminHandler')(roleEmitter);
-require('../../customer/handlers/CustomerHandler')(roleEmitter);
 
 module.exports = function(emitter){
+    emitter.subscribe(function(event, context){
+        authenticator.ensureSignin(context.weixin, context, function(err, user){
+            if(err){
+                logger.error('Fail to sign up: ' + err);
+                logger.error(context.weixin);
+            }
+            else{
+                context.user = user;
+                console.log('sign up a customer user automatically');
+            }
+        });
+    });
+
     emitter.qr(function(event, context){
         console.log('qr event emit');
         authenticator.ensureSignin(context.weixin, context, function(err, user){
@@ -23,6 +29,8 @@ module.exports = function(emitter){
             }
             else{
                 context.user = user;
+                //TODO: CODE HERE
+                console.log('sign up a customer service user automatically');
             }
             var sceneId = context.weixin.SceneId;
             co(function*(){

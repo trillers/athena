@@ -117,3 +117,66 @@ describe('enterSite', function() {
     })
 
 })
+
+describe('scanSite', function() {
+    it('succeed to scanSite to trigger qrsubscribe event', function (done) {
+        var platform = new Wechat.Platform();
+        var client = wxutil.newSignedInClient(platform);
+        var site = wxutil.newRegisteredSite(platform);
+        site.on('subscribe', function(message){
+            console.log('===subscribe===');
+            console.log(message);
+            console.log('\r\n');
+        });
+        site.on('enter', function(message){
+            console.log('===enter===');
+            console.log(message);
+            console.log('\r\n');
+        });
+
+        var api = site.getApi();
+        var sceneId = 101;
+        var ticket = '';
+        api.createLimitQRCode(sceneId, function(err, result){
+            ticket = result.ticket;
+        });
+
+        var siteClient = client.scanSite(site.getId(), sceneId);
+        console.log('\r\n');
+        done();
+    })
+
+    it('succeed to scanSite to trigger qrSCAN event', function (done) {
+        var platform = new Wechat.Platform();
+        var client = wxutil.newSignedInClient(platform);
+        var site = wxutil.newRegisteredSite(platform);
+        site.on('subscribe', function(message){
+            console.log('===subscribe===');
+            console.log(message);
+            console.log('\r\n');
+        });
+        site.on('SCAN', function(message){
+            console.log('===SCAN===');
+            console.log(message);
+            console.log('\r\n');
+        });
+        site.on('enter', function(message){
+            console.log('===enter===');
+            console.log(message);
+            console.log('\r\n');
+        });
+
+        client.subscribeSite(site.getId());
+
+        var api = site.getApi();
+        var sceneId = 101;
+        var ticket = '';
+        api.createLimitQRCode(sceneId, function(err, result){
+            ticket = result.ticket;
+        });
+
+        var siteClient = client.scanSite(site.getId(), sceneId);
+        console.log('\r\n');
+        done();
+    })
+})

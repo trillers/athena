@@ -53,22 +53,31 @@ WechatClient.prototype.enterSite = function(siteId){
     return siteClient;
 };
 
-WechatClient.prototype.scanSite = function(qrcode){
-    var site = this.wechat.getSiteByQrcode(qrcode);
+WechatClient.prototype.scanSite = function(siteId, sceneId, openid){
+    var site = this.wechat.getSiteById(siteId);
+    if(!site) throw new Error('wechat site ' +siteId+ ' does not exist');
 
-    /*
-     * TODO find by parameterized qrcode here
-     */
-
-    if(!site) return null;
-
+    var openidSubscribed = site.getOpenid(this.user.getId());
     var siteClient = this._getSiteClient(site.getId());
-    if(siteClient){
-        siteClient.SCAN();
-    }
-    else{
+    if(!siteClient){
         siteClient = this._createSiteClient(site);
-        siteClient.subscribe();
+    }
+
+    if(sceneId && (site._isGeneratedSceneId(sceneId) || site._isGeneratedTempSceneId(sceneId))){ //has parameter
+        if(openidSubscribed){
+            siteClient.qrSCAN(sceneId);
+        }
+        else{
+            siteClient.qrsubscribe(sceneId, openid);
+        }
+    }
+    else{// no parameter
+        if(openidSubscribed){
+            siteClient.SCAN();
+        }
+        else{
+            siteClient.subscribe(openid);
+        }
     }
 
     return siteClient;
