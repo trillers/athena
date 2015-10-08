@@ -288,7 +288,7 @@ Service.loadMeta = function (uid, callback) {
 
 
 var updateUser = function(id, update, callback){
-    User.findByIdAndUpdate(id, update, function (err, result){
+    User.findByIdAndUpdate(id, update, {new: true},function (err, result){
         if(err) {
             callback(err);
         } else {
@@ -305,6 +305,8 @@ Service.update = function(id, update, callback){
             if(user){
                 var userJson = user.toObject({virtuals: true});
                 //TODO: delete some associated properties
+                console.log('=========================');
+                console.log(userJson);
                 return UserKv.saveByIdAsync(userJson);
             }
             else{

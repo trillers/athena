@@ -6,7 +6,7 @@ var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var UserKv = require('../../user/kvs/User');
 var Service = {};
 
-Service.RegistryCS = function* (user) {
+Service.registryCS = function* (user) {
     var userUpdate = {
         role: UserRole.CustomerService.value()
     };
@@ -20,6 +20,19 @@ Service.RegistryCS = function* (user) {
 
 };
 
+Service.registryAD = function* (user) {
+    var userUpdate = {
+        role: UserRole.Admin.value()
+    };
+    try{
+        yield UserService.updateAsync(user.id, userUpdate);
+        return true;
+    } catch (err){
+        logger.error(err);
+        return false;
+    }
+
+};
 
 Service = Promise.promisifyAll(Service);
 
