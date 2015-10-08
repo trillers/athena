@@ -288,7 +288,7 @@ Service.loadMeta = function (uid, callback) {
 
 
 var updateUser = function(id, update, callback){
-    User.findByIdAndUpdate(id, update, function (err, result){
+    User.findByIdAndUpdate(id, update, {new: true},function (err, result){
         if(err) {
             callback(err);
         } else {
