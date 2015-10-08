@@ -3,13 +3,21 @@ var co = require('co');
 var logger = require('../../../app/logging').logger;
 var WechatAuthenticator = require('../../user/services/WechatAuthenticator');
 var authenticator = new WechatAuthenticator({});
-var RoleEmitter = require('../RoleEmitter');
-var roleEmitter = new RoleEmitter();
-require('../../cs/handlers/CsHandler')(roleEmitter);
-require('../../admin/handlers/AdminHandler')(roleEmitter);
-require('../../customer/handlers/CustomerHandler')(roleEmitter);
 
 module.exports = function(emitter){
+    emitter.subscribe(function(event, context){
+        authenticator.ensureSignin(context.weixin, context, function(err, user){
+            if(err){
+                logger.error('Fail to sign up: ' + err);
+                logger.error(context.weixin);
+            }
+            else{
+                context.user = user;
+                console.log('sign up a customer user automatically');
+            }
+        });
+    });
+
     emitter.qr(function(event, context){
         authenticator.ensureSignin(context.weixin, context, function(err, user){
             if(err){
@@ -17,8 +25,9 @@ module.exports = function(emitter){
             }
             else{
                 context.user = user;
+                //TODO: CODE HERE
+                console.log('sign up a customer service user automatically');
             }
-           //TODO: CODE HERE
         });
     });
 };

@@ -141,6 +141,44 @@ WechatSite.prototype.SCAN = function(openid){
     this.emitter.emit('SCAN', message);
 };
 
+WechatSite.prototype.qrsubscribe = function(sceneId, userId, openid){
+    openid = this._ensureOpenid(userId, openid);
+
+    this.openidUserInfos[openid] = {
+        openid: openid,
+        subscribed: 1,
+        subscribe_time: new Date()
+    };
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: generateMsgCreateTime()
+        , MsgType: 'event'
+        , Event: 'subscribe'
+        , EventKey: 'qrscene_'+ sceneId
+        , Ticket: '' + new Date().getTime()
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
+    this.emitter.emit('subscribe', message);
+    return openid;
+};
+
+WechatSite.prototype.qrSCAN = function(sceneId, openid){
+    var message = {
+        ToUserName: this.id
+        , FromUserName: openid
+        , CreateTime: generateMsgCreateTime()
+        , MsgType: 'event'
+        , Event: 'SCAN'
+        , EventKey: ''+sceneId
+        , Ticket: '' + new Date().getTime()
+    };
+    this.emitter.emit('raw', message);
+    this.emitter.emit('event', message);
+    this.emitter.emit('SCAN', message);
+};
+
 WechatSite.prototype.LOCATION = function(openid, location){
     var message = {
         ToUserName: this.id
@@ -333,5 +371,12 @@ WechatSite.prototype._ensureSession = function(openid){
     return this.sessions[openid];
 };
 
+WechatSite.prototype._isGeneratedSceneId = function(sceneId){
+    return this.sceneIds[sceneId];
+};
+
+WechatSite.prototype._isGeneratedTempSceneId = function(sceneId){
+    return this.tempSceneIds[sceneId];
+};
 
 module.exports = WechatSite;
