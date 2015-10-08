@@ -16,6 +16,7 @@ module.exports = function(emitter){
             }
             else{
                 context.user = user;
+                console.log(user);
                 console.log('sign up a customer user automatically');
             }
         });

@@ -15,28 +15,24 @@ describe('loadOrCreateFromWechat', function() {
             done();
         });
     })
-
 })
 
-describe('ensureSignin', function() {
-    it('succeed to sigin', function (done) {
-        co(function* (){
-            try{
-                var context = {
-                    weixin: {
-                        FromUserName: 'okvXqsw1VG76eVVJrKivWDgps_gA'
-                    },
-                    wxsession: {}
-                };
-                var user = yield ensureSignin(context.weixin, context);
-                assert.ok(user);
-                console.log(user);
-                done();
-            }
-            catch(e){
-                console.error(e);
-                done();
-            }
+describe('deleteByOpenid', function() {
+    before(function(done){
+        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
+        WechatUserService.loadOrCreateFromWechat(openid, function(err, user){
+            assert.ok(user);
+            console.log(user);
+            done();
+        });
+    })
+
+    it('succeed to delete user by openid', function (done) {
+        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
+        WechatUserService.deleteByOpenid(openid, function(err, user){
+            assert.ok(user);
+            console.log(user);
+            done();
         });
     })
 
