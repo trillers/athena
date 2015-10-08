@@ -36,7 +36,16 @@ module.exports = function(emitter){
                                 console.log('cs handler');
                                 reply = '欢迎成为客服人员！';
                                 try {
-                                    success = yield AssistantService.RegistryCS(user);
+                                    success = yield AssistantService.registryCS(user);
+                                }catch(err){
+                                    console.log(err);
+                                }
+                                break;
+                            case 'ad':
+                                console.log('admin handler');
+                                reply = '欢迎成为管理员员！';
+                                try {
+                                    success = yield AssistantService.registryAD(user);
                                 }catch(err){
                                     console.log(err);
                                 }
