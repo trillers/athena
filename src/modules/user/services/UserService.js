@@ -305,6 +305,8 @@ Service.update = function(id, update, callback){
             if(user){
                 var userJson = user.toObject({virtuals: true});
                 //TODO: delete some associated properties
+                console.log('=========================');
+                console.log(userJson);
                 return UserKv.saveByIdAsync(userJson);
             }
             else{
