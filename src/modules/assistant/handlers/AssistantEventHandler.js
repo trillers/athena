@@ -4,6 +4,9 @@ var logger = require('../../../app/logging').logger;
 var WechatAuthenticator = require('../../user/services/WechatAuthenticator');
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
 var authenticator = new WechatAuthenticator({});
+var AssistantService = require('../services/AssistantService');
+var wechatApi = require('../../wechat/common/api').api;
+
 module.exports = function(emitter){
     emitter.subscribe(function(event, context){
         authenticator.ensureSignin(context.weixin, context, function(err, user){
