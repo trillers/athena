@@ -2,7 +2,7 @@ var cskv = require('../kvs/CustomerService');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var wechatApi = require('../../wechat/common/api').api;
 module.exports = function(emitter){
-        emitter.message = function(context){
+        emitter.message(function(message, context){
             var user = context.user;
             var message = context.weixin;
             cskv.loadCSSByIdAsync(user.wx_openid)
@@ -15,7 +15,7 @@ module.exports = function(emitter){
                             contentType: MsgContentType.names(message.MsgType),
                             content: message.Content || message.MediaId,
                             channel: data._id
-                        }
+                        };
                         co(function* (){
                             yield MessageService.createAsync(msg);
                             switch(message.MsgType){
@@ -37,5 +37,5 @@ module.exports = function(emitter){
                 .then(function(){
                     return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
                 })
-        }
+        })
 };

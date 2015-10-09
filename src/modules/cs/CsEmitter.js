@@ -1,6 +1,8 @@
 var EventEmitter = require('events').EventEmitter;
 var cmdWorkflow = require('./common/FSM').getWf('cmdWorkflow');
 var wechatApi = require('../wechat/common/api').api;
+var cskv = require('./kvs/CustomerService');
+var Promise = require('bluebird');
 var cmdType = {
     '上线': 'online',
     '下线': 'offline',
@@ -10,11 +12,26 @@ function CsEmitter(){
     this.emitter = new EventEmitter();
 }
 CsEmitter.prototype.emit = function(context){
-    var content = context.Content.trim();
+    var content = context.weixin.Content.trim();
     var user = context.user;
-    var stt = user.status;
+    var me = this;
     if(content in cmdType){
-        this.emitter.emit(cmdType[content], context);
+        var type = cmdType[content],
+            promise = new Promise(function(resolve, reject){resolve()});
+        switch(type){
+            case 'online':
+                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'ol');
+                break;
+            case 'offline':
+                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'off');
+                break;
+        }
+        promise.then(function(){
+            return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
+        })
+        .then(function(){
+                return me.emitter.emit(cmdType[content], context);
+            });
         //if(cmdWorkflow.canInWild(cmdType[content], stt)){
         //    this.emitter.emit(cmdType[content], context);
         //    var status = cmdWorkflow.transition(cmdType[content], stt);
