@@ -54,18 +54,28 @@ var loadById = function(id, callback){
 };
 var loadByIdAsync = Promise.promisify(loadById);
 
+Service.delete = function(id, callback) {
+    User.findByIdAndRemove(id, function(err, doc){
+        if (err) {
+            logger.error('Fail to delete user [id=' + id + ']: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        logger.debug('Succeed to delete user [id=' + id + ']');
+        if(callback) callback(null, doc);
+    });
+};
+var deleteAsync = Promise.promisify(Service.delete);
+
+
 /**
  *  Create a registered user from wechat, not an anonymous user
  * @param user user json object
  * @param callback
  */
 Service.createFromWechat = function (userInfo, callback) {
-    if(userInfo.wx_nickname){
-        userInfo.stt = UserState.Registered;
-    }
-    else{
-        userInfo.stt = UserState.Registered; //UserState.Registered;
-    }
+    userInfo.stt = UserState.Registered;
     return createUserAsync(userInfo)
         .then(function (user) {
             return UserHelper.getUserJsonFromModel(user);
@@ -98,16 +108,6 @@ Service.createFromWechat = function (userInfo, callback) {
 Service.updateFromWechat = function(id, update, callback){
     var newUserJson = null;
     var toUpdate = {};
-
-    /*
-     * Update stt properties
-     */
-    if(update.wx_nickname){
-        toUpdate.stt = UserState.Registered;
-    }
-    else{
-        toUpdate.stt = UserState.Registered; //UserState.Anonymous;
-    }
 
     /*
      * Remove undefined properties voiding update errors
@@ -180,24 +180,39 @@ Service.loadOrCreateFromWechat = function(openid, callback){
 };
 
 Service.deleteByOpenid = function(openid, callback){
+    var userToDelete = null;
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){
-            return id && UserKv.loadByIdAsync(id);
+            if(id){
+                return deleteAsync(id)
+                    .then(function(user){
+                        userToDelete = user;
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.unlinkTokenAsync(userToDelete.token);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.unlinkOpenidAsync(openid);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.deleteByIdAsync(userToDelete.id);
+                        }
+                    })
+            }
+            else{
+                return;
+            }
         })
-        .then(function(user){
-            if (user) return user;
-            return getUserFromWechatAsync(openid)
-                .then(function (userInfo) {
-                    return UserHelper.getUserJsonFromWechatApi(userInfo);
-                })
-                .then(Service.createFromWechat);
-        })
-        .then(function(user){
-            if(callback) callback(null, user);
-            return user;
+        .then(function(){
+            if(callback) callback(null, userToDelete);
         })
         .catch(Error, function (err) {
-            logger.error('Fail to delete user by openid: ' + err);
+            logger.error('Fail to delete user by id: ' + err);
             if(callback) callback(err);
         });
 };
