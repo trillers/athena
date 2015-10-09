@@ -58,7 +58,10 @@ QrHandler.prototype.create = function(sceneId, customId, callback){
                 }
                 if (callback) callback(null, doc);
             });
-        });
+        }).catch(Error, function(err){
+             logger.error('Fail to create qr channel: ' + err);
+             if(callback) callback(err);
+         });
 };
 
 QrHandler.prototype.autoCreate = function(customId, callback){
