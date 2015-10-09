@@ -39,9 +39,9 @@ registry
     .addChild('Finished','fn', '已结束')
     .up().item('CSState', 'CSState', '客服状态')
     .addChild('offline','off', '离线')
-    .addChild('online','free', '空闲')
-    .addChild('busy','busy', '忙碌')
-    .addChild('case','case', '处理订单')
+    .addChild('online','ol', '在线')
+    //.addChild('busy','busy', '忙碌')
+    //.addChild('case','case', '处理订单')
 
 
 module.exports = registry;

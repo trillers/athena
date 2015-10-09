@@ -27,7 +27,7 @@ var handle = function(context){
             context.user.status = stt;
         })
         .then(function(){
-            csEmitter.emit(context)
+            csEmitter.emit(context);
         });
 }
 //var handle = function(user, message){
