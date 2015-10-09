@@ -8,7 +8,7 @@ var AssistantService = require('../services/AssistantService');
 var wechatApi = require('../../wechat/common/api').api;
 
 module.exports = function(emitter){
-    emitter.subscribe(function(event, context){
+    var signupCustomer = function(event, context){
         authenticator.ensureSignin(context.weixin, context, function(err, user){
             if(err){
                 logger.error('Fail to sign up: ' + err);
@@ -17,10 +17,12 @@ module.exports = function(emitter){
             else{
                 context.user = user;
                 console.log(user);
-                console.log('sign up a customer user automatically');
+                console.log('ensure to sign up a customer user automatically');
             }
         });
-    });
+    };
+    emitter.subscribe(signupCustomer);
+    emitter.SCAN(signupCustomer);
 
     emitter.qr(function(event, context){
         console.log('qr event emit');
