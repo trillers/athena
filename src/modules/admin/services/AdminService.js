@@ -1,13 +1,14 @@
 var Promise = require('bluebird');
-var settings = require('athena-settings');
-var User = require('../models/User').model;
-var UserHelper = require('../models/User').helper;
-var UserState = require('../../../framework/model/enums').UserState;
-var UserKv = require('../kvs/User');
+var UserKv = require('../../user/kvs/User');
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
 var wechat = require('../../wechat/common/api');
 var cbUtil = require('../../../framework/callback');
+var co = require('co');
+var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
+var userService = require('../../../../src/modules/user/services/UserService');
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+
 var Service = {};
 
 /**
@@ -16,7 +17,19 @@ var Service = {};
  * @param callback
  */
 Service.createFromOpenid = function(openid, callback){
+    var self = this;
+    co(function*(){
+        try{
+            var loadOrCreateFromWechatAsync = Promise.promisify(wechatUserService.loadOrCreateFromWechat);
+            var user = yield loadOrCreateFromWechatAsync(openid);
+            var newUser = yield self.setRoleByOpenidAsync(openid);
+            if(callback) callback(null, newUser);
+        } catch (err){
+            console.error('AdminService createFromOpenId err:' + err);
+            if(callback) callback(err, null);
+        }
 
+    });
 };
 
 /**
@@ -25,7 +38,19 @@ Service.createFromOpenid = function(openid, callback){
  * @param callback
  */
 Service.setRoleByOpenid = function(openid, callback){
-
+    co(function*(){
+        var userUpdate = {
+            role: UserRole.Admin.value()
+        };
+        try{
+            var userId = yield UserKv.loadIdByOpenidAsync(openid);
+            var user = yield userService.updateAsync(userId, userUpdate);
+            if(callback) callback(null, user);
+        } catch (err){
+            logger.error('AdminService setRoleByOpenid err:' + err);
+            if(callback) callback(err, null);
+        }
+    });
 };
 
 Service = Promise.promisifyAll(Service);
