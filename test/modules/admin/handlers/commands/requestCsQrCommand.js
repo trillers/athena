@@ -11,14 +11,14 @@ before(function(done){
     },2000);
 })
 
-describe('delete user', function() {
+describe('request cs qr', function() {
 
     //Create an admin user
     before(function(done){
         done();
     })
 
-    it('succeed to delete user by openid', function (done) {
+    it('succeed to request cs qr', function (done) {
         var platform = new Wechat.Platform();
         var client = wxutil.newSignedInClient(platform);
         var site = wxutil.newRegisteredSite(platform);
