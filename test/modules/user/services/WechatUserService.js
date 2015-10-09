@@ -16,8 +16,8 @@ before(function(done){
 
 describe('loadOrCreateFromWechat', function() {
     it('succeed to load or create user from wechat', function (done) {
-        //var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
-        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
+        //var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
         WechatUserService.loadOrCreateFromWechat(openid, function(err, user){
             assert.ok(user);
             console.log(user);

@@ -9,12 +9,16 @@ require('../../cs/handlers/CsHandler')(roleEmitter);
 require('../../admin/handlers/AdminHandler')(roleEmitter);
 require('../../customer/handlers/CustomerHandler')(roleEmitter);
 
-var commands = {};
-commands['删除当前用户'] = require('./commands/deleteUserCommand');
+//var commands = {};
+//commands['删除当前用户'] = require('./commands/deleteUserCommand');
+//
+//var getCommandHandler = function(msg){
+//    return 'text' == msg.MsgType && commands[msg.Content];
+//};
+var CommandRegistry = require('../../../framework/wechat/command-registry');
+var registry = new CommandRegistry();
+registry.addCommand('删除当前用户', require('./commands/deleteUserCommand'))
 
-var getCommandHandler = function(msg){
-    return 'text' == msg.MsgType && commands[msg.Content];
-};
 
 module.exports = function(emitter){
     emitter.message(function(event, context){
@@ -27,9 +31,9 @@ module.exports = function(emitter){
                 context.user = user;
             }
 
-            var handler = getCommandHandler(msg);
+            var handler = registry.extractCommandFromMessage(msg, user);
             if(handler){
-                handler(msg, user);
+                handler();
             }
             else{
                 roleEmitter.emit(context);
