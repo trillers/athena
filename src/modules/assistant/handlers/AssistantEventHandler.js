@@ -45,7 +45,7 @@ module.exports = function(emitter){
                                 console.log('cs handler');
                                 reply = '欢迎成为客服人员！';
                                 try {
-                                    success = yield AssistantService.registryCS(user);
+                                    success = yield AssistantService.registryCS(user.id);
                                 }catch(err){
                                     console.log(err);
                                 }
@@ -54,7 +54,7 @@ module.exports = function(emitter){
                                 console.log('admin handler');
                                 reply = '欢迎成为管理员员！';
                                 try {
-                                    success = yield AssistantService.registryAD(user);
+                                    success = yield AssistantService.registryAD(user.id);
                                 }catch(err){
                                     console.log(err);
                                 }
