@@ -6,6 +6,8 @@ module.exports = function(emitter){
         var user = context.user;
         console.log('this is admin message');
         console.log(msg);
-        csQrCodeHandler(msg.Content, user);
+        if(msg.MsgType == 'text') {
+            csQrCodeHandler(msg.Content, user);
+        }
     });
 };
