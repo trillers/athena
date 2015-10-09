@@ -40,6 +40,6 @@ describe('delete user', function() {
 
         setTimeout(function(){
             done();
-        }, 1000);
+        }, 4000);
     })
 })
