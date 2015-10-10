@@ -112,6 +112,8 @@ _fetchConversationAsync = Promise.promisify(_fetchConversation);
 
 module.exports = function(emitter){
     var customerEmitter = require('../CustomerEmitter');
+    require('./customerCvsHandler')(customerEmitter);
+    require('./customerMsgHandler')(customerEmitter);
     emitter.customer(function(event, context){
         co(function* (){
             var user = context.user;
@@ -122,6 +124,8 @@ module.exports = function(emitter){
                 cvs = yield conversationService.createAsync({
                     initiator: user.id, createTime: new Date()
                 });
+                yield ConversationKv.createAsync(cvs);
+                yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
                 cvsId = cvs.id;
                 yield ConversationKv.setCurrentIdAsync(user.id, cvsId);
                 yield messageService.createAsync({

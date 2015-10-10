@@ -1,5 +1,5 @@
 var EventEmitter = require('events').EventEmitter;
-var UserRole = require('../common/models/TypeRegistry').item('UserRole');
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 
 var RoleEmitter = function(){
     this.emitter = new EventEmitter();
