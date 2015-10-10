@@ -53,10 +53,9 @@ describe('send a customer message', function () {
             });
             setTimeout(function(){
                 siteClientA.sendText({
-                    Content: 'Hi'
+                    Content: 'Hello Boy'
                 });
-                done();
-            }, 10000);
+            }, 3000);
         });
     });
     //describe('the conversation already exist, send the message directly', function () {
