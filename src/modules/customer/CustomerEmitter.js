@@ -9,7 +9,7 @@
  */
 var EventEmitter = require('events').EventEmitter;
 var emitter = new EventEmitter();
-
-//TODO: bind event handlers here
+emitter.message = function(handler){ this.on('message', handler) };
+emitter.conversation = function(handler){ this.on('conversation', handler) };
 
 module.exports = emitter;

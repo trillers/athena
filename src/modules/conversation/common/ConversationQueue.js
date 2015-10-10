@@ -91,7 +91,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     var result;
     cskv.popWcCSSetAsync().then(function(csId){
         if(!csId){
-            return Promise.reject(new Error('workers all busy'));
+            return Promise.reject(new Error('workers-all-busy'));
         }
         conversation.stt = 'hd';
         conversation.csId = csId;
@@ -111,7 +111,9 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         return callback(null, result)
     })
     .catch(function(e){
-        console.log(e);
+        if(e.message !== 'workers-all-busy'){
+            console.error(e);
+        }
         return callback(e, null)
     })
 }
