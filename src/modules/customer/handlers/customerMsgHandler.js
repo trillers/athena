@@ -3,8 +3,6 @@ var wechatApi = require('../../wechat/common/api').api;
 var userService = require('../../user/services/UserService');
 module.exports = function(emitter){
     emitter.message(function(cvs, message){
-        console.log("*********************");
-        console.log(cvs);
         var csId = cvs.csId;
         console.log(csId);
         co(function*(){
@@ -17,8 +15,6 @@ module.exports = function(emitter){
                 console.log("message wait for queue");
             }
             function* _sendMsg(openId, message){
-                console.log("---------------");
-                console.log(message)
                 switch(message.MsgType) {
                     case 'text':
                         yield wechatApi.sendTextAsync(openId, message.Content);

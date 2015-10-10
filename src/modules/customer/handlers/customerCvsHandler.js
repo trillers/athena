@@ -23,8 +23,6 @@ module.exports = function(emitter){
                     var msgs = yield messageService.findAsync({channel: cvs.id});
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
                     var user = yield userService.loadByIdAsync(cid);
-                    console.log("======================");
-                    console.log(user);
                     msgs.forEach(function(msg){
                         _sendMsg(user.wx_openid, msg);
                     })
@@ -37,8 +35,6 @@ module.exports = function(emitter){
             }
         });
         function _sendMsg(openid, msg){
-            console.log("&&&&&&&&&&&&&&&&&&&&&&&&&&");
-            console.log(msg);
             switch(msg.contentType){
                 case 'text':
                     wechatApi.sendTextAsync(openid, msg.content);
