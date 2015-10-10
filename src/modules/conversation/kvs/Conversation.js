@@ -32,8 +32,8 @@ var kvs = {
         redis.get(key, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to get conversation id by userId ' + csId + ': ' + err,
-                'Succeed to get conversation id ' + result + ' by userId ' + csId);
+                'Fail to get conversation id by csId ' + csId + ': ' + err,
+                'Succeed to get conversation id ' + result + ' by csId ' + csId);
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
@@ -42,9 +42,9 @@ var kvs = {
         redis.set(key, cvsId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to get conversation id by csId ' + csId + ': ' + err,
-                'Succeed to get conversation id ' + result + ' by csId ' + csId);
-            cbUtil.handleOk(callback, err, result);
+                'Fail to link cs id ' + csId + ' to cvs id ' + cvsId + ': ' + err,
+                'Succeed to link cs id ' + csId + ' to cvs id ' + cvsId);
+            cbUtil.handleOk(callback, err, result, cvsId);
         });
     },
     setCurrentId: function(userId, cvsId, callback){

@@ -116,43 +116,44 @@ module.exports = function(emitter){
     require('./customerMsgHandler')(customerEmitter);
     emitter.customer(function(event, context){
         co(function* (){
-            var user = context.user;
-            var msg = context.weixin;
-            var cvs = null;
-            var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
-            if(!cvsId){
-                cvs = yield conversationService.createAsync({
-                    initiator: user.id, createTime: new Date()
-                });
-                yield ConversationKv.createAsync(cvs);
-                yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
-                cvsId = cvs.id;
-                yield ConversationKv.setCurrentIdAsync(user.id, cvsId);
-                yield messageService.createAsync({
-                    from: user.id,
-                    to: null,
-                    channel: cvsId,
-                    contentType: msg.MsgType,
-                    content: msg.Content || null,
-                    mediaId: msg.mediaId || null
-                });
-                customerEmitter.emit('message', cvs, msg);
-                customerEmitter.emit('conversation', cvs, msg);
+            try{
+                var user = context.user;
+                var msg = context.weixin;
+                var cvs = null;
+                var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
+                if(!cvsId){
+                    cvs = yield conversationService.createAsync({
+                        initiator: user.id, createTime: new Date()
+                    });
+                    yield ConversationKv.createAsync(cvs);
+                    cvsId = cvs.id;
+                    yield ConversationKv.setCurrentIdAsync(user.id, cvsId);
+                    yield messageService.createAsync({
+                        from: user.id,
+                        to: null,
+                        channel: cvsId,
+                        contentType: msg.MsgType,
+                        content: msg.Content || null,
+                        mediaId: msg.mediaId || null
+                    });
+                    customerEmitter.emit('message', cvs, msg);
+                    customerEmitter.emit('conversation', cvs, msg);
+                }
+                else{
+                    cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
+                    yield messageService.createAsync({
+                        from: user.id,
+                        to: null,
+                        channel: cvsId,
+                        contentType: msg.MsgType,
+                        content: msg.Content || null,
+                        mediaId: msg.mediaId || null
+                    });
+                    customerEmitter.emit('message', cvs, msg);
+                }
+            }catch(e){
+                console.log(e.stack);
             }
-            else{
-                cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
-                yield messageService.createAsync({
-                    from: user.id,
-                    to: null,
-                    channel: cvsId,
-                    contentType: msg.MsgType,
-                    content: msg.Content || null,
-                    mediaId: msg.mediaId || null
-                });
-                customerEmitter.emit('message', cvs, msg);
-            }
-        }).catch(function(e){
-            console.error(e.stack);
         });
     });
 };
