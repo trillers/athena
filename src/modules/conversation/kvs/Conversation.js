@@ -3,6 +3,10 @@ var logger = require('../../../app/logging').logger;
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
 
+var csIdToCvsIdKey = function(userId){
+    return 'cs:id->cvs:id:' + userId;
+};
+
 var userIdToCvsIdKey = function(userId){
     return 'usr:id->cvs:id:' + userId;
 };
@@ -23,7 +27,26 @@ var kvs = {
             cbUtil.handleSingleValue(callback, err, result);
         });
     },
-
+    getCurrentCid: function(csId, callback){
+        var key = csIdToCvsIdKey(csId);
+        redis.get(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to get conversation id by userId ' + csId + ': ' + err,
+                'Succeed to get conversation id ' + result + ' by userId ' + csId);
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+    setCurrentCid: function(csId, cvsId, callback){
+        var key = csIdToCvsIdKey(csId);
+        redis.set(key, cvsId, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to get conversation id by csId ' + csId + ': ' + err,
+                'Succeed to get conversation id ' + result + ' by csId ' + csId);
+            cbUtil.handleOk(callback, err, result);
+        });
+    },
     setCurrentId: function(userId, cvsId, callback){
         var key = userIdToCvsIdKey(userId);
         redis.set(key, cvsId, function(err, result){
@@ -42,6 +65,29 @@ var kvs = {
                 err,
                 'Fail to del link user id ' + userId + ' to cvs id, err:' + err,
                 'Succeed to del link user id ' + userId + ' to cvs id ');
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+
+    delCurrentId: function(userId, callback){
+        var key = userIdToCvsIdKey(userId);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to del link user id ' + userId + ' to cvs id, err:' + err,
+                'Succeed to del link user id ' + userId + ' to cvs id ');
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    delCurrentCid: function(csId, callback){
+        var key = userIdToCvsIdKey(csId);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to del link cs id ' + csId + ' to cvs id, err:' + err,
+                'Succeed to del link cs id ' + csId + ' to cvs id ');
             cbUtil.handleSingleValue(callback, err, result);
         });
     },

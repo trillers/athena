@@ -21,41 +21,51 @@ describe('cs send a command or a message', function() {
         siteClient = client.subscribeSite(site.getId(), openid);
         done();
     });
+    describe('send a plain message', function(){
+        it('success', function (done) {
+            assert.ok(site.getId());
+            console.log(assert.should.be);
+            siteClient.sendText({
+                Content: 'Hi'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
+        });
+    });
 
-    it('#plain message', function (done) {
-        assert.ok(site.getId());
-        siteClient.sendText({
-            Content: 'Hi'
+    describe('send a online command', function(){
+        it('success', function (done) {
+            assert.ok(site.getId());
+            siteClient.sendText({
+                Content: '上线'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
         });
-        setTimeout(function(){
-            done()
-        }, 2000)
     });
-    it('#online', function (done) {
-        assert.ok(site.getId());
-        siteClient.sendText({
-            Content: '上线'
+
+    describe('send a offline command', function(){
+        it('success', function (done) {
+            assert.ok(site.getId());
+            siteClient.sendText({
+                Content: '下线'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
         });
-        setTimeout(function(){
-            done()
-        }, 2000)
     });
-    it('#offline', function (done) {
-        assert.ok(site.getId());
-        siteClient.sendText({
-            Content: '下线'
+    describe('send a view state command', function(){
+        it('success', function (done) {
+            assert.ok(site.getId());
+            siteClient.sendText({
+                Content: '状态'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
         });
-        setTimeout(function(){
-            done()
-        }, 2000)
-    });
-    it('#view state', function (done) {
-        assert.ok(site.getId());
-        siteClient.sendText({
-            Content: '状态'
-        });
-        setTimeout(function(){
-            done()
-        }, 2000)
     });
 });
