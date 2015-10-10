@@ -4,7 +4,6 @@
 var assert = require('chai').assert;
 var wxutil = require('../../../framework/wechat/util');
 var Wechat = require('../../../../src/framework/wechat/index');
-var WechatSiteEmitter = require('../../../../src/framework/wechat/wechat-site-emitter');
 var Wechat = require('../../../../src/framework/wechat/index');
 var siteEmitter = require('../../../../src/modules/assistant/site-emitter');
 var mongoose = require('../../../../src/app/mongoose');
@@ -37,8 +36,16 @@ describe('Registry CS', function(){
             console.log(message);
             console.log('\r\n');
         });
-        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE'; //Sunny的错题本openid
-        var siteClient = client.scanSite(site.getId(), 100, openid);
-        done();
+        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE'; //独自等待的错题本openid
+        var api = site.getApi();
+        var sceneId = 101;
+        var ticket = '';
+        api.createLimitQRCode(sceneId, function(err, result){
+            ticket = result.ticket;
+        });
+        //client.scanSite(site.getId(), sceneId, openid);
+        setTimeout(function(){
+            done();
+        }, 4000);
     })
 });

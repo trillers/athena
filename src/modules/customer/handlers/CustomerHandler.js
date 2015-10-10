@@ -126,6 +126,8 @@ module.exports = function(emitter){
                 });
                 yield ConversationKv.createAsync(cvs);
                 yield ConversationKv.setCurrentIdAsync(user.id, cvs.id);
+                cvsId = cvs.id;
+                yield ConversationKv.setCurrentIdAsync(user.id, cvsId);
                 yield messageService.createAsync({
                     from: user.id,
                     to: null,
@@ -142,7 +144,7 @@ module.exports = function(emitter){
                 yield messageService.createAsync({
                     from: user.id,
                     to: null,
-                    channel: cvs.id,
+                    channel: cvsId,
                     contentType: msg.MsgType,
                     content: msg.Content || null,
                     mediaId: msg.mediaId || null

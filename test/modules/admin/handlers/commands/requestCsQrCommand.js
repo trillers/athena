@@ -1,6 +1,5 @@
 var assert = require('chai').assert;
 var wxutil = require('../../../../framework/wechat/util');
-var WechatSiteEmitter = require('../../../../../src/framework/wechat/wechat-site-emitter');
 var Wechat = require('../../../../../src/framework/wechat/index');
 var siteEmitter = require('../../../../../src/modules/assistant/site-emitter');
 var mongoose = require('../../../../../src/app/mongoose');
@@ -12,14 +11,14 @@ before(function(done){
     },2000);
 })
 
-describe('delete user', function() {
+describe('request cs qr', function() {
 
     //Create an admin user
     before(function(done){
         done();
     })
 
-    it('succeed to delete user by openid', function (done) {
+    it('succeed to request cs qr', function (done) {
         var platform = new Wechat.Platform();
         var client = wxutil.newSignedInClient(platform);
         var site = wxutil.newRegisteredSite(platform);
