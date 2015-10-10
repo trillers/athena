@@ -333,5 +333,14 @@ Service.resetUser = function(openidArray, update, callback){
     });
 }
 
+Service.getRoleSum = function(role, callback){
+    User.count({role: role}, function(err, count){
+       if(err) {
+           if(callback) return callback(err, null);
+       }
+       if(callback) return callback(null, count);
+    });
+}
+
 Service = Promise.promisifyAll(Service);
 module.exports = Service;

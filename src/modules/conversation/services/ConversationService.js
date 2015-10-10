@@ -151,6 +151,23 @@ Service.filter = function (params, callback) {
     });
 };
 
+Service.getTodayCvsSum = function(callback){
+    var startTime = new Date();
+    startTime.setHours(0);
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    var endTime = new Date();
+    endTime.setHours(23);
+    endTime.setMinutes(59);
+    endTime.setSeconds(59);
+    Conversation.count({createTime: {$gt: startTime, $lt: endTime}}, function(err, count){
+       if(err){
+           if(callback) return callback(err, null);
+       }
+       if(callback) return callback(null, count);
+    });
+}
+
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;
