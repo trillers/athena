@@ -32,6 +32,19 @@ WechatEmitter.prototype.bindEvent = function(type, site) {
         me.emitter.emit(type, type, context);
     });
 };
+
+WechatEmitter.prototype.bindEventQr = function(type, site) {
+    var me = this;
+    site.on(type, function(message){
+        var wxsession = site._ensureSession(message.FromUserName);
+        var context = {weixin: message, wxsession: wxsession};
+        me.emitter.emit('raw', 'raw', context);
+        me.emitter.emit('event', 'event', context);
+        me.emitter.emit('qr', 'qr', context);
+        me.emitter.emit(type, type, context);
+    });
+};
+
 WechatEmitter.prototype.bindMessage = function(type, site) {
     var me = this;
     site.on(type, function(message){
@@ -48,9 +61,11 @@ WechatEmitter.prototype.bindSite = function(site) {
      * bind and trigger event type message
      */
     this.bindEvent('subscribe', site);
+    this.bindEvent('SCAN', site);
+    this.bindEventQr('qrsubscribe', site);
+    this.bindEventQr('qrSCAN', site);
     this.bindEvent('unsubscribe', site);
     this.bindEvent('LOCATION', site);
-    this.bindEvent('SCAN', site);
     this.bindEvent('CLICK', site);
     this.bindEvent('VIEW', site);
     this.bindEvent('enter', site);

@@ -24,7 +24,7 @@ CommandRegistry.prototype.extractCommandFromMessage = function(msg){
     var cmdPattern = 'text' == msg.MsgType && typeof msg.Content == 'string' && msg.Content.trim();
     var handler = cmdPattern && this.commands[cmdPattern];
     if(handler){
-        var params = Array.prototype.slice.call(arguments, 1);
+        var params = Array.prototype.slice.call(arguments, 0);
         return function(){
             handler.apply(null, params);
         };

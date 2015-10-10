@@ -1,6 +1,7 @@
 var assert = require('chai').assert;
 var Wechat = require('../../../src/framework/wechat/index');
 var wxutil = require('./util');
+var WechatEmitter = require('../../../src/framework/WechatEmitter');
 
 describe('createClient', function() {
     it('succeed to create a client', function (done) {
@@ -142,7 +143,6 @@ describe('scanSite', function() {
         });
 
         var siteClient = client.scanSite(site.getId(), sceneId);
-        console.log('\r\n');
         done();
     })
 
@@ -176,7 +176,75 @@ describe('scanSite', function() {
         });
 
         var siteClient = client.scanSite(site.getId(), sceneId);
-        console.log('\r\n');
         done();
+    })
+})
+
+
+describe('scanSite emitting to WechatEmitter', function() {
+    it('succeed to scanSite to trigger qrsubscribe event', function (done) {
+        var platform = new Wechat.Platform();
+        var client = wxutil.newSignedInClient(platform);
+        var site = wxutil.newRegisteredSite(platform);
+        site.on('subscribe', function(message){
+            console.log('===subscribe===');
+            console.log(message);
+        });
+        site.on('enter', function(message){
+            console.log('===enter===');
+            console.log(message);
+        });
+
+        var api = site.getApi();
+        var sceneId = 101;
+        var ticket = '';
+        api.createLimitQRCode(sceneId, function(err, result){
+            ticket = result.ticket;
+        });
+
+        var emitter = new WechatEmitter();
+        emitter.qrsubscribe(function(event, context){
+            console.log(context.weixin);
+            assert.equal(context.weixin.SceneId, sceneId);
+            done();
+        });
+        emitter.bindSite(site);
+        var siteClient = client.scanSite(site.getId(), sceneId);
+    })
+
+    it('succeed to scanSite to trigger qrSCAN event', function (done) {
+        var platform = new Wechat.Platform();
+        var client = wxutil.newSignedInClient(platform);
+        var site = wxutil.newRegisteredSite(platform);
+        site.on('subscribe', function(message){
+            console.log('===subscribe===');
+            console.log(message);
+        });
+        site.on('SCAN', function(message){
+            console.log('===SCAN===');
+            console.log(message);
+        });
+        site.on('enter', function(message){
+            console.log('===enter===');
+            console.log(message);
+        });
+
+        var api = site.getApi();
+        var sceneId = 101;
+        var ticket = '';
+        api.createLimitQRCode(sceneId, function(err, result){
+            ticket = result.ticket;
+        });
+
+        var emitter = new WechatEmitter();
+        emitter.qrSCAN(function(event, context){
+            console.log(context.weixin);
+            assert.equal(context.weixin.SceneId, sceneId);
+            done();
+        });
+        emitter.bindSite(site);
+        client.subscribeSite(site.getId());
+
+        var siteClient = client.scanSite(site.getId(), sceneId);
     })
 })
