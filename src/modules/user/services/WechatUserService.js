@@ -156,6 +156,21 @@ Service.getUserFromWechat = getUserFromWechat;
 var getUserFromWechatAsync = Promise.promisify(getUserFromWechat);
 Service.getUserFromWechatAsync = getUserFromWechatAsync;
 
+Service.loadByOpenid = function(openid, callback){
+    return UserKv.loadIdByOpenidAsync(openid)
+        .then(function(id){
+            return id && UserKv.loadByIdAsync(id);
+        })
+        .then(function(user){
+            if(callback) callback(null, user);
+            return user;
+        })
+        .catch(Error, function (err) {
+            logger.error('Fail to load user by openid: ' + err);
+            if(callback) callback(err);
+        });
+};
+
 Service.loadOrCreateFromWechat = function(openid, callback){
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){

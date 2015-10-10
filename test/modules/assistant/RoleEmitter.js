@@ -1,5 +1,5 @@
-var RoleEmitter = require('../../../src/modules/assistant/RoleEmitter');
-var assert = require('assert');
+var RoleEmitter = require('../../../src/modules/assistant/common/RoleEmitter');
+var assert = require('chai').assert;
 
 describe('customer event', function() {
     it('customer', function (done) {
