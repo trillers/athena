@@ -6,6 +6,7 @@ var Promise = require('bluebird');
 var cmdType = {
     '上线': 'online',
     '下线': 'offline',
+    '关闭': 'closeCvs',
     '状态': 'status'
 }
 function CsEmitter(){
@@ -51,5 +52,6 @@ CsEmitter.prototype.emit = function(context){
 CsEmitter.prototype.message = function(handler){ this.emitter.on('message', handler); };
 CsEmitter.prototype.online = function(handler){ this.emitter.on('online', handler); };
 CsEmitter.prototype.offline = function(handler){ this.emitter.on('offline', handler); };
+CsEmitter.prototype.closeCvs = function(handler){ this.emitter.on('closeCvs', handler); };
 CsEmitter.prototype.status = function(handler){ this.emitter.on('status', handler); };
 module.exports = CsEmitter;

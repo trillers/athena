@@ -19,8 +19,8 @@ module.exports = function(emitter){
                     //update cvs,
                     cvs.csId = cid;
                     yield ConversationKv.createAsync(cvs);
-                    //get message from db, send the message
-                    var msgs = yield messageService.findAsync({channel: cvs.id});
+                    //get historical messages from db, send them
+                    var msgs = yield messageService.findAsync({conditions:{channel: cvs.id}});
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
                     var user = yield userService.loadByIdAsync(cid);
                     msgs.forEach(function(msg){
@@ -33,19 +33,19 @@ module.exports = function(emitter){
             }catch(e){
                 console.log(e);
             }
-        });
-        function _sendMsg(openid, msg){
-            switch(msg.contentType){
-                case 'text':
-                    wechatApi.sendTextAsync(openid, msg.content);
-                    break;
-                case 'image':
-                    wechatApi.sendImageAsync(openid, msg.mediaId);
-                    break;
-                case 'voice':
-                    wechatApi.sendVoiceAsync(openid, msg.mediaId);
-                    break;
+            function _sendMsg(openid, msg){
+                switch(msg.contentType){
+                    case 'text':
+                        wechatApi.sendTextAsync(openid, msg.content);
+                        break;
+                    case 'image':
+                        wechatApi.sendImageAsync(openid, msg.mediaId);
+                        break;
+                    case 'voice':
+                        wechatApi.sendVoiceAsync(openid, msg.mediaId);
+                        break;
+                }
             }
-        }
+        });
     })
 };

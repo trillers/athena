@@ -69,20 +69,8 @@ var kvs = {
         });
     },
 
-
-    delCurrentId: function(userId, callback){
-        var key = userIdToCvsIdKey(userId);
-        redis.del(key, function(err, result){
-            cbUtil.logCallback(
-                err,
-                'Fail to del link user id ' + userId + ' to cvs id, err:' + err,
-                'Succeed to del link user id ' + userId + ' to cvs id ');
-            cbUtil.handleSingleValue(callback, err, result);
-        });
-    },
-
     delCurrentCid: function(csId, callback){
-        var key = userIdToCvsIdKey(csId);
+        var key = csIdToCvsIdKey(csId);
         redis.del(key, function(err, result){
             cbUtil.logCallback(
                 err,

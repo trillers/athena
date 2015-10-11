@@ -3,6 +3,7 @@ var wechatApi = require('../../wechat/common/api').api;
 var userService = require('../../user/services/UserService');
 module.exports = function(emitter){
     emitter.message(function(cvs, message){
+        console.log(cvs);
         var csId = cvs.csId;
         console.log(csId);
         co(function*(){

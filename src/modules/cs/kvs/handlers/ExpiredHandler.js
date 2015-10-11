@@ -1,6 +1,7 @@
 var cskv = require('../CustomerService');
 var wechatApi = require('../../../wechat/common/api').api;
-
+var cvsService = require('../../../conversation/services/ConversationService');
+var cvsKv = require('../../../conversation/kvs/Conversation');
 module.exports = function* (message){
     var key = message;
     var customer;
@@ -10,12 +11,11 @@ module.exports = function* (message){
     var csId = key.slice(6);
     if(prefix == 'cs:st:') {
         try {
-            var css = yield cskv.loadCSSByIdAsync(csId);
-            if (css) customer = css.initiator;
-            yield cskv.delCSSByIdAsync(csId);
-            yield cskv.remWcCSSetAsync(csId);
+            var cvs = yield cvsKv.loadByIdAsync(csId);
+            yield cvsService.closeAsync(cvs);
+            //if (css) customer = css.initiator;
             yield cskv.saveCSStatusByCSOpenIdAsync(csId, 'off');
-            yield cskv.delWelcomeStatusAsync(customer);
+            //yield cskv.delWelcomeStatusAsync(customer);
             yield wechatApi.sendTextAsync(csId, '[系统]:长时间无交互，您已下线');
         } catch(err) {
             console.log('handle cs status tll expire: ' + err);

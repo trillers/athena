@@ -32,29 +32,36 @@ describe('send a customer message', function () {
             done();
         })
     });
-    //after(function(done){
-    //    WechatUserService.deleteByOpenid(prepareOpenid, function(err, user){
-    //        WechatUserService.deleteByOpenid(openid, function(err, user){
-    //            done();
-    //        });
-    //    });
-    //});
-    describe('create a new conversation and assign it to a cs', function () {
+    describe('create a new conversation and assign it to a free cs', function () {
         before(function(done){
             done();
         });
         after(function(done){
-            done();
+            siteClientB.sendText({
+                Content: '关闭'
+            });
+            setTimeout(function(){
+                done();
+            }, 3000);
         });
         it('a cs online and free, then a custom send a msg, the cvs assign to the cs', function(done){
             assert.ok(site.getId());
             siteClientB.sendText({
                 Content: '上线'
             });
+            siteClientB.sendText({
+                Content: 'Hi'
+            });
             setTimeout(function(){
                 siteClientA.sendText({
-                    Content: 'Hello Boy'
+                    Content: 'Hi?'
                 });
+                setTimeout(function(){
+                    siteClientB.sendText({
+                        Content: 'Hello'
+                    });
+                    done();
+                }, 3000);
             }, 3000);
         });
     });

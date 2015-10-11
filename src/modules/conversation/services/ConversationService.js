@@ -1,8 +1,9 @@
 var logger = require('../../../app/logging').logger;
+var ConversationState = require('../../common/models/TypeRegistry').item('ConversationState');
 var u = require('../../../app/util');
 var Conversation = require('../models/Conversation').model;
 var Promise = require('bluebird');
-
+var kvs = require('../kvs/Conversation');
 var Service = {};
 
 Service.load = function (id, callback) {
@@ -149,6 +150,37 @@ Service.filter = function (params, callback) {
 
         if (callback) callback(null, docs);
     });
+};
+
+Service.destroy = function(cvs, callback){
+    console.log(cvs);
+    kvs.delCurrentIdAsync(cvs.initiator)
+        .then(function(){
+            return kvs.delCurrentCidAsync(cvs.csId);
+        })
+        .then(function(){
+            return kvs.delByIdAsync(cvs._id);
+        })
+        .then(function(){
+            return callback(null, null);
+        })
+        .catch(Error, function(err){
+            return callback(err, null);
+        })
+};
+
+Service.close = function(cvs, callback){
+    Service.update(cvs.id, {stt: ConversationState.Finished.value()}, function(err){
+        if(err){
+            return callback(err, null);
+        }
+        Service.destroy(cvs, function(err){
+            if(err){
+                return callback(err, null);
+            }
+            callback(null, null);
+        })
+    })
 };
 
 Service.getTodayCvsSum = function(callback){
