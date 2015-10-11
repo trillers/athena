@@ -17,6 +17,7 @@ var csEmitter = new CsEmitter();
 require('./commands/onlineCommand')(csEmitter);
 require('./commands/offlineCommand')(csEmitter);
 require('./commands/viewStateCommand')(csEmitter);
+require('./commands/closeCvsCommand')(csEmitter);
 require('./CsMsgHandler')(csEmitter);
 var handle = function(context){
     var user = context.user;
