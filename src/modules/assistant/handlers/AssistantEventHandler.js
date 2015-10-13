@@ -10,19 +10,6 @@ var adminService = require('../../admin/services/AdminService');
 
 module.exports = function (emitter) {
     var createCustomer = require('./commands/createCustomerCommand');
-    //var signupCustomer = function(event, context){
-    //    authenticator.ensureSignin(context.weixin, context, function(err, user){
-    //        if(err){
-    //            logger.error('Fail to sign up: ' + err);
-    //            logger.error(context.weixin);
-    //        }
-    //        else{
-    //            context.user = user;
-    //            console.log(user);
-    //            console.log('ensure to sign up a customer user automatically');
-    //        }
-    //    });
-    //};
     emitter.subscribe(createCustomer);
     emitter.SCAN(createCustomer);
 

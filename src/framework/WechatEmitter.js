@@ -27,6 +27,8 @@ WechatEmitter.prototype.bindEvent = function(type, site) {
     site.on(type, function(message){
         var wxsession = site._ensureSession(message.FromUserName);
         var context = {weixin: message, wxsession: wxsession};
+        if(me.decorator) me.decorator.decorate(context);
+
         me.emitter.emit('raw', 'raw', context);
         me.emitter.emit('event', 'event', context);
         me.emitter.emit(type, type, context);
@@ -38,6 +40,8 @@ WechatEmitter.prototype.bindEventQr = function(type, site) {
     site.on(type, function(message){
         var wxsession = site._ensureSession(message.FromUserName);
         var context = {weixin: message, wxsession: wxsession};
+        if(me.decorator) me.decorator.decorate(context);
+
         me.emitter.emit('raw', 'raw', context);
         me.emitter.emit('event', 'event', context);
         me.emitter.emit('qr', 'qr', context);
@@ -50,6 +54,8 @@ WechatEmitter.prototype.bindMessage = function(type, site) {
     site.on(type, function(message){
         var wxsession = site._ensureSession(message.FromUserName);
         var context = {weixin: message, wxsession: wxsession};
+        if(me.decorator) me.decorator.decorate(context);
+
         me.emitter.emit('raw', 'raw', context);
         me.emitter.emit('message', 'message', context);
         me.emitter.emit(type, type, context);
@@ -93,6 +99,7 @@ WechatEmitter.prototype.bindSite = function(site) {
  */
 WechatEmitter.prototype.relay = function(context){
     var msg = context.weixin;
+    if(this.decorator) this.decorator.decorate(context);
 
     /*
      * emit event for general messages here
@@ -203,5 +210,7 @@ WechatEmitter.prototype.video = function(handler){ this.emitter.on('video', hand
 WechatEmitter.prototype.shortvideo = function(handler){ this.emitter.on('shortvideo', handler); };
 WechatEmitter.prototype.location = function(handler){ this.emitter.on('location', handler); };
 WechatEmitter.prototype.link = function(handler){ this.emitter.on('link', handler); };
+
+WechatEmitter.prototype.setContextDecorator = function(decorator){ this.decorator = decorator;};
 
 module.exports = WechatEmitter;
