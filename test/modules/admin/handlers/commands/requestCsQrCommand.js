@@ -2,6 +2,9 @@ var assert = require('chai').assert;
 var wxutil = require('../../../../framework/wechat/util');
 var Wechat = require('../../../../../src/framework/wechat/index');
 var siteEmitter = require('../../../../../src/modules/assistant/site-emitter');
+var adminService = require('../../../../../src/modules/admin/services/AdminService');
+var wechatUserService = require('../../../../../src/modules/user/services/WechatUserService');
+var userRole = require('../../../../../src/modules/common/models/TypeRegistry').item('UserRole');
 var mongoose = require('../../../../../src/app/mongoose');
 var redis = require('../../../../../src/app/redis');
 
@@ -12,19 +15,27 @@ before(function(done){
 })
 
 describe('request cs qr', function() {
+    var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
 
     //Create an admin user
     before(function(done){
-        done();
+        adminService.createFromOpenid(openid, function(err, user){
+            assert.ok(user);
+            assert(user.role, userRole.Admin.value());
+            done();
+        });
     })
-
+    after(function(done){
+        wechatUserService.deleteByOpenid(openid, function(err, user){
+            assert.ok(user);
+            done();
+        });
+    });
     it('succeed to request cs qr', function (done) {
         var platform = new Wechat.Platform();
         var client = wxutil.newSignedInClient(platform);
         var site = wxutil.newRegisteredSite(platform);
         siteEmitter.bindSite(site);
-        //var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
-        var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
         var siteClient = client.subscribeSite(site.getId(), openid);
 
         site.on('text', function(message){

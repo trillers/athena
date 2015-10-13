@@ -1,12 +1,26 @@
 var wechatUserService = require('../../../user/services/WechatUserService');
 var wechatApi = require('../../../wechat/common/api').api;
-var commandHandler = function(msg, user){
-    wechatUserService.deleteByOpenid(msg.FromUserName, function(err){
+var commandHandler = function(context){
+    var openid = context.weixin.FromUserName;
+    wechatUserService.deleteByOpenid(openid, function(err){
         if(err){
-            wechatApi.sendTextAsync(msg.FromUserName, '[系统]: 用户 ['+ (user && user.wx_nickname || msg.FromUserName) +'] 删除失败');
+            wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ openid +'] 删除失败');
         }
         else{
-            wechatApi.sendTextAsync(msg.FromUserName, '[系统]: 用户 ['+ (user && user.wx_nickname || msg.FromUserName) +'] 删除成功');
+            context.getUser().then(function(user){
+                wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
+            });
+
+            //var user = context.user;
+            //if(!user){
+            //    context.getUser(openid).then(function(user){
+            //        context.user = user;
+            //        wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
+            //    });
+            //}
+            //else{
+            //    wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
+            //}
         }
     });
 };
