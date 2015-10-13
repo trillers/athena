@@ -15,6 +15,8 @@ var RoleEmitter = function(){
 RoleEmitter.prototype.emit = function(context){
     var self = this;
     context.getUser().then(function(user){
+        console.log('**************************************');
+        console.log(user);
         if(user.role == UserRole.Customer.value()){
             self.emitter.emit('customer', 'customer', context);
         }
