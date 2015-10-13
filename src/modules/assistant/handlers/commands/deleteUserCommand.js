@@ -10,17 +10,6 @@ var commandHandler = function(context){
             context.getUser().then(function(user){
                 wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
             });
-
-            //var user = context.user;
-            //if(!user){
-            //    context.getUser(openid).then(function(user){
-            //        context.user = user;
-            //        wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
-            //    });
-            //}
-            //else{
-            //    wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 删除成功');
-            //}
         }
     });
 };
