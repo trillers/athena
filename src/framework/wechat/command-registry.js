@@ -33,4 +33,20 @@ CommandRegistry.prototype.extractCommandFromMessage = function(msg){
         return null;
     }
 };
+
+CommandRegistry.prototype.extractCommandFromContext = function(context){
+    var msg = context.weixin;
+    var cmdPattern = 'text' == msg.MsgType && typeof msg.Content == 'string' && msg.Content.trim();
+    var handler = cmdPattern && this.commands[cmdPattern];
+    if(handler){
+        var params = Array.prototype.slice.call(arguments, 0);
+        return function(){
+            handler.apply(null, params);
+        };
+    }
+    else {
+        return null;
+    }
+};
+
 module.exports = CommandRegistry;
