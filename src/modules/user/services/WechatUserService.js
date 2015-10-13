@@ -10,6 +10,7 @@ var wechat = require('../../wechat/common/api');
 var Service = {};
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
+var csKvs = require('../../cs/kvs/CustomerService');
 
 var generateUserToken = function(uid){
     var key = settings.secretKey;
@@ -216,6 +217,11 @@ Service.deleteByOpenid = function(openid, callback){
                     .then(function(){
                         if(userToDelete){
                             return UserKv.deleteByIdAsync(userToDelete.id);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return csKvs.delCSStatusByCSOpenIdAsync(userToDelete.wx_openid);
                         }
                     })
             }

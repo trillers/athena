@@ -10,7 +10,7 @@ var adminService = require('../../admin/services/AdminService');
 
 module.exports = function (emitter) {
     var createCustomer = require('./commands/createCustomerCommand');
-    emitter.subscribe(createCustomer);
+    //emitter.subscribe(createCustomer);
 
     emitter.qr(function (event, context) {
         var sceneId = context.weixin.SceneId;
