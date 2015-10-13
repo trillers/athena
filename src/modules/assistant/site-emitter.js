@@ -19,6 +19,10 @@ ContextDecorator.prototype.decorate = function(context){
         }
         return context._getUserThenable;
     };
+    context.invalidateUser = function(){
+        context._getUserThenable = null;
+    };
+
 };
 var decorator = new ContextDecorator();
 wechatEmitter.setContextDecorator(decorator);
