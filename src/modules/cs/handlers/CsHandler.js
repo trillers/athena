@@ -20,17 +20,22 @@ require('./commands/viewStateCommand')(csEmitter);
 require('./commands/closeCvsCommand')(csEmitter);
 require('./CsMsgHandler')(csEmitter);
 var handle = function(context){
-    var user = context.user;
-    var stt;
-    cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)
-        .then(function(st){
-            stt = st || 'off';
-            context.user.status = stt;
-        })
-        .then(function(){
-            csEmitter.emit(context);
-        });
-}
+    var message = context.weixin;
+    var stt = null;
+    var user = null;
+    context.getUser()
+    .then(function(cacheUser){
+        context.user = cacheUser;
+        return cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
+    })
+    .then(function(st){
+        stt = st || 'off';
+        context.user.status = stt;
+    })
+    .then(function(){
+        csEmitter.emit(context);
+    });
+};
 //var handle = function(user, message){
 //    var stt;
 //    cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)

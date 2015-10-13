@@ -14,6 +14,7 @@ function CsEmitter(){
 }
 CsEmitter.prototype.emit = function(context){
     var content = context.weixin.Content.trim();
+    var message = context.weixin;
     var user = context.user;
     var me = this;
     if(content in cmdType){
@@ -21,16 +22,16 @@ CsEmitter.prototype.emit = function(context){
             promise = new Promise(function(resolve, reject){resolve()});
         switch(type){
             case 'online':
-                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'ol');
+                promise = cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'ol');
                 break;
             case 'offline':
-                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'off');
+                promise = cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'off');
                 break;
         }
         promise.then(function(){
-            return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
+            return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName);
         })
-        .then(function(){
+            .then(function(){
                 return me.emitter.emit(cmdType[content], context);
             });
         //if(cmdWorkflow.canInWild(cmdType[content], stt)){

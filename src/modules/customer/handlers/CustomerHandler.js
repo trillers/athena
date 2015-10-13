@@ -117,7 +117,8 @@ module.exports = function(emitter){
     emitter.customer(function(event, context){
         co(function* (){
             try{
-                var user = context.user;
+                var user = yield context.getUser();
+                context.user = user;
                 var msg = context.weixin;
                 var cvs = null;
                 var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
