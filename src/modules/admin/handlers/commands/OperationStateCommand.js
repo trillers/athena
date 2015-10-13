@@ -9,7 +9,7 @@ var UserRole = require('../../../common/models/TypeRegistry').item('UserRole');
 
 var co = require('co');
 
-module.exports = function(message, user){
+module.exports = function(message, userOpenid){
     if (message.trim() === '运营状态') {
         co(function*(){
             try {
@@ -23,7 +23,7 @@ module.exports = function(message, user){
                     + '客户数：' + customerSum + '\n'
                     + '今天会话数：' + todayCvsSum;
 
-                wechatApi.sendText(user.wx_openid, reply, function (err, data) {
+                wechatApi.sendText(userOpenid, reply, function (err, data) {
                     if (err) {
                         return logger.error('wechat send operation state err:' + err);
                     }
@@ -31,7 +31,7 @@ module.exports = function(message, user){
                 });
             }catch(err){
                 console.error('query operation state err:' + err)
-                wechatApi.sendText(user.wx_openid, '系统繁忙，请稍后重试！', function (err, data) {
+                wechatApi.sendText(userOpenid, '系统繁忙，请稍后重试！', function (err, data) {
                     if (err) {
                         return logger.error('wechat send operation state err:' + err);
                     }

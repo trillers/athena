@@ -18,22 +18,12 @@ registry.addCommand('成为管理员', require('./commands/setRoleToAdminCommand
 
 module.exports = function(emitter){
     emitter.message(function(event, context){
-        var msg = context.weixin;
-        var handler = registry.extractCommandFromMessage(context);
+        var handler = registry.extractCommandFromContext(context);
         if(handler){
             handler();
         }
         else{
             roleEmitter.emit(context);
         }
-        //authenticator.ensureSignin(context.weixin, context, function(err, user){
-        //    if(err){
-        //        logger.error('Fail to signin with user: ' + err);
-        //    }
-        //    else{
-        //        context.user = user;
-        //    }
-        //
-        //});
     });
 };

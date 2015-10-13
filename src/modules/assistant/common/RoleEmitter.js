@@ -13,7 +13,6 @@ var RoleEmitter = function(){
  * @param context
  */
 RoleEmitter.prototype.emit = function(context){
-    //var user = context.user;
     context.getUser().then(function(user){
         if(user.role == UserRole.Customer.value()){
             this.emitter.emit('customer', 'customer', context);
@@ -27,8 +26,7 @@ RoleEmitter.prototype.emit = function(context){
         else{
             //for other unknown roles, ignore it
         }
-    })
-    ; //TODO add catch block
+    }); //TODO add catch block
 };
 
 /**

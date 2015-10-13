@@ -17,7 +17,8 @@ before(function(done){
 describe('request cs qr', function() {
     var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
 
-    //Create an admin user
+    var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';//独自等待的错题本openid
+    var admin = null;
     before(function(done){
         adminService.createFromOpenid(openid, function(err, user){
             assert.ok(user);
