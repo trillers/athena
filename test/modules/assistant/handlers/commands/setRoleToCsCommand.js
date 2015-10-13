@@ -44,7 +44,6 @@ describe('setRoleToCs', function() {
         });
         assert.ok(site.getId());
 
-
         siteClient.sendText({
             Content: '成为客服'
         });

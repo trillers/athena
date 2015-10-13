@@ -1,9 +1,7 @@
 var Promise = require('bluebird');
 var co = require('co');
 var logger = require('../../../app/logging').logger;
-var WechatAuthenticator = require('../../user/services/WechatAuthenticator');
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
-var authenticator = new WechatAuthenticator({});
 var wechatApi = require('../../wechat/common/api').api;
 var csService = require('../../cs/services/CsService');
 var adminService = require('../../admin/services/AdminService');

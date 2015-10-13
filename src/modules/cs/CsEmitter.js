@@ -6,14 +6,14 @@ var Promise = require('bluebird');
 var cmdType = {
     '上线': 'online',
     '下线': 'offline',
-    '关闭': 'closeCvs',
-    '状态': 'status'
+    '关闭': 'closeCvs'
 }
 function CsEmitter(){
     this.emitter = new EventEmitter();
 }
 CsEmitter.prototype.emit = function(context){
     var content = context.weixin.Content.trim();
+    var message = context.weixin;
     var user = context.user;
     var me = this;
     if(content in cmdType){
@@ -21,16 +21,17 @@ CsEmitter.prototype.emit = function(context){
             promise = new Promise(function(resolve, reject){resolve()});
         switch(type){
             case 'online':
-                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'ol');
+                promise = cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'ol');
                 break;
             case 'offline':
-                promise = cskv.saveCSStatusByCSOpenIdAsync(user.wx_openid, 'off');
+                promise = cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'off');
                 break;
         }
         promise.then(function(){
-            return cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
-        })
-        .then(function(){
+                return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName);
+            })
+            .then(function(){
+                console.log("--------"+cmdType[content])
                 return me.emitter.emit(cmdType[content], context);
             });
         //if(cmdWorkflow.canInWild(cmdType[content], stt)){
@@ -53,5 +54,4 @@ CsEmitter.prototype.message = function(handler){ this.emitter.on('message', hand
 CsEmitter.prototype.online = function(handler){ this.emitter.on('online', handler); };
 CsEmitter.prototype.offline = function(handler){ this.emitter.on('offline', handler); };
 CsEmitter.prototype.closeCvs = function(handler){ this.emitter.on('closeCvs', handler); };
-CsEmitter.prototype.status = function(handler){ this.emitter.on('status', handler); };
 module.exports = CsEmitter;
