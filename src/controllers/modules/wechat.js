@@ -23,6 +23,6 @@ module.exports = function() {
     });
     var wechatMiddleware = wechat(tokenConfig).middleware(frankon.generateHandler());
     router.all('/wechat', wechatMiddleware);
-    
+
     return router.routes();
 }
