@@ -16,13 +16,11 @@ var CsEmitter = require('../CsEmitter');
 var csEmitter = new CsEmitter();
 require('./commands/onlineCommand')(csEmitter);
 require('./commands/offlineCommand')(csEmitter);
-require('./commands/viewStateCommand')(csEmitter);
 require('./commands/closeCvsCommand')(csEmitter);
 require('./CsMsgHandler')(csEmitter);
 var handle = function(context){
     var message = context.weixin;
     var stt = null;
-    var user = null;
     context.getUser()
     .then(function(cacheUser){
         context.user = cacheUser;
