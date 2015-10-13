@@ -4,10 +4,11 @@ var logger = require('../../../app/logging').logger;
 var WechatAuthenticator = require('../../user/services/WechatAuthenticator');
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
 var authenticator = new WechatAuthenticator({});
-var AssistantService = require('../services/AssistantService');
 var wechatApi = require('../../wechat/common/api').api;
+var csService = require('../../cs/services/CsService');
+var adminService = require('../../admin/services/AdminService');
 
-module.exports = function(emitter){
+module.exports = function (emitter) {
     var createCustomer = require('./commands/createCustomerCommand');
     //var signupCustomer = function(event, context){
     //    authenticator.ensureSignin(context.weixin, context, function(err, user){
@@ -25,64 +26,54 @@ module.exports = function(emitter){
     emitter.subscribe(createCustomer);
     emitter.SCAN(createCustomer);
 
-    emitter.qr(function(event, context){
-        console.log('qr event emit');
-        authenticator.ensureSignin(context.weixin, context, function(err, user){
-            if(err){
-                logger.error('Fail to sigin with user: ' + err);
-            }
-            else{
-                context.user = user;
-                //TODO: CODE HERE
-                console.log('sign up a customer service user automatically');
-            }
-            var sceneId = context.weixin.SceneId;
-            co(function*(){
-                try{
-                    var success = false, reply = '系统繁忙，请稍后重试！';
-                    var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
-                    console.log(qr);
-                    if(qr){
-                        switch(qr.type){
-                            case 'cs':
-                                console.log('cs handler');
-                                reply = '欢迎成为客服人员！';
-                                try {
-                                    success = yield AssistantService.registryCS(user.id);
-                                }catch(err){
-                                    console.log(err);
-                                }
-                                break;
-                            case 'ad':
-                                console.log('admin handler');
-                                reply = '欢迎成为管理员！';
-                                try {
-                                    success = yield AssistantService.registryAD(user.id);
-                                }catch(err){
-                                    console.log(err);
-                                }
-                                break;
-                            //TODO another qr type
-                        }
-                        if(success){
-                            wechatApi.sendText(user.wx_openid, reply, function(err){
+    emitter.qr(function (event, context) {
+        var sceneId = context.weixin.SceneId;
+        var userOpenid = context.weixin.FromUserName;
+        co(function*() {
+            try {
+                var user = null, reply = '系统繁忙，请稍后重试！';
+                var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
+                console.log(qr);
+                if (qr) {
+                    switch (qr.type) {
+                        case 'cs':
+                            console.log('cs handler');
+                            reply = '欢迎成为客服人员！';
+                            try {
+                                user = yield csService.setRoleByOpenidAsync(userOpenid);
+                            } catch (err) {
                                 console.log(err);
-                                //TODO
-                            });
-                        }
+                            }
+                            break;
+                        case 'ad':
+                            console.log('admin handler');
+                            reply = '欢迎成为管理员！';
+                            try {
+                                user = yield adminService.setRoleByOpenidAsync(userOpenid);
+                            } catch (err) {
+                                console.log(err);
+                            }
+                            break;
+                        //TODO another qr type
                     }
-                    else{
-                        reply = '该二维码已失效';
-                        wechatApi.sendText(user.wx_openid, reply, function(err){
+                    if (user) {
+                        wechatApi.sendText(userOpenid, reply, function (err) {
                             console.log(err);
                             //TODO
                         });
                     }
-                }catch(err){
-                    logger.err('qr event handler err: ' + err);
-                    return;
                 }
-            });
+                else {
+                    reply = '该二维码已失效';
+                    wechatApi.sendText(userOpenid, reply, function (err) {
+                        console.log(err);
+                        //TODO
+                    });
+                }
+            } catch (err) {
+                logger.err('qr event handler err: ' + err);
+                return;
+            }
         });
     });
 };
