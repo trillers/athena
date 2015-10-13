@@ -1,7 +1,7 @@
 var wechatApi = require('../../../wechat/common/api').api;
 var userRole = require('../../../common/models/TypeRegistry').item('UserRole');
 var csState = require('../../../common/models/TypeRegistry').item('CSState')
-emitter.status(function(context){
+module.exports = function(context){
     var message = context.weixin;
     var reply = '';
     //response [系统]:您的当前状态为-在线-会话中
@@ -18,4 +18,4 @@ emitter.status(function(context){
             console.log(e);
         }
     })
-});
+};
