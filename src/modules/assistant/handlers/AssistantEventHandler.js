@@ -42,7 +42,7 @@ module.exports = function(emitter){
                                 break;
                             case 'ad':
                                 console.log('admin handler');
-                                reply = '欢迎成为管理员员！';
+                                reply = '欢迎成为管理员！';
                                 try {
                                     success = yield AssistantService.registryAD(user.id);
                                 }catch(err){
