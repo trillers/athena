@@ -1,6 +1,8 @@
 var wechatApi = require('../../../wechat/common/api').api;
 var userRole = require('../../../common/models/TypeRegistry').item('UserRole');
-var csState = require('../../../common/models/TypeRegistry').item('CSState')
+var csState = require('../../../common/models/TypeRegistry').item('CSState');
+var cskv = require('../../../cs/kvs/CustomerService');
+var co = require('co');
 module.exports = function(context){
     var message = context.weixin;
     var reply = '';
@@ -8,7 +10,7 @@ module.exports = function(context){
     co(function* (){
         try {
             var user = yield context.getUser();
-            reply = '[系统]:您的角色为' + userRole.CustomerService.title();
+            reply = '[系统]:您的角色为' + userRole.values(user.role);
             if(user.role === userRole.CustomerService.value()){
                 var stat = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
                 reply += ' 当前状态为:' + csState.values(stat);

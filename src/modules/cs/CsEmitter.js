@@ -28,9 +28,10 @@ CsEmitter.prototype.emit = function(context){
                 break;
         }
         promise.then(function(){
-            return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName);
-        })
+                return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName);
+            })
             .then(function(){
+                console.log("--------"+cmdType[content])
                 return me.emitter.emit(cmdType[content], context);
             });
         //if(cmdWorkflow.canInWild(cmdType[content], stt)){

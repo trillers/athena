@@ -5,6 +5,7 @@ var cskv = require('../../kvs/CustomerService');
 module.exports = function(emitter){
     //require('../../../conversation/common/ConversationQueue').emit('taskFinish', {csId: user.wx_openid});
     emitter.closeCvs(function(context){
+        console.log("$$$$$$$$$$$$$$$")
         var user = context.user;
         var message = context.weixin;
         cvsService.filterAsync({

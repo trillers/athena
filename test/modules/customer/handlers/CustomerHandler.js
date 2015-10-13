@@ -37,6 +37,7 @@ describe('send a customer message', function () {
             done();
         });
         after(function(done){
+            console.log("after--------------")
             siteClientB.sendText({
                 Content: '关闭'
             });
@@ -49,20 +50,21 @@ describe('send a customer message', function () {
             siteClientB.sendText({
                 Content: '上线'
             });
-            siteClientB.sendText({
-                Content: 'Hi'
-            });
-            setTimeout(function(){
-                siteClientA.sendText({
-                    Content: 'Hi?'
-                });
-                setTimeout(function(){
-                    siteClientB.sendText({
-                        Content: 'Hello'
-                    });
-                    done();
-                }, 3000);
-            }, 3000);
+            //siteClientB.sendText({
+            //    Content: 'Hi'
+            //});
+            //setTimeout(function(){
+            //    siteClientA.sendText({
+            //        Content: 'Hi?'
+            //    });
+            //    setTimeout(function(){
+            //        console.log("##############");
+            //        siteClientB.sendText({
+            //            Content: '状态'
+            //        });
+            //        done();
+            //    }, 3000);
+            //}, 3000);
         });
     });
     //describe('the conversation already exist, send the message directly', function () {
