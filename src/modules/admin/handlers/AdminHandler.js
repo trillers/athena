@@ -1,14 +1,16 @@
-var csQrCodeHandler = require('../../qrchannel/handlers/CSQrCodeHandler');
-var OperationStateCommand = require('./commands/OperationStateCommand');
+var CommandRegistry = require('../../../framework/wechat/command-registry');
+var registry = new CommandRegistry();
+registry.addCommand('运营状态', require('./commands/OperationStateCommand'));
+registry.addCommand('客服二维码', require('../../qrchannel/handlers/CSQrCodeHandler'));
+
 module.exports = function(emitter){
     emitter.admin(function(event, context){
-        var msg = context.weixin;
-        var userOpenid = context.weixin.FromUserName;
         console.log('this is admin message');
-        console.log(msg);
-        if(msg.MsgType == 'text') {
-            csQrCodeHandler(msg.Content, userOpenid);
-            OperationStateCommand(msg.Content, userOpenid);
+        var handler = registry.extractCommandFromContext(context);
+        if(handler){
+            handler();
+        }else{
+            //TODO
         }
     });
 };

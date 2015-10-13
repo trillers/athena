@@ -16,6 +16,7 @@ registry.addCommand('成为客户', require('./commands/setRoleToCustomerCommand
 registry.addCommand('成为客服', require('./commands/setRoleToCsCommand'));
 registry.addCommand('成为管理员', require('./commands/setRoleToAdminCommand'));
 
+
 module.exports = function(emitter){
     emitter.message(function(event, context){
         var handler = registry.extractCommandFromContext(context);

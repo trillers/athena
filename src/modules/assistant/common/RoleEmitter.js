@@ -13,15 +13,16 @@ var RoleEmitter = function(){
  * @param context
  */
 RoleEmitter.prototype.emit = function(context){
+    var self = this;
     context.getUser().then(function(user){
         if(user.role == UserRole.Customer.value()){
-            this.emitter.emit('customer', 'customer', context);
+            self.emitter.emit('customer', 'customer', context);
         }
         if(user.role == UserRole.CustomerService.value()){
-            this.emitter.emit('cs', 'cs', context);
+            self.emitter.emit('cs', 'cs', context);
         }
         if(user.role == UserRole.Admin.value()){
-            this.emitter.emit('admin', 'admin', context);
+            self.emitter.emit('admin', 'admin', context);
         }
         else{
             //for other unknown roles, ignore it
