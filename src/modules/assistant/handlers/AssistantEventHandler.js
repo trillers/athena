@@ -11,9 +11,10 @@ module.exports = function (emitter) {
     emitter.subscribe(createCustomer);
 
     emitter.qr(function (event, context) {
-        var sceneId = context.weixin.SceneId;
-        var userOpenid = context.weixin.FromUserName;
         co(function*() {
+            yield context.getUser();
+            var sceneId = context.weixin.SceneId;
+            var userOpenid = context.weixin.FromUserName;
             try {
                 var user = null, reply = '系统繁忙，请稍后重试！';
                 var qr = yield QrChannelService.loadBySceneIdAsync(sceneId);
