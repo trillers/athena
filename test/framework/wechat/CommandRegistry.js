@@ -118,7 +118,7 @@ describe('extractCommandFromMessage', function() {
 })
 
 describe('extractCommandFromContext', function() {
-    it('succeed to extract and execute command from a context', function (done) {
+    it('succeed to extract and execute command from a context with text message', function (done) {
         var registry = new CommandRegistry();
         var firstCommand = false;
         var secondCommand = false;
@@ -170,6 +170,63 @@ describe('extractCommandFromContext', function() {
         handler = registry.extractCommandFromContext(context, user);
         assert.notOk(handler);
         console.log(msg.Content + ' - 此消息不是【命令消息】');
+        assert.notOk(nonCommand);
+
+        done();
+    })
+
+    it('succeed to extract and execute command from a context with voice message', function (done) {
+        var registry = new CommandRegistry();
+        var firstCommand = false;
+        var secondCommand = false;
+        var nonCommand = false;
+        var handler = null;
+
+        registry.addCommand('删除当前用户', function(context, user){
+            firstCommand = true;
+            console.log( '删除当前用户' + ' - 命令已执行！');
+            console.log(context);
+            console.log(user);
+        });
+        registry.addCommand('状态', function(context, user){
+            secondCommand = true;
+            console.log( '状态' + ' - 命令已执行！');
+            console.log(context);
+            console.log(user);
+        });
+
+        var msg = {
+            MsgType: 'voice',
+            Recognition: ''
+        };
+        var user = {
+            id: '001',
+            wx_nickname: '数学老师'
+        };
+        var context = {weixin: msg};
+
+        msg.Recognition = '删除当前用户！';
+        handler = registry.extractCommandFromContext(context, user);
+        assert.ok(handler);
+        handler();
+        assert.ok(firstCommand);
+
+        msg.Recognition = '状态！';
+        handler = registry.extractCommandFromContext(context, user);
+        assert.ok(handler);
+        handler();
+        assert.ok(secondCommand);
+
+        msg.Recognition = '你好！';
+        handler = registry.extractCommandFromContext(context, user);
+        assert.notOk(handler);
+        console.log(msg.Recognition + ' - 此消息不是【命令消息】');
+        assert.notOk(nonCommand);
+
+        msg.Recognition = '';
+        handler = registry.extractCommandFromContext(context, user);
+        assert.notOk(handler);
+        console.log(msg.Recognition + ' - 此消息不是【命令消息】');
         assert.notOk(nonCommand);
 
         done();
