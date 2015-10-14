@@ -36,7 +36,18 @@ CommandRegistry.prototype.extractCommandFromMessage = function(msg){
 
 CommandRegistry.prototype.extractCommandFromContext = function(context){
     var msg = context.weixin;
-    var cmdPattern = 'text' == msg.MsgType && typeof msg.Content == 'string' && msg.Content.trim();
+    var cmdPattern = null;
+    if('text' == msg.MsgType && typeof msg.Content == 'string'){
+        cmdPattern = msg.Content.trim();
+    }
+    else if('voice' == msg.MsgType && typeof msg.Recognition == 'string'){
+        //var i = msg.Recognition.indexOf('！');
+        cmdPattern = msg.Recognition.slice(0, msg.Recognition.indexOf('！'));
+    }
+    else{
+        //non-command message
+    }
+
     var handler = cmdPattern && this.commands[cmdPattern];
     if(handler){
         var params = Array.prototype.slice.call(arguments, 0);
