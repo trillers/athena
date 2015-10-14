@@ -13,7 +13,12 @@ module.exports = function(context){
             reply = '[系统]:您的角色为' + userRole.values(user.role);
             if(user.role === userRole.CustomerService.value()){
                 var stat = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
-                reply += ' 当前状态为:' + csState.values(stat);
+                if(typeof stat === 'string'){
+                    reply += ' 当前状态为:' + csState.values(stat);
+                }
+                else{
+                    reply += ' 当前状态为:' + csState.offline.title();
+                }
             }
             yield wechatApi.sendTextAsync(message.FromUserName, reply);
         }catch(e){

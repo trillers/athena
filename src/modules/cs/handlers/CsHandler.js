@@ -29,10 +29,12 @@ var handle = function(context){
     .then(function(st){
         stt = st || 'off';
         context.user.status = stt;
-    })
-    .then(function(){
         csEmitter.emit(context);
-    });
+    })
+    .catch(Error, function(e){
+        console.log("------------------");
+        console.log(e);
+    })
 };
 //var handle = function(user, message){
 //    var stt;

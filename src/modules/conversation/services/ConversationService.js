@@ -170,7 +170,8 @@ Service.destroy = function(cvs, callback){
 };
 
 Service.close = function(cvs, callback){
-    Service.update(cvs.id, {stt: ConversationState.Finished.value()}, function(err){
+    console.log(cvs);
+    Service.update(cvs._id, {stt: ConversationState.Finished.value()}, function(err){
         if(err){
             return callback(err, null);
         }
