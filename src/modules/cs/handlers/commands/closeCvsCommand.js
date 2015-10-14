@@ -1,5 +1,6 @@
 var wechatApi = require('../../../wechat/common/api').api;
 var cvsService = require('../../../conversation/services/ConversationService');
+var cvsKv = require('../../../conversation/kvs/Conversation');
 var cskv = require('../../kvs/CustomerService');
 
 module.exports = function(emitter){
@@ -7,14 +8,13 @@ module.exports = function(emitter){
     emitter.closeCvs(function(context){
         var user = context.user;
         var message = context.weixin;
-        cvsService.filterAsync({
-            conditions:{
-                csId: user.id
-            }
+        cvsKv.getCurrentCidAsync(user.id)
+        .then(function(cvsId){
+            return cvsKv.loadByIdAsync(cvsId);
         })
-        .then(function(cvsArr){
-            if(cvsArr.length > 0){
-                return cvsService.closeAsync(cvsArr[0]);
+        .then(function(cvs){
+            if(cvs){
+                return cvsService.closeAsync(cvs);
             }
             return;
         })

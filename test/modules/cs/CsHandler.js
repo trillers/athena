@@ -118,9 +118,9 @@ describe('send a customer message', function () {
                     });
                     setTimeout(function(){
                         done();
-                    }, 2000);
-                }, 2000);
-            }, 2000);
+                    }, 3000);
+                }, 3000);
+            }, 3000);
         });
     });
 

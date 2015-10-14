@@ -14,10 +14,10 @@ module.exports = function(context){
             if(user.role === userRole.CustomerService.value()){
                 var stat = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
                 if(typeof stat === 'string'){
-                    reply += ' 当前状态为:' + csState.values(stat);
+                    reply += ' 当前状态为: ' + csState.values(stat);
                 }
                 else{
-                    reply += ' 当前状态为:' + csState.offline.title();
+                    reply += ' 当前状态为: ' + csState.offline.title();
                 }
             }
             yield wechatApi.sendTextAsync(message.FromUserName, reply);
