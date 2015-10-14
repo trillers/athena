@@ -88,7 +88,11 @@ describe('send a customer message', function () {
 
     describe('create a new conversation and assign it to a free cs', function () {
         before(function(done){
-            done();
+            prepareData(mock)
+                .then(function(){
+                    done();
+                });
+
         });
         after(function(done){
             console.log("after--------------");
@@ -104,25 +108,15 @@ describe('send a customer message', function () {
             mock.siteClientB.sendText({
                 Content: '上线'
             });
-            setTimeout(function(){
-                done();
-            }, 3000);
 
-            //siteClientB.sendText({
-            //    Content: 'Hi'
-            //});
-            //setTimeout(function(){
-            //    siteClientA.sendText({
-            //        Content: 'Hi?'
-            //    });
-            //    setTimeout(function(){
-            //        console.log("##############");
-            //        siteClientB.sendText({
-            //            Content: '状态'
-            //        });
-            //        done();
-            //    }, 3000);
-            //}, 3000);
+            siteClientB.sendText({
+                Content: 'Hi'
+            });
+            setTimeout(function(){
+                siteClientA.sendText({
+                    Content: 'Hi?'
+                });
+            }, 3000);
         });
     });
 
