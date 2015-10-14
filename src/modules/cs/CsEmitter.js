@@ -12,11 +12,11 @@ function CsEmitter(){
     this.emitter = new EventEmitter();
 }
 CsEmitter.prototype.emit = function(context){
-    var content = context.weixin.Content.trim();
+    var content = context.weixin.Content;
     var message = context.weixin;
     var user = context.user;
     var me = this;
-    if(content in cmdType){
+    if(content && content.trim() in cmdType){
         var type = cmdType[content],
             promise = new Promise(function(resolve, reject){resolve()});
         switch(type){

@@ -8,7 +8,7 @@ var wechatApi = require('../../wechat/common/api').api;
 module.exports = function(emitter){
     emitter.conversation(function(cvs, message){
         co(function*(){
-            var cid;
+            var cid = null;
             try{
                 //get a free cs
                 cid = yield cskv.popWcCSSetAsync();
@@ -19,6 +19,9 @@ module.exports = function(emitter){
                     //update cvs,
                     cvs.csId = cid;
                     yield ConversationKv.createAsync(cvs);
+                    //notify customer
+                    var customer = yield userService.loadByIdAsync(cvs.initiator);
+                    _sendMsg(customer.wx_openid, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
                     //get historical messages from db, send them
                     var msgs = yield messageService.findAsync({conditions:{channel: cvs.id}});
                     yield conversationService.updateAsync(cvs.id, {csId: cid});

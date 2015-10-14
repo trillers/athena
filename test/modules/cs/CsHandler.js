@@ -95,7 +95,7 @@ describe('send a customer message', function () {
 
         });
         after(function(done){
-            console.log("after--------------");
+            console.log('enter after hook---------');
             mock.siteClientB.sendText({
                 Content: '关闭'
             });
@@ -108,28 +108,29 @@ describe('send a customer message', function () {
             mock.siteClientB.sendText({
                 Content: '上线'
             });
-
-            siteClientB.sendText({
-                Content: 'Hi'
-            });
             setTimeout(function(){
-                siteClientA.sendText({
-                    Content: 'Hi?'
+                mock.siteClientA.sendText({
+                    Content: 'Hi'
                 });
-            }, 3000);
+                setTimeout(function(){
+                    mock.siteClientB.sendText({
+                        Content: 'Hi?'
+                    });
+                    setTimeout(function(){
+                        done();
+                    }, 2000);
+                }, 2000);
+            }, 2000);
         });
     });
 
 
 });
 function prepareData(mock){
-    console.log("0000000000000");
     mock.openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE'; //独自等待的错题本openid
     mock.prepareOpenid = 'okvXqswFmgRwEV0YrJ-h5YvKhdUk'; //祺天大圣的openid
     return csService.createFromOpenidAsync(mock.prepareOpenid)
         .then(function(user){
-            console.log("+++++++++++++++++");
-            console.log(user);
             assert.equal(user.role, 'cs');
             return customerService.createFromOpenidAsync(mock.openid)
         })
