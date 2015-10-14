@@ -57,6 +57,7 @@ Service.setRoleByOpenid = function(openid, callback){
             yield csKvs.saveCSStatusByCSOpenIdAsync(openid, csState.offline.value());
             if(callback) callback(null, user);
         } catch (err){
+            console.log(err.stack);
             logger.error('CustomerService setRoleByOpenid err:' + err);
             if(callback) callback(err, null);
         }

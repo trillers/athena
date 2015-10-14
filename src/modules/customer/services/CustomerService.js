@@ -54,6 +54,7 @@ Service.setRoleByOpenid = function(openid, callback){
             if(callback) callback(null, user);
         } catch (err){
             logger.error('CustomerService setRoleByOpenid err:' + err);
+            console.log(err.stack);
             if(callback) callback(err, null);
         }
     });
