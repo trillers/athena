@@ -14,6 +14,7 @@ registry.addCommand('状态', require('./commands/showMyStateCommand'));
 
 module.exports = function(emitter){
     emitter.message(function(event, context){
+        console.log(context.weixin);
         var handler = registry.extractCommandFromContext(context);
         if(handler){
             handler();
