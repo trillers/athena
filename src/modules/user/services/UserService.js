@@ -10,6 +10,7 @@ var Service = {};
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
 var userBizService = require('./UserBizService');
+var csKvs = require('../../cs/kvs/CustomerService');
 var generateUserToken = function(uid){
     var key = settings.secretKey;
     return require('crypto').createHash('sha1').update(String(uid)).update(key).digest('hex');
@@ -258,6 +259,11 @@ Service.deleteByOpenid = function(openid, callback) {
                             return UserKv.deleteByIdAsync(userToDelete.id);
                         }
                     })
+                    .then(function(){
+                        if(userToDelete){
+                            return csKvs.delCSStatusByCSOpenIdAsync(userToDelete.wx_openid);
+                        }
+                    })
             }
             else{
                 return;
@@ -339,6 +345,15 @@ Service.getRoleSum = function(role, callback){
            if(callback) return callback(err, null);
        }
        if(callback) return callback(null, count);
+    });
+}
+
+Service.getRoleList = function(role, callback){
+    User.find({role: role}, {}, {lean: true}, function(err, data){
+        if(err) {
+            if(callback) return callback(err, null);
+        }
+        if(callback) return callback(null, data);
     });
 }
 

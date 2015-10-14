@@ -8,7 +8,6 @@ var co = require('co');
 var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
 var userService = require('../../../../src/modules/user/services/UserService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
-
 var Service = {};
 
 /**

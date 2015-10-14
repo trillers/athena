@@ -3,6 +3,7 @@ var wxutil = require('../../../../framework/wechat/util');
 var Wechat = require('../../../../../src/framework/wechat/index');
 var siteEmitter = require('../../../../../src/modules/assistant/site-emitter');
 var adminService = require('../../../../../src/modules/admin/services/AdminService');
+var csService = require('../../../../../src/modules/cs/services/CsService');
 var WechatUserService = require('../../../../../src/modules/user/services/WechatUserService');
 var userRole = require('../../../../../src/modules/common/models/TypeRegistry').item('UserRole');
 
@@ -14,19 +15,28 @@ before(function(done){
 
 describe('request operation state', function() {
     var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';//独自等待的错题本openid
-    var admin = null;
+    var testOpenid = 'okvXqswFmgRwEV0YrJ-h5YvKhdUk';//齐天大圣的错题本openid
+    var admin = null, cs = null;
     before(function(done){
         adminService.createFromOpenid(openid, function(err, data){
             admin = data;
             assert(admin.role, userRole.Admin.value());
-            done();
+            csService.createFromOpenid(testOpenid, function(err, data){
+                cs = data;
+                assert(cs.role, userRole.CustomerService.value());
+                done();
+            });
         });
     });
     after(function(done){
         WechatUserService.deleteByOpenid(openid, function(err, user){
             assert.ok(user);
             console.log(user);
-            done();
+            WechatUserService.deleteByOpenid(testOpenid, function(err, user){
+                assert.ok(user);
+                console.log(user);
+                done();
+            });
         });
     });
 

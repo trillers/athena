@@ -4,14 +4,12 @@ var csService = require('../../../cs/services/CsService');
 
 var commandHandler = function(context){
     var openid = context.weixin.FromUserName;
-    csService.setRoleByOpenid(openid, function(err){
+    csService.setRoleByOpenid(openid, function(err, user){
         if(err){
-            wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ openid +'] 切换客服失败');
+            wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 切换客服失败');
         }
         else{
-            context.getUser().then(function(user){
-                wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 切换客服成功');
-            });
+            wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 切换客服成功');
         }
     });
 };

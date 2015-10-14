@@ -8,6 +8,11 @@ var co = require('co');
 var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
 var userService = require('../../../../src/modules/user/services/UserService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var csState = require('../../common/models/TypeRegistry').item('CSState');
+var csKvs = require('../kvs/CustomerService');
+var cvsKvs = require('../../conversation/kvs/Conversation');
+var cvsService = require('../../conversation/services/ConversationService');
+
 var Service = {};
 
 /**
@@ -44,6 +49,12 @@ Service.setRoleByOpenid = function(openid, callback){
         try{
             var userId = yield UserKv.loadIdByOpenidAsync(openid);
             var user = yield userService.updateAsync(userId, userUpdate);
+            var cvsId = yield cvsKvs.getCurrentCidAsync(userId);
+            if(cvsId){
+                var cvs = yield cvsKvs.loadByIdAsync(cvsId);
+                yield cvsService.closeAsync(cvs);
+            }
+            yield csKvs.saveCSStatusByCSOpenIdAsync(openid, csState.offline.value());
             if(callback) callback(null, user);
         } catch (err){
             logger.error('CustomerService setRoleByOpenid err:' + err);
