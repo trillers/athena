@@ -27,8 +27,7 @@ var handle = function(context){
         return cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
     })
     .then(function(st){
-        stt = st || 'off';
-        context.user.status = stt;
+        context.user.status = st || 'off';  //TODO temp
         csEmitter.emit(context);
     })
     .catch(Error, function(e){
