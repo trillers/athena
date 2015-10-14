@@ -39,7 +39,7 @@ module.exports = function(context){
                 if(cvsId){
                     reply += ', 会话中';
                 }else{
-                    reply += ', 无回话';
+                    reply += ', 无会话';
                 }
             }
             yield wechatApi.sendTextAsync(message.FromUserName, reply);

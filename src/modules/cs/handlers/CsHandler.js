@@ -14,27 +14,13 @@ var caseType = {
 var cmdWorkflow = require('../common/FSM').getWf('cmdWorkflow');
 var CsEmitter = require('../CsEmitter');
 var csEmitter = new CsEmitter();
-require('./commands/onlineCommand')(csEmitter);
-require('./commands/offlineCommand')(csEmitter);
-require('./commands/closeCvsCommand')(csEmitter);
+
 require('./CsMsgHandler')(csEmitter);
-var handle = function(context){
-    var message = context.weixin;
-    var stt = null;
-    context.getUser()
-    .then(function(cacheUser){
-        context.user = cacheUser;
-        return cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
-    })
-    .then(function(st){
-        context.user.status = st || 'off';  //TODO temp
-        csEmitter.emit(context);
-    })
-    .catch(Error, function(e){
-        console.log("------------------");
-        console.log(e);
-    })
-};
+var CommandRegistry = require('../../../framework/wechat/command-registry');
+var registry = new CommandRegistry();
+registry.addCommand('上线', require('./commands/onlineCommand'));
+registry.addCommand('下线', require('./commands/offlineCommand'));
+registry.addCommand('关闭', require('./commands/closeCvsCommand'));
 //var handle = function(user, message){
 //    var stt;
 //    cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)
@@ -114,6 +100,23 @@ var handle = function(context){
 module.exports = function(emitter){
     emitter.cs(function(event, context){
         console.log('emit customer service handler');
-        handle(context);
+        co(function*(){
+            var message = context.weixin;
+            var stt = null;
+            var handler = null;
+            try{
+                context.user = yield context.getUser();
+                stt = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
+                context.user.status = stt || 'off';  //TODO temp
+                handler = registry.extractCommandFromContext(context);
+                if(handler){
+                    handler();
+                }else{
+                    csEmitter.emit(context);
+                }
+            }catch(e){
+                console.log(e);
+            }
+        })
     });
 };
