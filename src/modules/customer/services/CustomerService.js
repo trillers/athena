@@ -47,13 +47,17 @@ Service.setRoleByOpenid = function(openid, callback){
             var userId = yield UserKv.loadIdByOpenidAsync(openid);
             var user = yield userService.updateAsync(userId, userUpdate);
             var cvsId = yield cvsKvs.getCurrentIdAsync(userId);
+            console.log('********');
+            console.log('cvsId' + cvsId);
             if(cvsId){
                 var cvs = yield cvsKvs.loadByIdAsync(cvsId);
+                console.log(cvs);
                 yield cvsService.closeAsync(cvs);
             }
             if(callback) callback(null, user);
         } catch (err){
             logger.error('CustomerService setRoleByOpenid err:' + err);
+            console.log(err.stack);
             if(callback) callback(err, null);
         }
     });

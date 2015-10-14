@@ -9,7 +9,10 @@ var wechatUserService = require('../../../../src/modules/user/services/WechatUse
 var userService = require('../../../../src/modules/user/services/UserService');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var Service = {};
-
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var csState = require('../../common/models/TypeRegistry').item('CSState');
+var cvsKvs = require('../../conversation/kvs/Conversation');
+var cvsService = require('../../conversation/services/ConversationService');
 /**
  * Create an admin user from openid
  * @param openid
@@ -44,6 +47,14 @@ Service.setRoleByOpenid = function(openid, callback){
         try{
             var userId = yield UserKv.loadIdByOpenidAsync(openid);
             var user = yield userService.updateAsync(userId, userUpdate);
+            var cvsId = yield cvsKvs.getCurrentCidAsync(userId);
+            console.log('********');
+            console.log('cvsId' + cvsId);
+            if(cvsId){
+                var cvs = yield cvsKvs.loadByIdAsync(cvsId);
+                console.log(cvs);
+                yield cvsService.closeAsync(cvs);
+            }
             if(callback) callback(null, user);
         } catch (err){
             logger.error('AdminService setRoleByOpenid err:' + err);
