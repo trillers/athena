@@ -14,77 +14,77 @@ before(function(done){
 });
 describe('send a customer message', function () {
     var mock = {};
-    //before(function(done){
-    //    prepareData(mock)
-    //    .then(function(){
-    //        console.log("~~~~~~~~~~~~~~~~~");
-    //        done();
-    //    })
-    //});
-    //
-    //describe('cs send a plain message', function () {
-    //    before(function(done){
-    //        done();
-    //    });
-    //    it('has no cvs', function(done){
-    //        assert.ok(mock.site.getId());
-    //        console.log(assert.ok);
-    //        mock.siteClientB.sendText({
-    //            Content: 'Hi'
-    //        });
-    //        setTimeout(function(){
-    //            done()
-    //        }, 2000)
-    //    });
-    //});
-    //
-    //describe('cs send a online cmd', function () {
-    //    before(function(done){
-    //        done();
-    //    });
-    //    it('online', function(done){
-    //        assert.ok(mock.site.getId());
-    //        console.log(assert.ok);
-    //        mock.siteClientB.sendText({
-    //            Content: '上线'
-    //        });
-    //        setTimeout(function(){
-    //            done()
-    //        }, 2000)
-    //    });
-    //});
-    //
-    //describe('cs send a offline cmd', function () {
-    //    before(function(done){
-    //        done();
-    //    });
-    //    it('offline', function(done){
-    //        assert.ok(mock.site.getId());
-    //        console.log(assert.ok);
-    //        mock.siteClientB.sendText({
-    //            Content: '下线'
-    //        });
-    //        setTimeout(function(){
-    //            done()
-    //        }, 2000)
-    //    });
-    //});
-    //
-    //describe('cs send a status cmd', function () {
-    //    before(function(done){
-    //        done();
-    //    });
-    //    it('should be offline', function(done){
-    //        assert.ok(mock.site.getId());
-    //        console.log(assert.ok);
-    //        mock.siteClientB.sendText({
-    //            Content: '状态'
-    //        });
-    //        setTimeout(function(){
-    //            done()
-    //        }, 2000)
-    //    });
-    //});
+    before(function(done){
+        prepareData(mock)
+        .then(function(){
+            console.log("~~~~~~~~~~~~~~~~~");
+            done();
+        })
+    });
+
+    describe('cs send a plain message', function () {
+        before(function(done){
+            done();
+        });
+        it('has no cvs', function(done){
+            assert.ok(mock.site.getId());
+            console.log(assert.ok);
+            mock.siteClientB.sendText({
+                Content: 'Hi'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
+        });
+    });
+
+    describe('cs send a online cmd', function () {
+        before(function(done){
+            done();
+        });
+        it('online', function(done){
+            assert.ok(mock.site.getId());
+            console.log(assert.ok);
+            mock.siteClientB.sendText({
+                Content: '上线'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
+        });
+    });
+
+    describe('cs send a offline cmd', function () {
+        before(function(done){
+            done();
+        });
+        it('offline', function(done){
+            assert.ok(mock.site.getId());
+            console.log(assert.ok);
+            mock.siteClientB.sendText({
+                Content: '下线'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
+        });
+    });
+
+    describe('cs send a status cmd', function () {
+        before(function(done){
+            done();
+        });
+        it('should be offline', function(done){
+            assert.ok(mock.site.getId());
+            console.log(assert.ok);
+            mock.siteClientB.sendText({
+                Content: '状态'
+            });
+            setTimeout(function(){
+                done()
+            }, 2000)
+        });
+    });
 
     describe('create a new conversation and assign it to a free cs', function () {
         before(function(done){
@@ -95,6 +95,7 @@ describe('send a customer message', function () {
 
         });
         after(function(done){
+            console.log('enter after hook---------');
             mock.siteClientB.sendText({
                 Content: '关闭'
             });
@@ -108,14 +109,16 @@ describe('send a customer message', function () {
                 Content: '上线'
             });
             setTimeout(function(){
-                mock.siteClientB.sendVoice({
-                    Format: 'amr',
-                    MediaId: 'asdfasdfasdf'
+                mock.siteClientA.sendText({
+                    Content: 'Hi'
                 });
                 setTimeout(function(){
-                    mock.siteClientA.sendText({
+                    mock.siteClientB.sendText({
                         Content: 'Hi?'
                     });
+                    setTimeout(function(){
+                        done();
+                    }, 2000);
                 }, 2000);
             }, 2000);
         });
