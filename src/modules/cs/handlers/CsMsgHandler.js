@@ -12,14 +12,14 @@ module.exports = function(emitter){
                 var message = context.weixin;
                 var cvsId = yield ConversationKv.getCurrentCidAsync(user.id)
                 if (cvsId) {
-                    var data = yield ConversationKv.loadByIdAsync(cvsId);
-                    var customer = data.initiator;
+                    var cvs = yield ConversationKv.loadByIdAsync(cvsId);
+                    var customer = cvs.initiator;
                     var msg = {
                         from: user,
                         to: customer,
                         contentType: MsgContentType.names(message.MsgType),
                         content: message.Content || message.MediaId,
-                        channel: data._id
+                        channel: cvs._id
                     };
                     try {
                         yield messageService.createAsync(msg);
