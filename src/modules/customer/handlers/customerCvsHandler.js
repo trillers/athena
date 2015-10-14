@@ -30,8 +30,10 @@ module.exports = function(emitter){
                         _sendMsg(user.wx_openid, msg);
                     })
                 }else{
-                    //TODO if cs all busy
-                    console.log("all busy");
+                    //if cs all busy? clear mark
+                    yield conversationService.deleteAsync(cvs._id);
+                    yield ConversationKv.delByIdAsync(cvs._id);
+                    yield ConversationKv.delCurrentIdAsync(cvs.initiator);
                 }
             }catch(e){
                 console.log(e);
