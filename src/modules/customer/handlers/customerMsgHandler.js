@@ -28,7 +28,7 @@ module.exports = function(emitter){
                         case 'voice':
                             yield wechatApi.sendVoiceAsync(openId, message.MediaId);
                             if(message.Recognition){
-                                yield wechatApi.sendTextAsync(openId, message.Recognition);
+                                yield wechatApi.sendTextAsync(openId, '[翻译]: ' + message.Recognition);
                             }
                             break;
                     }
