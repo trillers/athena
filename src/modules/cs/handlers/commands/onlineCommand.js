@@ -12,6 +12,6 @@ module.exports = function(context){
             return cskv.pushWcCSSetAsync(user.id);
         })
         .then(function(){
-            wechatApi.sendText(message.FromUserName, '[系统]:您已上线', function(err, result){});
+            wechatApi.sendText(message.FromUserName, '[系统]: 您已上线', function(err, result){});
         });
 };
