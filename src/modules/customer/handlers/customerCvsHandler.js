@@ -20,7 +20,8 @@ module.exports = function(emitter){
                     cvs.csId = cid;
                     yield ConversationKv.createAsync(cvs);
                     //notify customer
-                    _sendMsg(cvs.initiator, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
+                    var customer = yield userService.loadByIdAsync(cvs.initiator);
+                    _sendMsg(customer.wx_openid, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
                     //get historical messages from db, send them
                     var msgs = yield messageService.findAsync({conditions:{channel: cvs.id}});
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
