@@ -24,18 +24,13 @@ module.exports = function (context) {
             var customerSum = yield userService.getRoleSumAsync(UserRole.Customer.value());
             var todayCvsSum = yield cvsService.getTodayCvsSumAsync();
 
-            var reply = '--------------------------------\n'
-                + '[系统]: \n'
-                + '管理员人数：' + adminSum + '\n'
-                + adminListStr
-                +'--------------------------------\n'
-                + '客服人数：  ' + csSum + '\n'
-                + csListStr
-                +'--------------------------------\n'
-                + '客户数：    ' + customerSum + '\n'
-                +'--------------------------------\n'
-                + '今天会话数：' + todayCvsSum; + '\n'
-                +'--------------------------------\n';
+            var reply = '[系统]: \n'
+                + '管理员人数: ' + adminSum + '\n'
+                + adminListStr +'\n'
+                + '客服人数: ' + csSum + '\n'
+                + csListStr +'\n'
+                + '客户人数：    ' + customerSum + '\n\n'
+                + '今天会话数：' + todayCvsSum + '\n';
 
             wechatApi.sendText(openid, reply, function (err, data) {
                 if (err) {
