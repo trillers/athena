@@ -185,7 +185,7 @@ Service.loadOrCreateFromWechat = function(openid, callback){
                 .then(Service.createFromWechat);
         })
         .then(function(user){
-            if(callback) callback(null, user);
+            if(callback) return callback(null, user);
             return user;
         })
         .catch(Error, function (err) {

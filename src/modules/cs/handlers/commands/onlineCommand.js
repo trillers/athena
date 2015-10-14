@@ -10,12 +10,7 @@ module.exports = function(emitter){
                 return cskv.pushWcCSSetAsync(user.id);
             })
             .then(function(){
-                return;
-                //return require('../../../conversation/common/ConversationQueue').emit('csOnline', {csId: user.wx_openid});
-            })
-            .then(function(){
                 wechatApi.sendText(message.FromUserName, '[系统]:您已上线', function(err, result){});
             });
-
     })
 };

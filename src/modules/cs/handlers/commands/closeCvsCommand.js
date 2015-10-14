@@ -14,7 +14,10 @@ module.exports = function(emitter){
             }
         })
         .then(function(cvsArr){
-            return cvsService.closeAsync(cvsArr[0]);
+            if(cvsArr.length > 0){
+                return cvsService.closeAsync(cvsArr[0]);
+            }
+            return;
         })
         .then(function(){
             return cskv.pushWcCSSetAsync(user.id);
