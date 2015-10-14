@@ -11,7 +11,7 @@ module.exports = function (emitter) {
     emitter.event(function (event, context) {
         console.log(context.weixin);
     });
-    //emitter.subscribe(createCustomer);
+    emitter.subscribe(createCustomer);
 
     emitter.qr(function (event, context) {
         co(function*() {
