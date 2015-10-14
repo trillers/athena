@@ -287,7 +287,7 @@ var CustomerService = {
     //},
     remWcCSSet: function(userId, callback){
         var key = getWcCSSetKey();
-        redis.smove(key, 0, userId, function(err, result){
+        redis.srem(key, 0, userId, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to pop wc customer server  set ' + userId + ': ' + err,
