@@ -1,4 +1,5 @@
 var cskv = require('../../kvs/CustomerService');
+var cvsKv = require('../../../conversation/kvs/Conversation');
 var cvsService = require('../../../conversation/services/ConversationService');
 var wechatApi = require('../../../wechat/common/api').api;
 module.exports = function(emitter){
@@ -11,15 +12,14 @@ module.exports = function(emitter){
                 return cskv.remWcCSSetAsync(user.id);
             })
             .then(function(){
-                return cvsService.filterAsync({
-                    conditions:{
-                        csId: user.id
-                    }
-                })
+                return cvsKv.getCurrentCidAsync(user.id);
             })
-            .then(function(cvsArr){
-                if(cvsArr.length>0){
-                    return cvsService.closeAsync(cvsArr[0]);
+            .then(function(cvsId){
+                return cvsKv.loadByIdAsync(cvsId);
+            })
+            .then(function(cvs){
+                if(cvs){
+                    return cvsService.closeAsync(cvs);
                 }
                 return;
             })
