@@ -264,6 +264,11 @@ Service.deleteByOpenid = function(openid, callback) {
                             return csKvs.delCSStatusByCSOpenIdAsync(userToDelete.wx_openid);
                         }
                     })
+                    .then(function(){
+                        if(userToDelete){
+                            return csKvs.remWcCSSetAsync(userToDelete.id);
+                        }
+                    })
             }
             else{
                 return;

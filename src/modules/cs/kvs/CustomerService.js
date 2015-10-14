@@ -285,13 +285,13 @@ var CustomerService = {
     //        cbUtil.handleSingleValue(callback, err, result);
     //    });
     //},
-    remWcCSSet: function(csOpenId, callback){
+    remWcCSSet: function(userId, callback){
         var key = getWcCSSetKey();
-        redis.smove(key, 0, csOpenId, function(err, result){
+        redis.smove(key, 0, userId, function(err, result){
             cbUtil.logCallback(
                 err,
-                'Fail to pop wc customer server  set ' + csOpenId + ': ' + err,
-                'Succeed to pop wc customer server  set ' + csOpenId);
+                'Fail to pop wc customer server  set ' + userId + ': ' + err,
+                'Succeed to pop wc customer server  set ' + userId);
 
             cbUtil.handleSingleValue(callback, err, result);
         });

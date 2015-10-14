@@ -13,6 +13,8 @@ var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var csState = require('../../common/models/TypeRegistry').item('CSState');
 var cvsKvs = require('../../conversation/kvs/Conversation');
 var cvsService = require('../../conversation/services/ConversationService');
+var csKvs = require('../../cs/kvs/CustomerService');
+
 /**
  * Create an admin user from openid
  * @param openid
@@ -57,6 +59,8 @@ Service.setRoleByOpenid = function(openid, callback){
                 console.log(cvs);
                 yield cvsService.closeAsync(cvs);
             }
+            yield csKvs.remWcCSSetAsync(userId);
+            yield csKvs.delCSStatusByCSOpenIdAsync(openid);
             if(callback) callback(null, user);
         } catch (err){
             logger.error('AdminService setRoleByOpenid err:' + err);
