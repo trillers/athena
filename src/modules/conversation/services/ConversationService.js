@@ -165,6 +165,7 @@ Service.destroy = function(cvs, callback){
             return callback(null, null);
         })
         .catch(Error, function(err){
+            console.log(err);
             return callback(err, null);
         })
 };

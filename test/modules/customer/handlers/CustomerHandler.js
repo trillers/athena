@@ -48,42 +48,4 @@ describe('send a customer message', function () {
             }, 2000)
         });
     });
-
-    //describe('create a new conversation and assign it to a free cs', function () {
-    //    before(function(done){
-    //        done();
-    //    });
-    //    after(function(done){
-    //        console.log("after--------------")
-    //        siteClientB.sendText({
-    //            Content: '关闭'
-    //        });
-    //        setTimeout(function(){
-    //            done();
-    //        }, 3000);
-    //    });
-    //    it('a cs online and free, then a custom send a msg, the cvs assign to the cs', function(done){
-    //        assert.ok(site.getId());
-    //        siteClientB.sendText({
-    //            Content: '上线'
-    //        });
-    //        //siteClientB.sendText({
-    //        //    Content: 'Hi'
-    //        //});
-    //        //setTimeout(function(){
-    //        //    siteClientA.sendText({
-    //        //        Content: 'Hi?'
-    //        //    });
-    //        //    setTimeout(function(){
-    //        //        console.log("##############");
-    //        //        siteClientB.sendText({
-    //        //            Content: '状态'
-    //        //        });
-    //        //        done();
-    //        //    }, 3000);
-    //        //}, 3000);
-    //    });
-    //});
-
-
 });
