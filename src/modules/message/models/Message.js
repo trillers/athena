@@ -14,7 +14,8 @@ var schema = DomainBuilder
         channel: {type: String, require: true}, //cvs id
         contentType: {type: String, enum: MsgContentType.valueList(), default: MsgContentType.text.value()},
         content: {type: String},  //text content
-        mediaId: {type: String}  //media id
+        mediaId: {type: String},  //media id
+        recognition: {type: String}
     })
     .build();
 module.exports.schema = schema;

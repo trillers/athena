@@ -8,7 +8,7 @@ module.exports = function(context){
     var message = context.weixin;
     cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName)
     .then(function(){
-        cvsKv.getCurrentCidAsync(user.id)
+        return cvsKv.getCurrentCidAsync(user.id)
     })
     .then(function(cvsId){
         return cvsKv.loadByIdAsync(cvsId);

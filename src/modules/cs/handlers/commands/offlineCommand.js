@@ -6,15 +6,15 @@ module.exports = function(context){
     var message = context.weixin;
     var user = null;
     context.getUser()
+        .then(function(data){
+            user = data;
+            return cskv.remWcCSSetAsync(user.id);
+        })
         .then(function(){
             return cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'off')
         })
         .then(function() {
             return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName)
-        })
-        .then(function(data){
-            user = data;
-            return cskv.remWcCSSetAsync(user.id);
         })
         .then(function(){
             return cvsKv.getCurrentCidAsync(user.id);

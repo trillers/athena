@@ -35,7 +35,7 @@ module.exports = function(context){
                 }
             }
             if(user.role == userRole.Customer.value()){
-                var cvsId = yield cvsKv.getCurrentId(user.id);
+                var cvsId = yield cvsKv.getCurrentIdAsync(user.id);
                 if(cvsId){
                     reply += ', 会话中';
                 }else{

@@ -21,16 +21,16 @@ module.exports = function(emitter){
                     yield ConversationKv.createAsync(cvs);
                     //notify customer
                     var customer = yield userService.loadByIdAsync(cvs.initiator);
-                    _sendMsg(customer.wx_openid, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
+                    yield _sendMsg(customer.wx_openid, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
                     //get historical messages from db, send them
                     var msgs = yield messageService.findAsync({conditions:{channel: cvs.id}});
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
                     var user = yield userService.loadByIdAsync(cid);
-                    msgs.forEach(function(msg){
-                        _sendMsg(user.wx_openid, msg);
-                    })
+                    for(var i=0, len=msgs.length; i<len; i++){
+                        yield _sendMsg(user.wx_openid, msgs[i]);
+                    }
                 }else{
-                    //if cs all busy? clear mark
+                    //if cs all busy? clear trace
                     yield conversationService.deleteAsync(cvs._id);
                     yield ConversationKv.delByIdAsync(cvs._id);
                     yield ConversationKv.delCurrentIdAsync(cvs.initiator);
@@ -38,16 +38,19 @@ module.exports = function(emitter){
             }catch(e){
                 console.log(e);
             }
-            function _sendMsg(openid, msg){
+            function* _sendMsg(openid, msg){
                 switch(msg.contentType){
                     case 'text':
-                        wechatApi.sendTextAsync(openid, msg.content);
+                        yield wechatApi.sendTextAsync(openid, msg.content);
                         break;
                     case 'image':
-                        wechatApi.sendImageAsync(openid, msg.mediaId);
+                        yield wechatApi.sendImageAsync(openid, msg.mediaId);
                         break;
                     case 'voice':
-                        wechatApi.sendVoiceAsync(openid, msg.mediaId);
+                        yield wechatApi.sendVoiceAsync(openid, msg.mediaId);
+                        if(msg.recognition){
+                            yield wechatApi.sendTextAsync(openid, '[翻译]: ' + msg.recognition);
+                        }
                         break;
                 }
             }
