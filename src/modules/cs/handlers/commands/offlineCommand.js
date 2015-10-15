@@ -32,7 +32,7 @@ module.exports = function(context){
             return cskv.delCSSByIdAsync(message.FromUserName);
         })
         .then(function(){
-            wechatApi.sendText(message.FromUserName, '[系统]:您已下线', function(err, result){});
+            wechatApi.sendText(message.FromUserName, '[系统]: 您已下线', function(err, result){});
         })
         .catch(Error, function(e){
             console.log(e);
