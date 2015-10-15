@@ -135,7 +135,8 @@ module.exports = function(emitter){
                         channel: cvsId,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
-                        mediaId: msg.MediaId || null
+                        mediaId: msg.MediaId || null,
+                        recognition: msg.Recognition || null
                     });
                     customerEmitter.emit('message', cvs, msg);
                     customerEmitter.emit('conversation', cvs, msg);
@@ -148,7 +149,8 @@ module.exports = function(emitter){
                         channel: cvsId,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
-                        mediaId: msg.MediaId || null
+                        mediaId: msg.MediaId || null,
+                        recognition: msg.Recognition || null
                     });
                     customerEmitter.emit('message', cvs, msg);
                 }
