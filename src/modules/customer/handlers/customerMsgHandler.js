@@ -1,6 +1,6 @@
 var co = require('co');
 var wechatApi = require('../../wechat/common/api').api;
-var userService = require('../../user/services/UserService');
+var userKv = require('../../user/kvs/User');
 module.exports = function(emitter){
     emitter.message(function(cvs, message){
         console.log("****************************");
@@ -11,7 +11,7 @@ module.exports = function(emitter){
             try{
                 if(csId){
                     //cvs is undertaken
-                    var user = yield userService.loadById(csId);
+                    var user = yield userKv.loadByIdAsync(csId);
                     yield _sendMsg(user.wx_openid, message);
                 }else{
                     //cvs is applying, nothing to do
