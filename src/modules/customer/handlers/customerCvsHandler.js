@@ -27,7 +27,7 @@ module.exports = function(emitter){
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
                     var user = yield userService.loadByIdAsync(cid);
                     msgs.forEach(function(msg){
-                        _sendMsg(user.wx_openid, msg);
+                        yield _sendMsg(user.wx_openid, msg);
                     })
                 }else{
                     //if cs all busy? clear trace
@@ -38,18 +38,18 @@ module.exports = function(emitter){
             }catch(e){
                 console.log(e);
             }
-            function _sendMsg(openid, msg){
+            function* _sendMsg(openid, msg){
                 switch(msg.contentType){
                     case 'text':
-                        wechatApi.sendTextAsync(openid, msg.content);
+                        yield wechatApi.sendTextAsync(openid, msg.content);
                         break;
                     case 'image':
-                        wechatApi.sendImageAsync(openid, msg.mediaId);
+                        yield wechatApi.sendImageAsync(openid, msg.mediaId);
                         break;
                     case 'voice':
-                        wechatApi.sendVoiceAsync(openid, msg.mediaId);
+                        yield wechatApi.sendVoiceAsync(openid, msg.mediaId);
                         if(msg.recognition){
-                            wechatApi.sendTextAsync(openid, msg.recognition);
+                            yield wechatApi.sendTextAsync(openid, '[翻译]: ' + msg.recognition);
                         }
                         break;
                 }
