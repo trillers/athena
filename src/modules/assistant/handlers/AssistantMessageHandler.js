@@ -1,10 +1,4 @@
 var roleEmitter = require('../roleEmitter');
-//var RoleEmitter = require('../common/RoleEmitter');
-//var roleEmitter = new RoleEmitter();
-//require('../../cs/handlers/CsHandler')(roleEmitter);
-//require('../../admin/handlers/AdminHandler')(roleEmitter);
-//require('../../customer/handlers/CustomerHandler')(roleEmitter);
-
 var CommandRegistry = require('../../../framework/wechat/command-registry');
 var registry = new CommandRegistry();
 registry.addCommand('删除当前用户', require('./commands/deleteUserCommand'));
