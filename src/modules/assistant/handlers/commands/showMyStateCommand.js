@@ -16,7 +16,7 @@ module.exports = function(context){
             reply = '[系统]: 您的角色为' + userRole.values(user.role);
             if(user.role === userRole.CustomerService.value()){
                 var stat = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
-                var cvsId = yield cvsKv.delCurrentCidAsync(user.id);
+                var cvsId = yield cvsKv.getCurrentCidAsync(user.id);
                 if(typeof stat === 'string'){
                     reply += ', 当前状态为: ' + csState.values(stat);
                 }
