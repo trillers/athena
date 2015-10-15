@@ -21,7 +21,7 @@ module.exports = function (emitter) {
             , CreateTime: msg.CreateTime
             , MsgType: 'text'
             , MsgId: new Date().getTime()
-            , Content: '[系统]: 新用户刚刚关注，请服务!'
+            , Content: '我刚刚关注，请为我服务!'
         };
         ctx.wxsession = context.wxsession;
         emitter.relay(ctx);
