@@ -125,6 +125,10 @@ node_modules
 
 public/components
 web/build
+public/qrCode/*
+public/qrCode/!README
+public/uploads/*
+public/uploads/!README
 
 public/components
 web/build

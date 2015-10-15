@@ -1,7 +1,7 @@
 var CSHandler = require('../common/CSHandler');
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var ConversationState = require('../../common/models/TypeRegistry').item('ConversationState');
-var cskv = require('../kvs/CustomerServer');
+var cskv = require('../kvs/CustomerService');
 var conversationQueue = require('../../conversation/common/ConversationQueue');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
@@ -14,9 +14,24 @@ var handle = function(user, message){
     console.log('ru handle start');
     console.log('queue----------------')
     console.log(conversationQueue);
+
+    //ensure a customer conversation there: find or create
+    var cvs = findCustomerOpenConversation(user.id);
+    if(cvs){
+        cvs = createCustomerConversation();
+
+        emitter.emit('conversation', cvs);
+    }
+
+    //append message to conversation and emit event
+    cvs.push(message);
+    emitter.emit('message', cvs, message);
+
+
+
     _fetchConversationAsync(user)
         .then(function(conversation){
-            if(ConversationState.valueNames(conversation.stt) === 'Handing'){
+            if(ConversationState.valueNames(conversation.stt) === 'Handing'){//todo
                 co(function* (){
                     var csId = conversation.csId;
                     switch(message.MsgType){

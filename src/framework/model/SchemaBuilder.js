@@ -5,7 +5,9 @@ var Schema = mongoose.Schema;
 
 var BaseOptions = {
     //safe: {}, //TODO: it is important option which need to be specified carefully later.
-    strict: true
+    strict: true,
+    toJSON: { getters: true, virtuals: true },
+    toObject: { getters: true, virtuals: true }
 };
 
 var SchemaBuilder = function(name){

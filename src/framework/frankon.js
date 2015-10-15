@@ -1,4 +1,9 @@
 var co = require('co');
+
+/**
+ * TODO:
+ * @constructor
+ */
 function Frankon(){
     this.middlewares = [];
     this.ctx = {};

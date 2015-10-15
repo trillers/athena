@@ -1,9 +1,9 @@
-var cskv = require('../../customer_server/kvs/CustomerServer');
+var cskv = require('../../customer_server/kvs/CustomerService');
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var ConversationService = require('../services/ConversationService');
-var CustomerServerHandler = require('../../customer_server/handlers/CustomerServerHandler');
-var cmdWorkflow = require('../../customer_server/common/FSM').getWf('cmdWorkflow');
+var CustomerServiceHandler = require('../../customer_server/handlers/CustomerServiceHandler');
+var cmdWorkflow = require('../../cs/common/FSM').getWf('cmdWorkflow');
 
 function ConversationQueue(){
     EventEmitter.call(this);
@@ -91,7 +91,7 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     var result;
     cskv.popWcCSSetAsync().then(function(csId){
         if(!csId){
-            return Promise.reject(new Error('workers all busy'));
+            return Promise.reject(new Error('workers-all-busy'));
         }
         conversation.stt = 'hd';
         conversation.csId = csId;
@@ -99,10 +99,10 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
     })
     .then(function(doc){
         result = doc;
-        return CustomerServerHandler.sendHistoryMsgsAsync(doc)
+        return CustomerServiceHandler.sendHistoryMsgsAsync(doc)
     })
     .then(function(){
-        return CustomerServerHandler.sendCustomerProfileAsync(result);
+        return CustomerServiceHandler.sendCustomerProfileAsync(result);
     })
     .then(function(){
         cskv.saveCSStatusByCSOpenIdAsync(result.csId, 'busy');
@@ -111,7 +111,9 @@ ConversationQueue.prototype.dispatch = function(conversation, callback){
         return callback(null, result)
     })
     .catch(function(e){
-        console.log(e);
+        if(e.message !== 'workers-all-busy'){
+            console.error(e);
+        }
         return callback(e, null)
     })
 }

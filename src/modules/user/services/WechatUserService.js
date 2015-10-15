@@ -1,15 +1,16 @@
 var User = require('../models/User').model;
 var UserHelper = require('../models/User').helper;
-var UserState = require('../framework/model/enums').UserState;
+var UserState = require('../../../framework/model/enums').UserState;
 var UserKv = require('../kvs/User');
-var time = require('../app/time');
+var time = require('../../../app/time');
 var settings = require('athena-settings');
-var logger = require('../app/logging').logger;
-var u = require('../app/util');
-var wechat = require('../app/wechat/api');
+var logger = require('../../../app/logging').logger;
+var u = require('../../../app/util');
+var wechat = require('../../wechat/common/api');
 var Service = {};
 var Promise = require('bluebird');
-var cbUtil = require('../framework/callback');
+var cbUtil = require('../../../framework/callback');
+var csKvs = require('../../cs/kvs/CustomerService');
 
 var generateUserToken = function(uid){
     var key = settings.secretKey;
@@ -54,18 +55,28 @@ var loadById = function(id, callback){
 };
 var loadByIdAsync = Promise.promisify(loadById);
 
+Service.delete = function(id, callback) {
+    User.findByIdAndRemove(id, function(err, doc){
+        if (err) {
+            logger.error('Fail to delete user [id=' + id + ']: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        logger.debug('Succeed to delete user [id=' + id + ']');
+        if(callback) callback(null, doc);
+    });
+};
+var deleteAsync = Promise.promisify(Service.delete);
+
+
 /**
  *  Create a registered user from wechat, not an anonymous user
  * @param user user json object
  * @param callback
  */
 Service.createFromWechat = function (userInfo, callback) {
-    if(userInfo.wx_nickname){
-        userInfo.stt = UserState.Registered;
-    }
-    else{
-        userInfo.stt = UserState.Registered; //UserState.Registered;
-    }
+    userInfo.stt = UserState.Registered;
     return createUserAsync(userInfo)
         .then(function (user) {
             return UserHelper.getUserJsonFromModel(user);
@@ -98,16 +109,6 @@ Service.createFromWechat = function (userInfo, callback) {
 Service.updateFromWechat = function(id, update, callback){
     var newUserJson = null;
     var toUpdate = {};
-
-    /*
-     * Update stt properties
-     */
-    if(update.wx_nickname){
-        toUpdate.stt = UserState.Registered;
-    }
-    else{
-        toUpdate.stt = UserState.Registered; //UserState.Anonymous;
-    }
 
     /*
      * Remove undefined properties voiding update errors
@@ -156,6 +157,21 @@ Service.getUserFromWechat = getUserFromWechat;
 var getUserFromWechatAsync = Promise.promisify(getUserFromWechat);
 Service.getUserFromWechatAsync = getUserFromWechatAsync;
 
+Service.loadByOpenid = function(openid, callback){
+    return UserKv.loadIdByOpenidAsync(openid)
+        .then(function(id){
+            return id && UserKv.loadByIdAsync(id);
+        })
+        .then(function(user){
+            if(callback) callback(null, user);
+            return user;
+        })
+        .catch(Error, function (err) {
+            logger.error('Fail to load user by openid: ' + err);
+            if(callback) callback(err);
+        });
+};
+
 Service.loadOrCreateFromWechat = function(openid, callback){
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){
@@ -170,7 +186,7 @@ Service.loadOrCreateFromWechat = function(openid, callback){
                 .then(Service.createFromWechat);
         })
         .then(function(user){
-            if(callback) callback(null, user);
+            if(callback) return callback(null, user);
             return user;
         })
         .catch(Error, function (err) {
@@ -180,52 +196,49 @@ Service.loadOrCreateFromWechat = function(openid, callback){
 };
 
 Service.deleteByOpenid = function(openid, callback){
+    var userToDelete = null;
     return UserKv.loadIdByOpenidAsync(openid)
         .then(function(id){
-            return id && UserKv.loadByIdAsync(id);
-        })
-        .then(function(user){
-            if (user) return user;
-            return getUserFromWechatAsync(openid)
-                .then(function (userInfo) {
-                    return UserHelper.getUserJsonFromWechatApi(userInfo);
-                })
-                .then(Service.createFromWechat);
-        })
-        .then(function(user){
-            if(callback) callback(null, user);
-            return user;
-        })
-        .catch(Error, function (err) {
-            logger.error('Fail to delete user by openid: ' + err);
-            if(callback) callback(err);
-        });
-};
-
-Service.createOrUpdateFromWechatOAuth = function(oauth, callback){
-    var newUserJson = null;
-    var openid = oauth.openid;
-    return getUserFromWechatAsync(openid)
-        .then(function (userJson) {
-            return newUserJson = UserHelper.mergeUserInfo(oauth, userJson);
-        })
-        .then(function(userJson){
-            return UserKv.loadIdByOpenidAsync(openid);
-        })
-        .then(function(id){
             if(id){
-                return Service.updateFromWechat(id, newUserJson);
+                return deleteAsync(id)
+                    .then(function(user){
+                        userToDelete = user;
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.unlinkTokenAsync(userToDelete.token);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.unlinkOpenidAsync(openid);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return UserKv.deleteByIdAsync(userToDelete.id);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return csKvs.delCSStatusByCSOpenIdAsync(userToDelete.wx_openid);
+                        }
+                    })
+                    .then(function(){
+                        if(userToDelete){
+                            return csKvs.remWcCSSetAsync(userToDelete.id);
+                        }
+                    })
             }
             else{
-                return Service.createFromWechat(newUserJson);
+                return;
             }
         })
-        .then(function(userJson){
-            if(callback) callback(null, userJson);
-            return userJson;
+        .then(function(){
+            if(callback) callback(null, userToDelete);
         })
         .catch(Error, function (err) {
-            logger.error('Fail to create or update user by openid: ' + err);
+            logger.error('Fail to delete user by id: ' + err);
             if(callback) callback(err);
         });
 };

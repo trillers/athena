@@ -1,8 +1,9 @@
 var logger = require('../../../app/logging').logger;
+var ConversationState = require('../../common/models/TypeRegistry').item('ConversationState');
 var u = require('../../../app/util');
 var Conversation = require('../models/Conversation').model;
 var Promise = require('bluebird');
-
+var kvs = require('../kvs/Conversation');
 var Service = {};
 
 Service.load = function (id, callback) {
@@ -15,6 +16,19 @@ Service.load = function (id, callback) {
 
         logger.debug('Succeed to load  Conversation [id=' + id + ']');
         if (callback) callback(null, doc);
+    })
+};
+
+Service.loadById = function (id, callback) {
+    Conversation.findById(id).exec(function (err, doc) {
+        if (err) {
+            logger.error('Fail to load Conversation [id=' + id + ']: ' + err);
+            if (callback) callback(err);
+            return;
+        }
+
+        logger.debug('Succeed to load  Conversation [id=' + id + ']');
+        if (callback) callback(null, doc ? doc.toObject() : null);
     })
 };
 
@@ -138,6 +152,55 @@ Service.filter = function (params, callback) {
     });
 };
 
+Service.destroy = function(cvs, callback){
+    console.log(cvs);
+    kvs.delCurrentIdAsync(cvs.initiator)
+        .then(function(){
+            return kvs.delCurrentCidAsync(cvs.csId);
+        })
+        .then(function(){
+            return kvs.delByIdAsync(cvs._id);
+        })
+        .then(function(){
+            return callback(null, null);
+        })
+        .catch(Error, function(err){
+            console.log(err);
+            return callback(err, null);
+        })
+};
+
+Service.close = function(cvs, callback){
+    console.log(cvs);
+    Service.update(cvs._id, {stt: ConversationState.Finished.value()}, function(err){
+        if(err){
+            return callback(err, null);
+        }
+        Service.destroy(cvs, function(err){
+            if(err){
+                return callback(err, null);
+            }
+            callback(null, null);
+        })
+    })
+};
+
+Service.getTodayCvsSum = function(callback){
+    var startTime = new Date();
+    startTime.setHours(0);
+    startTime.setMinutes(0);
+    startTime.setSeconds(0);
+    var endTime = new Date();
+    endTime.setHours(23);
+    endTime.setMinutes(59);
+    endTime.setSeconds(59);
+    Conversation.count({createTime: {$gt: startTime, $lt: endTime}}, function(err, count){
+       if(err){
+           if(callback) return callback(err, null);
+       }
+       if(callback) return callback(null, count);
+    });
+}
 
 Service = Promise.promisifyAll(Service);
 
