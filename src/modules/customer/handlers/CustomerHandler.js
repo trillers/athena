@@ -2,7 +2,7 @@ var co = require('co');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
 var ConversationKv = require('../../conversation/kvs/Conversation');
-var customerEmitter = require('../customerEmitter');
+var customerEmitter = require('../CustomerEmitter');
 module.exports = function(emitter){
     emitter.customer(function(event, context){
         co(function* (){
