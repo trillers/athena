@@ -27,7 +27,7 @@ module.exports = function(emitter){
                     yield conversationService.updateAsync(cvs.id, {csId: cid});
                     var user = yield userService.loadByIdAsync(cid);
                     msgs.forEach(function(msg){
-                        _sendMsg(user.wx_openid, msg);
+                        yield _sendMsg(user.wx_openid, msg);
                     })
                 }else{
                     //if cs all busy? clear trace
