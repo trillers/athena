@@ -1,5 +1,6 @@
 var customerService = require('../../../customer/services/CustomerService');
 var wechatApi = require('../../../wechat/common/api').api;
+
 var createCustomer = function(event, context){
     var openid = context.weixin.FromUserName;
     customerService.createFromOpenid(openid, function(err, user){

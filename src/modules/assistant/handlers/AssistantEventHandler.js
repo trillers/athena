@@ -11,7 +11,21 @@ module.exports = function (emitter) {
     emitter.event(function (event, context) {
         console.log(context.weixin);
     });
-    emitter.subscribe(createCustomer);
+    emitter.subscribe(function(event, context){
+        createCustomer(event, context);
+        var msg = context.weixin;
+        var ctx = {};
+        ctx.weixin = {
+            ToUserName: msg.ToUserName
+            , FromUserName: msg.ToUserName
+            , CreateTime: msg.CreateTime
+            , MsgType: 'text'
+            , MsgId: new Date().getTime()
+            , Content: '[系统]: 新用户刚刚关注，请服务!'
+        };
+        ctx.wxsession = context.wxsession;
+        emitter.relay(ctx);
+    });
 
     emitter.qr(function (event, context) {
         co(function*() {
