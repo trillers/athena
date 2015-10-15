@@ -41,7 +41,6 @@ CommandRegistry.prototype.extractCommandFromContext = function(context){
         cmdPattern = msg.Content.trim();
     }
     else if('voice' == msg.MsgType && typeof msg.Recognition == 'string'){
-        //var i = msg.Recognition.indexOf('！');
         cmdPattern = msg.Recognition.slice(0, msg.Recognition.indexOf('！'));
     }
     else{
