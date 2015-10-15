@@ -17,7 +17,7 @@ module.exports = function (emitter) {
         var ctx = {};
         ctx.weixin = {
             ToUserName: msg.ToUserName
-            , FromUserName: msg.ToUserName
+            , FromUserName: msg.FromUserName
             , CreateTime: msg.CreateTime
             , MsgType: 'text'
             , MsgId: new Date().getTime()
