@@ -2,7 +2,7 @@ var Promise = require('bluebird');
 var UserKv = require('../../user/kvs/User');
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var wechat = require('../../wechat/common/api');
+var wechatApi = require('../../wechat/common/api').api;
 var cbUtil = require('../../../framework/callback');
 var co = require('co');
 var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
@@ -68,6 +68,14 @@ Service.setRoleByOpenid = function(openid, callback){
         }
     });
 };
+
+/**
+ * Create user for those who had subscribed but did't create user
+ * @param callback
+ * */
+Service.createUsersForNoUserAccount = function(callback){
+
+}
 
 Service = Promise.promisifyAll(Service);
 module.exports = Service;
