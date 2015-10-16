@@ -40,7 +40,7 @@ module.exports = function(emitter){
                         console.log(e);
                     }
                 } else {
-                    yield wechatApi.sendTextAsync(user.wx_openid, '[系统]:您还没有建立会话');
+                    yield wechatApi.sendTextAsync(user.wx_openid, '[系统]: 您还没有建立会话');
                 }
                 yield cskv.resetCSStatusTTLByCSOpenIdAsync(user.wx_openid);
                 return;

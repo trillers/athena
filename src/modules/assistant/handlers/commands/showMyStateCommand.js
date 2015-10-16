@@ -16,7 +16,7 @@ module.exports = function(context){
             reply = '[系统]: 您的角色为' + userRole.values(user.role);
             if(user.role === userRole.CustomerService.value()){
                 var stat = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
-                var cvsId = yield cvsKv.delCurrentCidAsync(user.id);
+                var cvsId = yield cvsKv.getCurrentCidAsync(user.id);
                 if(typeof stat === 'string'){
                     reply += ', 当前状态为: ' + csState.values(stat);
                 }
@@ -35,11 +35,11 @@ module.exports = function(context){
                 }
             }
             if(user.role == userRole.Customer.value()){
-                var cvsId = yield cvsKv.getCurrentId(user.id);
+                var cvsId = yield cvsKv.getCurrentIdAsync(user.id);
                 if(cvsId){
                     reply += ', 会话中';
                 }else{
-                    reply += ', 无回话';
+                    reply += ', 无会话';
                 }
             }
             yield wechatApi.sendTextAsync(message.FromUserName, reply);

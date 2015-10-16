@@ -7,7 +7,7 @@ var redisClient = require('./redis-client');
 redisClient('default');
 redisClient('sub');
 redisClient('pub');
-require('../modules/cs');
+//require('../modules/cs');
 
 
 system.addMember('application', application);

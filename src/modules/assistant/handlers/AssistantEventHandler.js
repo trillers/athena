@@ -9,9 +9,26 @@ var adminService = require('../../admin/services/AdminService');
 module.exports = function (emitter) {
     var createCustomer = require('./commands/createCustomerCommand');
     emitter.event(function (event, context) {
-        console.log(context.weixin);
+        console.log(context.weixin);    
     });
-    emitter.subscribe(createCustomer);
+    emitter.subscribe(function(event, context){
+        createCustomer(event, context, function(err){
+            if(!err){
+                var msg = context.weixin;
+                var ctx = {};
+                ctx.weixin = {
+                    ToUserName: msg.ToUserName
+                    , FromUserName: msg.FromUserName
+                    , CreateTime: msg.CreateTime
+                    , MsgType: 'text'
+                    , MsgId: new Date().getTime()
+                    , Content: '我刚刚关注，请为我服务!'
+                };
+                ctx.wxsession = context.wxsession;
+                emitter.relay(ctx);
+            }
+        });
+    });
 
     emitter.qr(function (event, context) {
         co(function*() {

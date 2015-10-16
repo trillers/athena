@@ -12,4 +12,7 @@ var emitter = new EventEmitter();
 emitter.message = function(handler){ this.on('message', handler) };
 emitter.conversation = function(handler){ this.on('conversation', handler) };
 
+require('./handlers/customerCvsHandler')(emitter);
+require('./handlers/customerMsgHandler')(emitter);
+
 module.exports = emitter;
