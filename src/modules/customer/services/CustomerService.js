@@ -29,6 +29,7 @@ Service.createFromOpenid = function(openid, callback){
             if(callback) callback(null, newUser);
         } catch (err){
             console.error('CustomerService createFromOpenId err:' + err);
+            console.log(err.stack);
             if(callback) callback(err, null);
         }
 

@@ -69,13 +69,5 @@ Service.setRoleByOpenid = function(openid, callback){
     });
 };
 
-/**
- * Create user for those who had subscribed but did't create user
- * @param callback
- * */
-Service.createUsersForNoUserAccount = function(callback){
-
-}
-
 Service = Promise.promisifyAll(Service);
 module.exports = Service;
