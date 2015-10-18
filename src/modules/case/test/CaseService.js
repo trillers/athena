@@ -10,11 +10,10 @@ describe('CustomerService', function() {
         commissionerPhone: '13208571443',
         responsibleId: 'id2',
         conversationId: 'id3',
-        useTime: '02-0404',
-        evaluation: '3.9',
-        origin: '回龙观',
-        destination: '西二旗',
-        carType: 'kc',
+        //useTime: '02-0404',
+        //origin: '回龙观',
+        //destination: '西二旗',
+        //carType: 'kc',
     }, caseId;
 
     /**
@@ -22,15 +21,21 @@ describe('CustomerService', function() {
      */
     //it('create', function (done) {
     //    co(function* (){
-    //        var data = yield cs.create(caseCar);
+    //        try{
+    //            var data = yield cs.create(caseCar);
+    //        }catch(err){
+    //            console.log(err);
+    //        }
+    //        console.log('aaaaaaa');
     //        caseId = data._id;
     //        assert.ok(!data._id);
     //        done();
     //    }).catch(function(err){
-    //        console.log(err)
+    //        console.log(err);
+    //        done();
     //    })
     //});
-    //
+
     //it('load', function (done) {
     //    co(function* (){
     //        var data = yield cs.load(caseId);
