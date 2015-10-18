@@ -9,7 +9,8 @@ var channels = {
     send: 'send',
     readProfile: 'readProfile',
     onReceive: 'onReceive',
-    onAddContact: 'onAddContact'
+    onAddContact: 'onAddContact',
+    onDisconnect: 'onDisconnect'
 };
 pubSubService.register = function(type){
     this[type+'CbMap'] = {}
@@ -45,6 +46,11 @@ pubSubService.subClient.on('message', function(channel, msg){
             pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
         }
     }
+    if(channel === channels.onDisconnect){
+        for(var prop in pubSubService[channel + 'CbMap']){
+            pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
+        }
+    }
 });
 /**
  * external interface
@@ -59,11 +65,12 @@ pubSubService.readProfile = function(bid, callback){
 };
 pubSubService.onAddContact = function(callback){
     this[channels.onAddContact + 'CbMap'][nextId()] = callback;
-    pubSubService.pubClient.publish(channels.onAddContact, {});
 };
 pubSubService.onReceive = function(callback){
     this[channels.onReceive + 'CbMap'][nextId()] = callback;
-    pubSubService.pubClient.publish(channels.onReceive, {});
+};
+pubSubService.onDisconnect = function(callback){
+    this[channels.onReceive + 'CbMap'][nextId()] = callback;
 };
 var id = 0;
 function nextId(){

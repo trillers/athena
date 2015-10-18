@@ -13,9 +13,6 @@ module.exports = function(context){
         .then(function(){
             return cskv.saveCSStatusByCSOpenIdAsync(message.FromUserName, 'off')
         })
-        .then(function() {
-            return cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName)
-        })
         .then(function(){
             return cvsKv.getCurrentCidAsync(user.id);
         })

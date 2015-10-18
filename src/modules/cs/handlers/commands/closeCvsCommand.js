@@ -6,10 +6,7 @@ var cskv = require('../../kvs/CustomerService');
 module.exports = function(context){
     var user = context.user;
     var message = context.weixin;
-    cskv.resetCSStatusTTLByCSOpenIdAsync(message.FromUserName)
-    .then(function(){
-        return cvsKv.getCurrentCidAsync(user.id)
-    })
+    cvsKv.getCurrentCidAsync(user.id)
     .then(function(cvsId){
         return cvsKv.loadByIdAsync(cvsId);
     })
