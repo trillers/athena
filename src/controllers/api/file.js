@@ -29,6 +29,8 @@ module.exports = function(router){
      * */
     router.post('/upload', function* (){
         var self = this;
+        console.log(this.request);
+        console.log(this.req);
         console.log(self.req.files);
         var file = self.req.files.file;
         var fileJson = {
