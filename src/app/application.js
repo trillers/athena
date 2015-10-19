@@ -22,7 +22,7 @@ system.addMember('application', app);
 //var server = require('./http-server')(app);
 
 app.use(logging.generatorFunc);
-app.use(koaBody({formidable:{uploadDir: __dirname}}));
+app.use(koaBody({multipart:true, formidable:{keepExtensions: true, uploadDir: path.join(__dirname, '../../public/uploads')}}));
 //router
 require('../routes')(app);
 //404
