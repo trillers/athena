@@ -1,73 +1,92 @@
-var Promise = require('bluebird');
-var UserKv = require('../../user/kvs/User');
 var logger = require('../../../app/logging').logger;
-var u = require('../../../app/util');
-var wechat = require('../../wechat/common/api');
 var cbUtil = require('../../../framework/callback');
-var co = require('co');
-var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
-var userService = require('../../../../src/modules/user/services/UserService');
-var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
-var cvsKvs = require('../../conversation/kvs/Conversation');
-var cvsService = require('../../conversation/services/ConversationService');
-var csKvs = require('../../cs/kvs/CustomerService');
+var WechatBot = require('../models/WechatBot').model;
 
 var Service = {};
 
 /**
- * Create a customer user from openid
- * @param openid
+ * Load all wechat bots.
  * @param callback
  */
-Service.createFromOpenid = function(openid, callback){
-    var self = this;
-    co(function*(){
-        try{
-            var loadOrCreateFromWechatAsync = Promise.promisify(wechatUserService.loadOrCreateFromWechat);
-            var user = yield loadOrCreateFromWechatAsync(openid);
-            var newUser = yield self.setRoleByOpenidAsync(openid);
-            if(callback) callback(null, newUser);
-        } catch (err){
-            console.error('CustomerService createFromOpenId err:' + err);
-            if(callback) callback(err, null);
-        }
-
-    });
+Service.load = function(callback){
+    WechatBot
+        .find({}, null, {lean: true, sort: {bucketid: -1, crtOn: -1}})
+        .exec(function(err, results){
+            if(err){
+                logger.error('Fail to load all wechat bots: ' + err);
+                callback(err);
+            }
+            else{
+                logger.info('Succeed to load all wechat bots');
+                callback(null, results);
+            }
+        });
 };
 
 /**
- * Set user role to customer role by openid
- * @param openid
+ * TODO
+ * @param botInfo
  * @param callback
  */
-Service.setRoleByOpenid = function(openid, callback){
-    co(function*(){
-        var userUpdate = {
-            role: UserRole.Customer.value()
-        };
-        try{
-            var userId = yield UserKv.loadIdByOpenidAsync(openid);
-            var user = yield userService.updateAsync(userId, userUpdate);
-            var csCvsId = yield cvsKvs.getCurrentCidAsync(userId);
-            var cuCvsId = yield cvsKvs.getCurrentIdAsync(userId);
-            var cvsId = csCvsId || cuCvsId;
-            console.log('********');
-            console.log('cvsId' + cvsId);
-            if(cvsId){
-                var cvs = yield cvsKvs.loadByIdAsync(cvsId);
-                console.log(cvs);
-                yield cvsService.closeAsync(cvs);
+Service.add = function(botInfo, callback){
+    WechatBot
+        .findOne({
+            bucketid: botInfo.bucketid,
+            openid: botInfo.openid
+        })
+        .exec(function(err, doc){
+            if(err){
+                logger.error('Fail to find and add wechat bot '+ JSON.stringify(botInfo) + ' : ' + err);
+                callback(err);
             }
-            yield csKvs.remWcCSSetAsync(userId);
-            yield csKvs.delCSStatusByCSOpenIdAsync(openid);
-            if(callback) callback(null, user);
-        } catch (err){
-            logger.error('CustomerService setRoleByOpenid err:' + err);
-            console.log(err.stack);
-            if(callback) callback(err, null);
-        }
-    });
+            else{
+                if(doc){
+                    logger.info('Succeed to find the specified and existed wechat bot, no need to add it again '+ JSON.stringify(botInfo));
+                    callback(null, doc.toObject());
+                }
+                else{
+                    var wechatBot = new WechatBot(botInfo);
+                    wechatBot.save(function (err, result, affected) {
+                        if(err){
+                            logger.error('Fail to add wechat bot: ' + err);
+                            callback(err);
+                            return;
+                        }
+                        if (affected == 1) {
+                            logger.info('Succeed to add wechat bot ' + JSON.stringify(botInfo));
+                            callback(null, result.toObject());
+                        }
+                        else {
+                            callback(new Error('Fail to add wechat bot, no record is affected!'));
+                        }
+                    });
+                }
+            }
+        });
 };
 
-Service = Promise.promisifyAll(Service);
+/**
+ * TODO
+ * @param botInfo
+ * @param callback
+ */
+Service.remove = function(botInfo, callback){
+    WechatBot.remove(
+        {
+            bucketid: botInfo.bucketid,
+            openid: botInfo.openid
+        },
+        function (err) {
+            if (err) {
+                logger.error('Fail to remove wechat bot '+ JSON.stringify(botInfo) +': ' + err);
+                callback(err);
+                return;
+            }
+            else{
+                logger.info('Succeed to remove wechat bot ' + JSON.stringify(botInfo));
+                callback();
+            }
+        });
+};
+
 module.exports = Service;
