@@ -22,7 +22,6 @@ module.exports = function(emitter){
                     //notify customer
                     var customer = yield userService.loadByIdAsync(cvs.initiator);
                     var cs = yield userService.loadByIdAsync(cid);
-                    yield _sendMsg(customer.wx_openid, {contentType: 'text', content: 'underTaken[cvsId]:' + cvs._id});
                     //send the customer,s profile to cs
                     yield _sendMsg(cs.wx_openid, {contentType: 'text', content: '[系统]: 您正在为“'+ customer.wx_nickname +'”服务'});
                     //get historical messages from db, send them
