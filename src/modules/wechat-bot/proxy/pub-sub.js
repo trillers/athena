@@ -1,6 +1,5 @@
 var subClient = require('../../../app/redis-client')('sub');
 var pubClient = require('../../../app/redis-client')('pub');
-var service = require('../services/botService');
 var pubSubService = {
     pubClient: pubClient,
     subClient: subClient

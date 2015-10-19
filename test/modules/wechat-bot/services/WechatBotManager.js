@@ -1,7 +1,14 @@
 var assert = require('chai').assert;
-var WechatBotManager = require('../../../src/framework/wechat/WechatBotManager');
-var WechatBotService = require('../../../src/modules/wechat-bot/services/WechatBotService');
+var WechatBotManager = require('../../../../src/modules/wechat-bot/services/WechatBotManager');
+var WechatBotService = require('../../../../src/modules/wechat-bot/services/WechatBotService');
+var mongoose = require('../../../../src/app/mongoose');
 describe('WechatBotManager', function() {
+
+before(function(done){
+    setTimeout(function(){
+        done();
+    },3000);
+})
 
 describe('#register', function() {
     var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
