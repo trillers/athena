@@ -3,6 +3,8 @@ var util = require('util');
 var logger = require('../../app/logging').logger;
 var ApiReturn = require('../../framework/ApiReturn');
 var thunkify = require('thunkify');
+var wechatApi = require('../../modules/wechat/common/api').api;
+var userService = require('../../modules/user/services/UserService');
 
 module.exports = function(router){
     //get customer server QR CODE

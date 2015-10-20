@@ -1,6 +1,5 @@
 var subClient = require('../../../app/redis-client')('sub');
 var pubClient = require('../../../app/redis-client')('pub');
-var service = require('../services/botService');
 var pubSubService = {
     pubClient: pubClient,
     subClient: subClient
@@ -10,7 +9,8 @@ var channels = {
     readProfile: 'readProfile',
     onReceive: 'onReceive',
     onAddContact: 'onAddContact',
-    onDisconnect: 'onDisconnect'
+    onDisconnect: 'onDisconnect',
+    onNeedLogin: 'onNeedLogin'
 };
 pubSubService.register = function(type){
     this[type+'CbMap'] = {}
@@ -51,6 +51,11 @@ pubSubService.subClient.on('message', function(channel, msg){
             pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
         }
     }
+    if(channel === channels.onNeedLogin){
+        for(var prop in pubSubService[channel + 'CbMap']){
+            pubSubService[channel + 'CbMap'][prop].call(null, msg.err, msg.data);
+        }
+    }
 });
 /**
  * external interface
@@ -70,7 +75,10 @@ pubSubService.onReceive = function(callback){
     this[channels.onReceive + 'CbMap'][nextId()] = callback;
 };
 pubSubService.onDisconnect = function(callback){
-    this[channels.onReceive + 'CbMap'][nextId()] = callback;
+    this[channels.onDisconnect + 'CbMap'][nextId()] = callback;
+};
+pubSubService.onNeedLogin = function(callback){
+    this[channels.onNeedLogin + 'CbMap'][nextId()] = callback;
 };
 var id = 0;
 function nextId(){
