@@ -3,7 +3,6 @@ var util = require('util');
 var logger = require('../../../app/logging').logger;
 var WechatBot = require('./WechatBot');
 var WechatBotService = require('./WechatBotService');
-//var botService = require('./botService');
 var WechatBotProxy = require('../proxy/WechatBotProxy');
 
 /**
@@ -16,10 +15,10 @@ var WechatBotManager = function(){
     this.buckets = {};
     this.inited = false;
     this.persister = WechatBotService;
-    var proxy = new WechatBotProxy();
+    this.proxy = new WechatBotProxy();
 
     var me = this;
-    proxy.on('message', function(err, data){
+    this.proxy.on('message', function(err, data){
         if(err){
             //TODO
             logger.error(err);
@@ -30,7 +29,7 @@ var WechatBotManager = function(){
         }
     });
 
-    proxy.on('profile', function(err, data){
+    this.proxy.on('profile', function(err, data){
         if(err){
             //TODO
             logger.error(err);
@@ -41,7 +40,7 @@ var WechatBotManager = function(){
         }
     });
 
-    proxy.on('contact-added', function(err, data){
+    this.proxy.on('contact-added', function(err, data){
         if(err){
             //TODO
             logger.error(err);
@@ -52,7 +51,7 @@ var WechatBotManager = function(){
         }
     });
 
-    proxy.on('need-login', function(err, data){
+    this.proxy.on('need-login', function(err, data){
         if(err){
             //TODO
             logger.error(err);
@@ -130,13 +129,12 @@ WechatBotManager.prototype.unregister = function(botInfo, callback){
     });
 };
 
-
-WechatBotManager.prototype.start = function(callback){
-    botService.start(this.bucketid, this.openid, callback);
+WechatBotManager.prototype.start = function(botInfo){
+    this.proxy.start(this._encodeBotid(botInfo));
 };
 
-WechatBotManager.prototype.stop = function(){
-    botService.stop(this.bucketid, this.openid, callback);
+WechatBotManager.prototype.stop = function(botInfo){
+    this.proxy.stop(this._encodeBotid(botInfo));
 };
 
 /**
@@ -144,16 +142,17 @@ WechatBotManager.prototype.stop = function(){
  * @param msg
  *  {
  *      ToUserName: bid
- *      FromUserName: bucketid:openid
+ *      FromUserName: botid (bucketid:openid)
  *      Content:String,
  *      MsgId:String //TODO
  *  }
  *
  * @param callback (Function)
  */
-WechatBotManager.prototype.sendText = function(msg, callback){
+WechatBotManager.prototype.sendText = function(msg){
     msg.MsgType = 'text';
-    botService.send(msg, callback);
+    msg.FromUserName = this._encodeBotid(msg);
+    this.proxy.send(msg);
 };
 
 /**
@@ -165,18 +164,25 @@ WechatBotManager.prototype.sendText = function(msg, callback){
  *      bid
  *   }
  * @param callback(err, profile)
- *  {
- *      headIconUrl
- *      nickName
+ *  profile: {
+ *      botid
+ *      bucketid
+ *      openid
  *      bid
+ *      headIconUrl
+ *      nickname
  *      place
  *  }
  */
-WechatBotManager.prototype.getProfile = function(info, callback){
-    botService.readProfile(info, callback);
+WechatBotManager.prototype.requestProfile = function(info, callback){
+    var me = this;
+    this.proxy.requestProfile(this._encodeBotid(info), info.bid, function(err, profile){
+        var from = me._decodeBotid(profile.botid);
+        profile.bucketid = from.bucketid;
+        profile.openid = from.openid;
+        if(callback) callback(err, profile);
+    });
 };
-
-
 
 WechatBotManager.prototype._addBot = function(botInfo){
     var bot = new WechatBot(botInfo);
@@ -201,6 +207,18 @@ WechatBotManager.prototype._addBots = function(botInfos){
     for(var i=0; i < botInfos.length; i++){
         this._addBot(botInfos[i]);
     }
+};
+
+WechatBotManager.prototype._encodeBotid = function(botInfo){
+    return botInfo.bucketid + ':' + botInfo.openid;
+};
+
+WechatBotManager.prototype._decodeBotid = function(botid){
+    var parts = botid.split(':');
+    return {
+        bucketid: parts[0],
+        openid: parts[1]
+    };
 };
 
 module.exports = WechatBotManager;
