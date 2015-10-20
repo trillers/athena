@@ -29,32 +29,33 @@ module.exports = function(router){
      * */
     router.post('/upload', function* (){
         var self = this;
-        console.log(self.req.files);
-        var file = self.req.files.file;
-        var fileJson = {
-            name: file.name,
-            ext: file.extension,
-            size: file.size,
-            path: file.path,
-            mimeType: file.mimetype
+        if(self.request.body.files) {
+            var file = self.request.body.files.file;
+            var fileJson = {
+                name: file.name,
+                ext: file.extension,
+                size: file.size,
+                path: file.path,
+                mimeType: file.mimetype
+            }
+            try {
+                var result = yield FileService.createAsync(fileJson);
+                console.log('++++++');
+                console.log(result);
+                this.body = {err: null, media_id: result._id};
+            } catch (err) {
+                logger.err('save file info err:' + err);
+                this.body = {err: err, media_id: null};
+            }
+            //var files = self.req.files;
+            //for(var key in files){
+            //    var file = files[key];
+            //    var fileName = Math.random() + '.' + file.extension;
+            //    var newPath = path.join(__dirname, '../../../public/qrCode',  fileName);
+            //    console.log(newPath);
+            //    fs.renameSync(file.path, newPath);  //重命名
+            //}
         }
-        try{
-            var result = yield FileService.createAsync(fileJson);
-            console.log('++++++');
-            console.log(result);
-            this.body = {err: null, media_id: result._id};
-        } catch(err){
-            logger.err('save file info err:' + err);
-            this.body = {err: err, media_id: null};
-        }
-        //var files = self.req.files;
-        //for(var key in files){
-        //    var file = files[key];
-        //    var fileName = Math.random() + '.' + file.extension;
-        //    var newPath = path.join(__dirname, '../../../public/qrCode',  fileName);
-        //    console.log(newPath);
-        //    fs.renameSync(file.path, newPath);  //重命名
-        //}
     });
 
 };
