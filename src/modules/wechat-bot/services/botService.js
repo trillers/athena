@@ -37,6 +37,21 @@ Service.onAddContact = function(callback){
     proxy.onAddContact(callback);
 };
 
+/**
+ * subscribe sBot disconnect event
+ * @param callback
+ */
+Service.onDisconnect = function(callback){
+    proxy.onDisconnect(callback);
+};
+/**
+ * subscribe sBot launch event
+ * @param callback
+ */
+Service.onNeedLogin = function(callback){
+    proxy.onNeedLogin(callback);
+};
+
 Service.onLogin = function(callback){
     //TODO
 };
