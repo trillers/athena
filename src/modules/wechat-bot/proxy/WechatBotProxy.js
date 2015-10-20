@@ -4,21 +4,86 @@ var subClient = require('../../../app/redis-client')('sub');
 var pubClient = require('../../../app/redis-client')('pub');
 
 var events = {
+    /*
+     * {
+     *   FromUserName: (bid)
+     *   FromUserNickname: nickname in case of no bid
+     *   ToUserName: botid
+     *   MsgId: UUID (String)
+     *   CreateTime: millisecond/1000 (String)
+     *   MsgType: 'text/image/voice'
+     *   Content: (String for text message)
+     *   MediaId: (String for voice and image message)
+     * }
+     */
     'message': true,
+
+    /*
+     * {
+     *   botid
+     *   bid:
+     *   nickname:
+     *   headIconUrl:
+     *   place:
+     * }
+     */
     'profile': true,
+
+    /*
+     * {
+     *   botid
+     *   bid:
+     *   nickname:
+     * }
+     */
     'contact-added': true,
+
+    /*
+     * {
+     *   botid
+     *   media_id:
+     * }
+     */
     'need-login': true
 };
 
 var channels = {
+    /*
+     * {
+     *     ToUserName: bid
+     *     FromUserName: botid (bucketid:openid)
+     *     MsgType: 'text'
+     *     Content: to-be-sent text String
+     * }
+     */
     messageSend: 'sbot:message-send',
-    messageReceived: 'sbot:message',
-    profileRequest: 'sbot:profile-request',
-    profileResponse: 'sbot:profile',
-    contactAdded: 'sbot:contact-added',
-    needLogin: 'sbot:need-login',
+
+    /*
+     * {
+     *     botid: (String)
+     * }
+     */
     botStartRequest: 'sbot:start',
-    botStopRequest: 'sbot:stop'
+
+    /*
+     * {
+     *     botid: (String)
+     * }
+     */
+    botStopRequest: 'sbot:stop',
+
+    /*
+     * {
+     *     botid: (String)
+     *     bid: (String)
+     * }
+     */
+    profileRequest: 'sbot:profile-request',
+
+    profileResponse: 'sbot:profile',
+    messageReceived: 'sbot:message',
+    contactAdded: 'sbot:contact-added',
+    needLogin: 'sbot:need-login'
 };
 
 var WechatBotProxy = function(pub, sub){
@@ -38,15 +103,15 @@ util.inherits(WechatBotProxy, EventEmitter);
 WechatBotProxy.prototype._handleMessage = function(channel, msg){
     var msg = JSON.parse(msg);
     var event = channel.split(':')[1];
-    events[event] && this.emit(event, msg.err, msg.data);
+    this.emit(event, msg.err, msg.data);
 };
 
 WechatBotProxy.prototype.start = function(botid){
-    this.pubClient.publish(channels.botStartRequest, botid);
+    this.pubClient.publish(channels.botStartRequest, JSON.stringify({botid: botid}));
 };
 
 WechatBotProxy.prototype.stop = function(botid){
-    this.pubClient.publish(channels.botStopRequest, botid);
+    this.pubClient.publish(channels.botStopRequest, JSON.stringify({botid: botid}));
 };
 
 WechatBotProxy.prototype.send = function(msg){

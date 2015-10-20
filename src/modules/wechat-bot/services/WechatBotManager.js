@@ -143,8 +143,8 @@ WechatBotManager.prototype.stop = function(botInfo){
  *  {
  *      ToUserName: bid
  *      FromUserName: botid (bucketid:openid)
- *      Content:String,
- *      MsgId:String //TODO
+ *      MsgType: 'text'
+ *      Content: to-be-sent text String
  *  }
  *
  * @param callback (Function)
