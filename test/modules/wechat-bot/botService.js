@@ -4,7 +4,7 @@ setTimeout(function(){
     describe('send a msg', function() {
         it('send a text', function(done){
             var mock = {
-                ToUserName:'c5ba7380-6445-',
+                ToUserName:'5835e1a0-7539-',
                 MsgType:'text',
                 Content:'hello',
                 Url:'',
@@ -12,17 +12,17 @@ setTimeout(function(){
             };
             service.send(mock, function(err, data){
                 console.log(data);
-                done();
             });
+                done();
         });
     });
     describe('read a user profile', function() {
         it('readProfile', function(done){
-            var bid = 'c5ba7380-6445-';
+            var bid = '5835e1a0-7539-';
             service.readProfile(bid, function(err, data){
                 console.log(data);
-                done();
             });
+                done();
         });
     });
     describe('listen to a msg receiving event', function() {
@@ -46,4 +46,4 @@ setTimeout(function(){
         });
     });
     run();
-}, 5000);
+}, 3000);
