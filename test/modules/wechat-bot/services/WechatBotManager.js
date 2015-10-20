@@ -33,7 +33,7 @@ describe('WechatBotManager', function() {
 
     describe('#register', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
-        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA11'; //包三哥的错题本openid
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         before(function(done){
             done();
         })
@@ -62,7 +62,7 @@ describe('WechatBotManager', function() {
 
     describe('#unregister', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
-        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA11'; //包三哥的错题本openid
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         var nickname = '包三哥';
         var botManager = new WechatBotManager();
         before(function(done){
@@ -101,4 +101,110 @@ describe('WechatBotManager', function() {
         })
     })
 
+    describe('Event:message', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var nickname = '包三哥';
+        var botid = siteId + ':' + openid;
+        var bid = 'abcd';
+        var botManager = new WechatBotManager();
+
+        it('to test message event if it follows given format', function (done) {
+            botManager.on('message', function(message){
+                assert.ok(message);
+                assert.equal(message.bucketid, siteId);
+                assert.equal(message.openid, openid);
+                assert.equal(message.FromUserName, bid);
+                assert.equal(message.ToUserName, botid);
+                assert.equal(message.MsgType, 'text');
+                assert.equal(message.Content, 'hello');
+                console.info(message);
+                done();
+            });
+            botManager.proxy.emit('message', null, {
+                FromUserName: bid,
+                ToUserName: botid,
+                MsgType: 'text',
+                Content: 'hello'
+            });
+        })
+    })
+
+    describe('Event:profile', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var nickname = '包三哥';
+        var botid = siteId + ':' + openid;
+        var bid = 'abcd';
+        var botManager = new WechatBotManager();
+
+        it('to test profile event if it follows given format', function (done) {
+            botManager.on('profile', function(message){
+                assert.ok(message);
+                assert.equal(message.bucketid, siteId);
+                assert.equal(message.openid, openid);
+                assert.equal(message.bid, bid);
+                assert.equal(message.nickname, nickname);
+                assert.equal(message.place, '北京');
+                console.info(message);
+                done();
+            });
+            botManager.proxy.emit('profile', null, {
+                bid: bid,
+                botid: botid,
+                nickname: nickname,
+                place: '北京'
+            });
+        })
+    })
+
+    describe('Event:contact-added', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var nickname = '包三哥';
+        var botid = siteId + ':' + openid;
+        var bid = 'abcd';
+        var botManager = new WechatBotManager();
+
+        it('to test contact-added event if it follows given format', function (done) {
+            botManager.on('contact-added', function(message){
+                assert.ok(message);
+                assert.equal(message.bucketid, siteId);
+                assert.equal(message.openid, openid);
+                assert.equal(message.bid, bid);
+                assert.equal(message.nickname, nickname);
+                console.info(message);
+                done();
+            });
+            botManager.proxy.emit('contact-added', null, {
+                bid: bid,
+                botid: botid,
+                nickname: nickname
+            });
+        })
+    })
+
+    describe('Event:need-login', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var nickname = '包三哥';
+        var botid = siteId + ':' + openid;
+        var bid = 'abcd';
+        var botManager = new WechatBotManager();
+
+        it('to test need-login event if it follows given format', function (done) {
+            botManager.on('need-login', function(message){
+                assert.ok(message);
+                assert.equal(message.bucketid, siteId);
+                assert.equal(message.openid, openid);
+                assert.equal(message.media_id, 'abcd');
+                console.info(message);
+                done();
+            });
+            botManager.proxy.emit('need-login', null, {
+                botid: botid,
+                media_id: 'abcd'
+            });
+        })
+    })
 })
