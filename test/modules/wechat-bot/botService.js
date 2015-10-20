@@ -12,8 +12,8 @@ setTimeout(function(){
             };
             service.send(mock, function(err, data){
                 console.log(data);
-                done();
             });
+                done();
         });
     });
     describe('read a user profile', function() {
@@ -21,8 +21,8 @@ setTimeout(function(){
             var bid = '5835e1a0-7539-';
             service.readProfile(bid, function(err, data){
                 console.log(data);
-                done();
             });
+                done();
         });
     });
     describe('listen to a msg receiving event', function() {

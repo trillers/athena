@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
 var WechatBotManager = require('../../../../src/modules/wechat-bot/services/WechatBotManager');
-var WechatBotService = require('../../../../src/modules/wechat-bot/services/WechatBotService');
 var mongoose = require('../../../../src/app/mongoose');
+
 describe('WechatBotManager', function() {
 
 before(function(done){
@@ -18,7 +18,7 @@ describe('#register', function() {
     })
 
     it('register a bot', function (done) {
-        var botManager = new WechatBotManager(WechatBotService);
+        var botManager = new WechatBotManager();
         botManager.on('register', function(bot){
             console.info('wechat bot is registered successfully!');
             console.info(bot);
@@ -46,7 +46,7 @@ describe('#init', function() {
     })
 
     it('init to load all bots from db', function (done) {
-        var botManager = new WechatBotManager(WechatBotService);
+        var botManager = new WechatBotManager();
         botManager.on('init', function(){
             console.info('wechat bot manager is initiated!');
             done();
@@ -63,7 +63,7 @@ describe('#init', function() {
 describe('#get', function() {
     var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
     var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA11'; //包三哥的错题本openid
-    var botManager = new WechatBotManager(WechatBotService);
+    var botManager = new WechatBotManager();
     before(function(done){
         botManager.on('register', function(bot){
             console.info('wechat bot is registered successfully!');
@@ -94,9 +94,9 @@ describe('#get', function() {
         assert.ok(bot);
         assert.equal(bot.info.bucketid, siteId);
         assert.equal(bot.info.openid, openid);
+        console.info(bot);
         done();
     })
 })
-
 
 })

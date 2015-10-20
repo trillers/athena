@@ -25,14 +25,8 @@ var WechatBot = function(info){
     this.started = false;
 };
 
-WechatBot.prototype.getId = function(){return this.info.id;};
-
 WechatBot.prototype.isStarted = function(){return this.started;};
 
-WechatBot.prototype.start = function(){
-};
 
-WechatBot.prototype.stop = function(){
-};
 
 module.exports = WechatBot;
