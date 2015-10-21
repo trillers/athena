@@ -1,5 +1,5 @@
 var wechatApi = require('../../../wechat/common/api').api;
-var botService = require('../../../wechat-bot/services/BotService');
+var botService = require('../../../wechat-bot/services/BotUserService');
 var co = require('co');
 var commandHandler = function(context){
     co(function*(){
