@@ -1,4 +1,3 @@
-var wechatUserService = require('../../../user/services/WechatUserService');
 var wechatApi = require('../../../wechat/common/api').api;
 var adminService = require('../../../admin/services/AdminService');
 var co = require('co');

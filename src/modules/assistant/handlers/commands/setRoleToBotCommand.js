@@ -1,4 +1,3 @@
-var wechatUserService = require('../../../user/services/WechatUserService');//TODO remove it
 var wechatApi = require('../../../wechat/common/api').api;
 var botService = require('../../../wechat-bot/services/BotService');
 var co = require('co');
