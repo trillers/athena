@@ -1,22 +1,18 @@
 var Promise = require('bluebird');
-var UserKv = require('../../user/kvs/User');
-var logger = require('../../../app/logging').logger;
-var u = require('../../../app/util');
-var wechatApi = require('../../wechat/common/api').api;
-var cbUtil = require('../../../framework/callback');
 var co = require('co');
+var logger = require('../../../app/logging').logger;
+var UserKv = require('../../user/kvs/User');
 var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
 var userService = require('../../../../src/modules/user/services/UserService');
-var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
-var Service = {};
 var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var csState = require('../../common/models/TypeRegistry').item('CSState');
 var cvsKvs = require('../../conversation/kvs/Conversation');
 var cvsService = require('../../conversation/services/ConversationService');
 var csKvs = require('../../cs/kvs/CustomerService');
+var Service = {};
 
 /**
- * Create an admin user from openid
+ * Create an bot user from openid
  * @param openid
  * @param callback
  */
@@ -37,7 +33,7 @@ Service.createFromOpenid = function(openid, callback){
 };
 
 /**
- * Set user role to admin role by openid
+ * Set user role to bot role by openid
  * @param openid
  * @param callback
  */
