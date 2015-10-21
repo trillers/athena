@@ -13,17 +13,18 @@ var WechatBotProxy = require('../proxy/WechatBotProxy');
 var WechatBotManager = function(){
     EventEmitter.call(this);
     this.buckets = {};
-    this.inited = false;
     this.persister = WechatBotService;
     this.proxy = new WechatBotProxy();
 
     var me = this;
     this.proxy.on('message', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
+            var botInfo = me._decodeBotid(data.ToUserName);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
             logger.debug(data);
             me.emit('message', data);
         }
@@ -35,6 +36,9 @@ var WechatBotManager = function(){
             logger.error(err);
         }
         else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
             logger.debug(data);
             me.emit('profile', data);
         }
@@ -46,6 +50,9 @@ var WechatBotManager = function(){
             logger.error(err);
         }
         else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
             logger.debug(data);
             me.emit('contact-added', data);
         }
@@ -57,6 +64,9 @@ var WechatBotManager = function(){
             logger.error(err);
         }
         else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
             logger.debug(data);
             me.emit('need-login', data);
         }
@@ -66,8 +76,6 @@ var WechatBotManager = function(){
 
 util.inherits(WechatBotManager, EventEmitter);
 
-WechatBotManager.prototype.isInited = function(){return this.inited;};
-
 WechatBotManager.prototype.init = function(){
     var me = this;
     this.persister.load(function(err, results){
@@ -76,16 +84,9 @@ WechatBotManager.prototype.init = function(){
         }
         else{
             me._addBots(results);
-            me.inited = true;
             me.emit('init');
         }
     });
-};
-
-WechatBotManager.prototype.get = function(botInfo){
-    var bucket = this.buckets[botInfo.bucketid];
-    var bot = bucket && bucket[botInfo.openid];
-    return bot;
 };
 
 /**
@@ -129,16 +130,28 @@ WechatBotManager.prototype.unregister = function(botInfo, callback){
     });
 };
 
+/**
+ * start a bot
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ */
 WechatBotManager.prototype.start = function(botInfo){
-    this.proxy.start(this._encodeBotid(botInfo));
-};
-
-WechatBotManager.prototype.stop = function(botInfo){
-    this.proxy.stop(this._encodeBotid(botInfo));
+    this.proxy.start({
+        botid: this._encodeBotid(botInfo)
+    });
 };
 
 /**
- *
+ * stop a bot
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ */
+WechatBotManager.prototype.stop = function(botInfo){
+    this.proxy.stop({
+        botid: this._encodeBotid(botInfo)
+    });
+};
+
+/**
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  * @param msg
  *  {
  *      ToUserName: bid
@@ -146,42 +159,36 @@ WechatBotManager.prototype.stop = function(botInfo){
  *      MsgType: 'text'
  *      Content: to-be-sent text String
  *  }
- *
- * @param callback (Function)
  */
-WechatBotManager.prototype.sendText = function(msg){
+WechatBotManager.prototype.sendText = function(botInfo, msg){
     msg.MsgType = 'text';
-    msg.FromUserName = this._encodeBotid(msg);
+    msg.FromUserName = this._encodeBotid(botInfo);
     this.proxy.send(msg);
 };
 
 /**
- *
- * @param info
- *   {
- *      bucketid
- *      openid
- *      bid
- *   }
- * @param callback(err, profile)
- *  profile: {
- *      botid
- *      bucketid
- *      openid
- *      bid
- *      headIconUrl
- *      nickname
- *      place
- *  }
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ * @param bid
  */
-WechatBotManager.prototype.requestProfile = function(info, callback){
-    var me = this;
-    this.proxy.requestProfile(this._encodeBotid(info), info.bid, function(err, profile){
-        var from = me._decodeBotid(profile.botid);
-        profile.bucketid = from.bucketid;
-        profile.openid = from.openid;
-        if(callback) callback(err, profile);
+WechatBotManager.prototype.requestProfile = function(botInfo, bid, callback){
+    this.proxy.requestProfile({
+        botid: this._encodeBotid(botInfo),
+        bid: bid
     });
+
+    //var me = this;
+    //this.proxy.requestProfile(this._encodeBotid(info), info.bid, function(err, profile){
+    //    var from = me._decodeBotid(profile.botid);
+    //    profile.bucketid = from.bucketid;
+    //    profile.openid = from.openid;
+    //    if(callback) callback(err, profile);
+    //});
+};
+
+WechatBotManager.prototype._get = function(botInfo){
+    var bucket = this.buckets[botInfo.bucketid];
+    var bot = bucket && bucket[botInfo.openid];
+    return bot;
 };
 
 WechatBotManager.prototype._addBot = function(botInfo){
