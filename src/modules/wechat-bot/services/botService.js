@@ -1,67 +1,73 @@
+var Promise = require('bluebird');
+var UserKv = require('../../user/kvs/User');
+var logger = require('../../../app/logging').logger;
+var u = require('../../../app/util');
+var wechatApi = require('../../wechat/common/api').api;
+var cbUtil = require('../../../framework/callback');
+var co = require('co');
+var wechatUserService = require('../../../../src/modules/user/services/WechatUserService');
+var userService = require('../../../../src/modules/user/services/UserService');
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
 var Service = {};
-var proxy = require('../proxy/pub-sub');
+var UserRole = require('../../common/models/TypeRegistry').item('UserRole');
+var csState = require('../../common/models/TypeRegistry').item('CSState');
+var cvsKvs = require('../../conversation/kvs/Conversation');
+var cvsService = require('../../conversation/services/ConversationService');
+var csKvs = require('../../cs/kvs/CustomerService');
 
 /**
- * leverage sBot to send a msg to a user
- * @param msg:Object{ToUserName:String, MsgType:[text/voice/image], Content:String, Url:MediaUrl, MsgId:String}
+ * Create an admin user from openid
+ * @param openid
  * @param callback
- * @return just original message
  */
-Service.send = function(msg, callback){
-    proxy.send(msg, callback);
-};
+Service.createFromOpenid = function(openid, callback){
+    var self = this;
+    co(function*(){
+        try{
+            var loadOrCreateFromWechatAsync = Promise.promisify(wechatUserService.loadOrCreateFromWechat);
+            var user = yield loadOrCreateFromWechatAsync(openid);
+            var newUser = yield self.setRoleByOpenidAsync(openid);
+            if(callback) callback(null, newUser);
+        } catch (err){
+            console.error('BotService createFromOpenId err:' + err);
+            if(callback) callback(err, null);
+        }
 
-/**
- * leverage sBot to read a user,s profile
- * @param bid:String
- * @param callback
- * @return { headUrl:[String],nickName:[String],bid:[String],place:[String]}
- */
-Service.readProfile = function(bid, callback){
-    proxy.readProfile(bid, callback);
-};
-
-/**
- * subscribe sBot receive event
- * @param callback
- */
-Service.onReceive = function(callback){
-    proxy.onReceive(callback);
+    });
 };
 
 /**
- * subscribe sBot addContact event
+ * Set user role to admin role by openid
+ * @param openid
  * @param callback
  */
-Service.onAddContact = function(callback){
-    proxy.onAddContact(callback);
+Service.setRoleByOpenid = function(openid, callback){
+    co(function*(){
+        var userUpdate = {
+            role: UserRole.Bot.value()
+        };
+        try{
+            var userId = yield UserKv.loadIdByOpenidAsync(openid);
+            var user = yield userService.updateAsync(userId, userUpdate);
+            var csCvsId = yield cvsKvs.getCurrentCidAsync(userId);
+            var cuCvsId = yield cvsKvs.getCurrentIdAsync(userId);
+            var cvsId = csCvsId || cuCvsId;
+            console.log('********');
+            console.log('cvsId' + cvsId);
+            if(cvsId){
+                var cvs = yield cvsKvs.loadByIdAsync(cvsId);
+                console.log(cvs);
+                yield cvsService.closeAsync(cvs);
+            }
+            yield csKvs.remWcCSSetAsync(userId);
+            yield csKvs.delCSStatusByCSOpenIdAsync(openid);
+            if(callback) callback(null, user);
+        } catch (err){
+            logger.error('AdminService setRoleByOpenid err:' + err);
+            if(callback) callback(err, null);
+        }
+    });
 };
 
-/**
- * subscribe sBot disconnect event
- * @param callback
- */
-Service.onDisconnect = function(callback){
-    proxy.onDisconnect(callback);
-};
-/**
- * subscribe sBot launch event
- * @param callback
- */
-Service.onNeedLogin = function(callback){
-    proxy.onNeedLogin(callback);
-};
-
-Service.onLogin = function(callback){
-    //TODO
-};
-
-Service.start = function(bucketid, openid, callback){
-    //TODO
-};
-
-Service.stop = function(bucketid, openid, callback){
-    //TODO
-};
-
+Service = Promise.promisifyAll(Service);
 module.exports = Service;

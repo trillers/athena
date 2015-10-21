@@ -20,11 +20,14 @@ RoleEmitter.prototype.emit = function(context){
         if(user.role == UserRole.Customer.value()){
             self.emitter.emit('customer', 'customer', context);
         }
-        if(user.role == UserRole.CustomerService.value()){
+        else if(user.role == UserRole.CustomerService.value()){
             self.emitter.emit('cs', 'cs', context);
         }
-        if(user.role == UserRole.Admin.value()){
+        else if(user.role == UserRole.Admin.value()){
             self.emitter.emit('admin', 'admin', context);
+        }
+        else if(user.role == UserRole.Bot.value()){
+            self.emitter.emit('bot', 'bot', context);
         }
         else{
             //for other unknown roles, ignore it

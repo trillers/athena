@@ -1,1 +1,1 @@
-module.exports = require('./services/botService');
+module.exports = require('./services/BotService');
