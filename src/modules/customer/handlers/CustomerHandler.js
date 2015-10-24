@@ -2,6 +2,8 @@ var co = require('co');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
 var ConversationKv = require('../../conversation/kvs/Conversation');
+var mediaFileService = require('../../file/services/MediaFileService');
+
 var customerEmitter = require('../CustomerEmitter');
 module.exports = function(emitter){
     emitter.customer(function(event, context){
@@ -25,7 +27,7 @@ module.exports = function(emitter){
                         channel: cvsId,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
-                        mediaId: msg.MediaId || null,
+                        wx_media_id: msg.MediaId || null,
                         recognition: msg.Recognition || null
                     });
                     customerEmitter.emit('message', cvs, msg);
@@ -33,13 +35,23 @@ module.exports = function(emitter){
                 }
                 else{
                     cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
+                    var an_media_id = '';
+                    switch (message.MsgType){
+                        case MsgContentType.image.value():
+                            an_media_id = yield mediaFileService.saveImage(msg.MediaId);
+                            break;
+                        case MsgContentType.voice.value():
+                            an_media_id = yield mediaFileService.saveVoice(msg.MediaId);
+                            break;
+                    }
                     yield messageService.createAsync({
                         from: user.id,
                         to: null,
                         channel: cvsId,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
-                        mediaId: msg.MediaId || null,
+                        wx_media_id: msg.MediaId || null,
+                        an_media_id: an_media_id,
                         recognition: msg.Recognition || null
                     });
                     customerEmitter.emit('message', cvs, msg);

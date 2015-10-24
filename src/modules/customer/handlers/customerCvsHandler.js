@@ -45,10 +45,10 @@ module.exports = function(emitter){
                         yield wechatApi.sendTextAsync(openid, msg.content);
                         break;
                     case 'image':
-                        yield wechatApi.sendImageAsync(openid, msg.mediaId);
+                        yield wechatApi.sendImageAsync(openid, msg.wx_media_id);
                         break;
                     case 'voice':
-                        yield wechatApi.sendVoiceAsync(openid, msg.mediaId);
+                        yield wechatApi.sendVoiceAsync(openid, msg.wx_media_id);
                         if(msg.recognition){
                             yield wechatApi.sendTextAsync(openid, '[翻译]: ' + msg.recognition);
                         }
