@@ -13,6 +13,15 @@ module.exports = function(emitter){
                 context.user = user;
                 var msg = context.weixin;
                 var cvs = null;
+                var an_media_id = '';
+                switch (message.MsgType){
+                    case MsgContentType.image.value():
+                        an_media_id = yield mediaFileService.saveImage(msg.MediaId);
+                        break;
+                    case MsgContentType.voice.value():
+                        an_media_id = yield mediaFileService.saveVoice(msg.MediaId);
+                        break;
+                }
                 var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
                 if(!cvsId){
                     cvs = yield conversationService.createAsync({
@@ -28,6 +37,7 @@ module.exports = function(emitter){
                         contentType: msg.MsgType,
                         content: msg.Content || null,
                         wx_media_id: msg.MediaId || null,
+                        an_media_id: an_media_id,
                         recognition: msg.Recognition || null
                     });
                     customerEmitter.emit('message', cvs, msg);
@@ -35,15 +45,6 @@ module.exports = function(emitter){
                 }
                 else{
                     cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
-                    var an_media_id = '';
-                    switch (message.MsgType){
-                        case MsgContentType.image.value():
-                            an_media_id = yield mediaFileService.saveImage(msg.MediaId);
-                            break;
-                        case MsgContentType.voice.value():
-                            an_media_id = yield mediaFileService.saveVoice(msg.MediaId);
-                            break;
-                    }
                     yield messageService.createAsync({
                         from: user.id,
                         to: null,
