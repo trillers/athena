@@ -14,7 +14,7 @@ module.exports = function(emitter){
                 var msg = context.weixin;
                 var cvs = null;
                 var an_media_id = '';
-                switch (message.MsgType){
+                switch (msg.MsgType){
                     case MsgContentType.image.value():
                         an_media_id = yield mediaFileService.saveImage(msg.MediaId);
                         break;
