@@ -26,7 +26,7 @@ module.exports = function(emitter){
                     yield _sendMsg(cs.wx_openid, {contentType: 'text', content: '[系统]: 您正在为“'+ customer.wx_nickname +'”服务'});
                     //get historical messages from db, send them
                     var msgs = yield messageService.findAsync({conditions:{channel: cvs.id}});
-                    yield conversationService.updateAsync(cvs.id, {csId: cid});
+                    yield conversationService.updateAsync(cvs.id, {csId: cid, takeTime: new Date()});
                     for(var i=0, len=msgs.length; i<len; i++){
                         yield _sendMsg(cs.wx_openid, msgs[i]);
                     }

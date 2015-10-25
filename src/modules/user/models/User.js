@@ -35,6 +35,7 @@ var schema = DomainBuilder
         , wx_province: {type: String}
         , wx_city: {type: String}
         , wx_privilege: {type: String}
+        , setRoleTime: {type: Date} //设置用户角色时间
     })
     .build();
 

@@ -44,7 +44,8 @@ Service.createFromOpenid = function(openid, callback){
 Service.setRoleByOpenid = function(openid, callback){
     co(function*(){
         var userUpdate = {
-            role: UserRole.Admin.value()
+            role: UserRole.Admin.value(),
+            setRoleTime: new Date()
         };
         try{
             var userId = yield UserKv.loadIdByOpenidAsync(openid);

@@ -44,7 +44,8 @@ Service.createFromOpenid = function(openid, callback){
 Service.setRoleByOpenid = function(openid, callback){
     co(function*(){
         var userUpdate = {
-            role: UserRole.Customer.value()
+            role: UserRole.Customer.value(),
+            setRoleTime: new Date()
         };
         try{
             var userId = yield UserKv.loadIdByOpenidAsync(openid);
