@@ -1,5 +1,6 @@
 var assert = require('chai').assert;
 var WechatBotManager = require('../../../../src/modules/wechat-bot/services/WechatBotManager');
+var botManager = require('../../../../src/modules/assistant/botManager');
 var mongoose = require('../../../../src/app/mongoose');
 
 describe('WechatBotManager', function() {
@@ -17,7 +18,7 @@ describe('WechatBotManager', function() {
         })
 
         it('init to load all bots from db', function (done) {
-            var botManager = new WechatBotManager();
+            //var botManager = new WechatBotManager();
             botManager.on('init', function(){
                 console.info('wechat bot manager is initiated!');
                 done();
@@ -39,7 +40,7 @@ describe('WechatBotManager', function() {
         })
 
         it('register a bot', function (done) {
-            var botManager = new WechatBotManager();
+            //var botManager = new WechatBotManager();
             botManager.on('register', function(bot){
                 console.info('wechat bot is registered successfully!');
                 console.info(bot);
@@ -64,7 +65,7 @@ describe('WechatBotManager', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         var nickname = '包三哥';
-        var botManager = new WechatBotManager();
+        //var botManager = new WechatBotManager();
         before(function(done){
             botManager.on('register', function(bot){
                 console.info('wechat bot is registered successfully!');
@@ -101,13 +102,47 @@ describe('WechatBotManager', function() {
         })
     })
 
+    describe.only('#requestProfile', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqs_VftHruzwFV9rx4Pbd_fno'; //包三哥的错题本openid
+        var bid = "5835e1a0-7539-";
+
+
+        before(function(done){
+            done();
+        })
+
+        it('test the format of requested profile', function (done) {
+            //var botManager = new WechatBotManager();
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: '包三哥'
+            };
+
+            //botManager.on('need-login', function(msg){
+            //    setTimeout(function(){
+            //        botManager.requestProfile(botInfo, bid);
+            //        console.error('request profile is sent');
+            //        done();
+            //    }, 5000);
+            //});
+
+            //botManager.start(botInfo);
+            botManager.requestProfile(botInfo, bid);
+            setTimeout(function(){
+                done();
+            }, 5000);
+        })
+    })
+
     describe('Event:message', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         var nickname = '包三哥';
         var botid = siteId + ':' + openid;
         var bid = 'abcd';
-        var botManager = new WechatBotManager();
+        //var botManager = new WechatBotManager();
 
         it('to test message event if it follows given format', function (done) {
             botManager.on('message', function(message){
@@ -136,7 +171,7 @@ describe('WechatBotManager', function() {
         var nickname = '包三哥';
         var botid = siteId + ':' + openid;
         var bid = 'abcd';
-        var botManager = new WechatBotManager();
+        //var botManager = new WechatBotManager();
 
         it('to test profile event if it follows given format', function (done) {
             botManager.on('profile', function(message){
@@ -164,7 +199,7 @@ describe('WechatBotManager', function() {
         var nickname = '包三哥';
         var botid = siteId + ':' + openid;
         var bid = 'abcd';
-        var botManager = new WechatBotManager();
+        //var botManager = new WechatBotManager();
 
         it('to test contact-added event if it follows given format', function (done) {
             botManager.on('contact-added', function(message){
@@ -190,7 +225,7 @@ describe('WechatBotManager', function() {
         var nickname = '包三哥';
         var botid = siteId + ':' + openid;
         var bid = 'abcd';
-        var botManager = new WechatBotManager();
+        //var botManager = new WechatBotManager();
 
         it('to test need-login event if it follows given format', function (done) {
             botManager.on('need-login', function(message){

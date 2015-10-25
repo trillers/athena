@@ -10,7 +10,6 @@ var WechatBot = function(info){
     var errors = [];
     info.bucketid || (errors.push('need bucketid'));
     info.openid || (errors.push('need openid'));
-    info.nickname || (errors.push('need nickname'));
 
     if(errors.length != 0){
         throw new Error(errors.join('\r\n'));
@@ -18,8 +17,7 @@ var WechatBot = function(info){
 
     this.info = {
         bucketid: info.bucketid,
-        openid: info.openid,
-        nickname: info.nickname
+        openid: info.openid
     };
 
     this.started = false;

@@ -2,23 +2,23 @@ var User = require('../models/User').model;
 var UserHelper = require('../models/User').helper;
 var UserState = require('../../../framework/model/enums').UserState;
 var UserKv = require('../kvs/User');
-var time = require('../../../app/time');
+var WechatWebUserKv = require('../../wechat/kvs/WechatWebUser');
 var settings = require('athena-settings');
 var logger = require('../../../app/logging').logger;
-var u = require('../../../app/util');
 var wechat = require('../../wechat/common/api');
-var Service = {};
 var co = require('co');
 var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
 var csKvs = require('../../cs/kvs/CustomerService');
+var wechatBotUserService = require('./WechatBotUserService');
+
+var Service = {};
 
 var generateUserToken = function (uid) {
     var key = settings.secretKey;
     return require('crypto').createHash('sha1').update(String(uid)).update(key).digest('hex');
 };
 
-Promise.promisifyAll(User);
 var createUser = function (userInfo, callback) {
     var user = new User(userInfo);
     var uid = user.autoId();
@@ -86,16 +86,13 @@ Service.createFromWechat = function (userInfo, callback) {
             return UserKv.saveByIdAsync(userJson);
         })
         .then(function (userJson) {
-            return UserKv.linkTokenAsync(userJson.token, userJson.id)
-                .then(function () {
-                    return userJson;
-                });
+            return WechatWebUserKv.linkTokenAsync(userJson.token, userJson.id).then(function(){return userJson;});
         })
         .then(function (userJson) {
-            return UserKv.linkOpenidAsync(userJson.wx_openid, userJson.id)
-                .then(function () {
-                    return userJson;
-                });
+            return UserKv.linkOpenidAsync(userJson.wx_openid, userJson.id).then(function(){return userJson;});
+        })
+        .then(function (userJson) {
+            return wechatBotUserService.matchTheSameBotUsersAsync(userJson).then(function(){return userJson;});
         })
         .then(function (userJson) {
             if (callback) callback(null, userJson);
@@ -131,7 +128,7 @@ Service.updateFromWechat = function (id, update, callback) {
             return UserKv.saveByIdAsync(userJson);
         })
         .then(function () {
-            return UserKv.linkTokenAsync(newUserJson.token, newUserJson.id);
+            return WechatWebUserKv.linkTokenAsync(newUserJson.token, newUserJson.id);
         })
         .then(function () {
             if (callback) callback(null, newUserJson);
@@ -144,7 +141,8 @@ Service.updateFromWechat = function (id, update, callback) {
 };
 
 var getUserFromWechat = function (openid, callback) {
-    wechat.api.getUser(openid, function (err, userInfo) {
+    var input = {openid: openid, lang: 'zh_CN'}
+    wechat.api.getUser(input, function (err, userInfo) {
         if (err) {
             if (callback) callback(err);
         }
@@ -207,7 +205,7 @@ Service.deleteByOpenid = function (openid, callback) {
                     })
                     .then(function () {
                         if (userToDelete) {
-                            return UserKv.unlinkTokenAsync(userToDelete.token);
+                            return WechatWebUserKv.unlinkTokenAsync(userToDelete.token);
                         }
                     })
                     .then(function () {

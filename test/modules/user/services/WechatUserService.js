@@ -9,8 +9,9 @@ before(function(done){
     },3000);
 })
 
-describe('loadOrCreateFromWechat', function() {
+describe.only('loadOrCreateFromWechat', function() {
     it('succeed to load or create user from wechat', function (done) {
+        //var openid = 'okvXqs_VftHruzwFV9rx4Pbd_fno';
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
         //var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';
         WechatUserService.loadOrCreateFromWechat(openid, function(err, user){
@@ -19,14 +20,14 @@ describe('loadOrCreateFromWechat', function() {
             done();
         });
     })
-    after(function(done){
-        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
-        WechatUserService.deleteByOpenid(openid, function(err, user){
-            assert.ok(user);
-            console.log(user);
-            done();
-        });
-    })
+    //after(function(done){
+    //    var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
+    //    WechatUserService.deleteByOpenid(openid, function(err, user){
+    //        assert.ok(user);
+    //        console.log(user);
+    //        done();
+    //    });
+    //})
 })
 
 describe('deleteByOpenid', function() {

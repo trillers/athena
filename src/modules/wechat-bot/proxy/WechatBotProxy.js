@@ -90,20 +90,26 @@ var WechatBotProxy = function(pub, sub){
     EventEmitter.call(this);
     this.pubClient = pub || pubClient;
     this.subClient = sub || subClient;
-
-    this.subClient.subscribe('sbot:' + channels.messageReceived);
-    this.subClient.subscribe('sbot:' + channels.profileResponse);
-    this.subClient.subscribe('sbot:' + channels.contactAdded);
-    this.subClient.subscribe('sbot:' + channels.needLogin);
-    this.subClient.on('message', this._handleMessage.bind(this));
 };
 
 util.inherits(WechatBotProxy, EventEmitter);
 
-WechatBotProxy.prototype._handleMessage = function(channel, msg){
-    var msg = JSON.parse(msg);
+WechatBotProxy.prototype._handleMessage = function(channel, data){
+    console.info(channel);
+    console.error(oData);
+
+    var oData = JSON.parse(data);
     var event = channel.split(':')[1];
-    this.emit(event, msg.err, msg.data);
+
+    this.emit(event, oData.err, oData.data);
+};
+
+WechatBotProxy.prototype.init = function(){
+    this.subClient.subscribe(channels.messageReceived);
+    this.subClient.subscribe(channels.profileResponse);
+    this.subClient.subscribe(channels.contactAdded);
+    this.subClient.subscribe(channels.needLogin);
+    this.subClient.on('message', this._handleMessage.bind(this));
 };
 
 WechatBotProxy.prototype.start = function(botid){

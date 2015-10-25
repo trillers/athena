@@ -29,16 +29,6 @@ var processUserToSave = function(sourceObject){
     targetObject.crtOn && (delete targetObject.crtOn);
     targetObject.wx_subscribe_time && (delete targetObject.wx_subscribe_time);
 
-    //TODO remove it
-    targetObject.contact && (delete targetObject.contact);
-
-    targetObject.latestLatitude && (delete targetObject.latestLatitude);
-    targetObject.latestLongitude && (delete targetObject.latestLongitude);
-    targetObject.latestPrecision && (delete targetObject.latestPrecision);
-    targetObject.latestLocationTime && (delete targetObject.latestLocationTime);
-    targetObject.latestLocationCity && (delete targetObject.latestLocationCity);
-    targetObject.latestLocationAddress && (delete targetObject.latestLocationAddress);
-
     return targetObject;
 };
 

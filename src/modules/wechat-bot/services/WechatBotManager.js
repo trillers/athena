@@ -76,6 +76,10 @@ var WechatBotManager = function(){
 
 util.inherits(WechatBotManager, EventEmitter);
 
+WechatBotManager.prototype.setProxy = function(proxy){
+    this.proxy = proxy;
+};
+
 WechatBotManager.prototype.init = function(){
     var me = this;
     this.persister.load(function(err, results){
@@ -84,7 +88,7 @@ WechatBotManager.prototype.init = function(){
         }
         else{
             me._addBots(results);
-            me.emit('init');
+            me.emit('init', results);
         }
     });
 };
@@ -108,9 +112,9 @@ WechatBotManager.prototype.register = function(botInfo, callback){
             if(callback) callback(err);
         }
         else{
-            var bot = me._addBot(storedBotInfo);
-            me.emit('register', bot);
-            if(callback) callback(null, bot);
+            me._addBot(storedBotInfo);
+            me.emit('register', storedBotInfo);
+            if(callback) callback(null, storedBotInfo);
         }
     });
 };
@@ -123,9 +127,9 @@ WechatBotManager.prototype.unregister = function(botInfo, callback){
             if(callback) callback(err);
         }
         else{
-            var bot = me._removeBot(botInfo);
-            me.emit('unregister', bot);
-            if(callback) callback(null, bot);
+            me._removeBot(botInfo);
+            me.emit('unregister', botInfo);
+            if(callback) callback(null, botInfo);
         }
     });
 };
@@ -135,9 +139,7 @@ WechatBotManager.prototype.unregister = function(botInfo, callback){
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  */
 WechatBotManager.prototype.start = function(botInfo){
-    this.proxy.start({
-        botid: this._encodeBotid(botInfo)
-    });
+    this.proxy.start(this._encodeBotid(botInfo));
 };
 
 /**
@@ -145,9 +147,7 @@ WechatBotManager.prototype.start = function(botInfo){
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  */
 WechatBotManager.prototype.stop = function(botInfo){
-    this.proxy.stop({
-        botid: this._encodeBotid(botInfo)
-    });
+    this.proxy.stop(this._encodeBotid(botInfo));
 };
 
 /**
@@ -171,18 +171,7 @@ WechatBotManager.prototype.sendText = function(botInfo, msg){
  * @param bid
  */
 WechatBotManager.prototype.requestProfile = function(botInfo, bid, callback){
-    this.proxy.requestProfile({
-        botid: this._encodeBotid(botInfo),
-        bid: bid
-    });
-
-    //var me = this;
-    //this.proxy.requestProfile(this._encodeBotid(info), info.bid, function(err, profile){
-    //    var from = me._decodeBotid(profile.botid);
-    //    profile.bucketid = from.bucketid;
-    //    profile.openid = from.openid;
-    //    if(callback) callback(err, profile);
-    //});
+    this.proxy.requestProfile(this._encodeBotid(botInfo), bid);
 };
 
 WechatBotManager.prototype._get = function(botInfo){

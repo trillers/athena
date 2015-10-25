@@ -16,7 +16,6 @@ var generateUserToken = function(uid){
     return require('crypto').createHash('sha1').update(String(uid)).update(key).digest('hex');
 };
 
-Promise.promisifyAll(User);
 var createUser = function (userInfo, callback) {
     var user = new User(userInfo);
     var uid = user.autoId();
