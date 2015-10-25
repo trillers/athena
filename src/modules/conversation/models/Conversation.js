@@ -11,6 +11,7 @@ var schema = DomainBuilder
         , csId: {type: String}
         , cases: [{type: String, ref: 'Case'}]
         , createTime: {type: Date, required: true}
+        , takenTime: {type: Date}
         , closeTime: {type: Date}
     })
     .build();

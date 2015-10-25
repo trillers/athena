@@ -4,6 +4,7 @@ var FileService = require('../../modules/file/services/FileService');
 var fs = require('fs');
 var path = require('path');
 var thunkify = require('thunkify');
+var readFile = thunkify(fs.readFile);
 
 module.exports = function(router){
     /**
@@ -17,7 +18,7 @@ module.exports = function(router){
             var file = yield FileService.loadAsync(media_id);
             console.log(file);
             self.type = file.mimeType;
-            self.body = fs.readFileSync(file.path);
+            self.body = yield readFile(file.path);
         }catch(err){
             console.log(err);
             self.body = '404';
@@ -36,7 +37,7 @@ module.exports = function(router){
                 ext: file.extension,
                 size: file.size,
                 path: file.path,
-                mimeType: file.mimetype
+                mimeType: file.type
             }
             try {
                 var result = yield FileService.createAsync(fileJson);

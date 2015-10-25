@@ -8,6 +8,11 @@ var idToUserKey = function(id){
     return 'usr:id:' + id;
 };
 
+//the session window key that we can initiative to contact user
+var idToSessionKey =  function(openid){
+    return 'usr:ses:' + openid;
+}
+
 var tokenToIdKey = function(token){
     return 'usr:tk:' + token;
 };
@@ -190,6 +195,51 @@ var User = {
         var key = openidToAtKey(openid);
         redis.set(key, accessToken, function(err, result){
             cbUtil.handleOk(callback, err, result);
+        });
+    },
+
+    loadSessionByOpenid: function(openid, callback){
+        var key = idToSessionKey(openid);
+        redis.get(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to get user session window by openid ' + openid + ': ' + err,
+                'Succeed to get user session window by openid ' + openid);
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    loadSessionTTLByOpenid: function(openid, callback){
+        var key = idToSessionKey(openid);
+        redis.ttl(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to get user session window ttl by openid ' + openid + ': ' + err,
+                'Succeed to get user session window ttl by openid ' + openid);
+            cbUtil.handleSingleValue(callback, err, result);
+        });
+    },
+
+    saveSessionByOpenid: function(openid, callback){
+        var key = idToSessionKey(openid);
+        redis.set(key, 'active', 'EX', 172800, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to save user session window by openid ' + openid + ': ' + err,
+                'Succeed to save user session window by openid ' + openid);
+            cbUtil.handleOk(callback, err, result, 'active');
+        });
+    },
+
+    deleteSessionByOpenid: function(openid, callback){
+        var key = idToSessionKey(openid);
+        redis.del(key, function(err, result){
+            cbUtil.logCallback(
+                err,
+                'Fail to delete user session window by openid ' + openid + ': ' + err,
+                'Succeed to delete user session window by openid ' + openid);
+
+            cbUtil.handleSingleValue(callback, err, result);
         });
     }
 };

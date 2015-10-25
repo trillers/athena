@@ -13,7 +13,7 @@ var txtMsg = {
     channel: channel,
     contentType: MsgContentType.text.value(),
     content: 'test message',
-    mediaId: null
+    wx_media_id: null
 }
 
 var mediaMsg = {
@@ -22,7 +22,7 @@ var mediaMsg = {
     channel: channel,
     contentType: MsgContentType.image.value(),
     content: null,
-    mediaId: 'media123'
+    wx_media_id: 'media123'
 }
 
 before(function (done) {
@@ -62,7 +62,7 @@ describe('createMessage', function () {
             assert.ok(!err);
             assert.ok(data);
             mediaMsgId = data._id;
-            assert.equal(data.mediaId, mediaMsg.mediaId);
+            assert.equal(data.wx_media_id, mediaMsg.wx_media_id);
             done();
         });
     });

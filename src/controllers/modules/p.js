@@ -1,7 +1,7 @@
 var path = require('path');
 var views = require('co-views');
 var render= views(path.join(__dirname, '../../views'), { map: { html: 'swig' }});
-var cskv = require('../../modules/customer_server/kvs/CustomerService');
+var cskv = require('../../modules/cs/kvs/CustomerService');
 var userBizService = require('../../modules/user/services/UserBizService')
 var wechatApi = require('../../modules/wechat/common/api').api;
 module.exports=function(router){

@@ -15,6 +15,7 @@ var schema = DomainBuilder
         token: {type: String}
         , stt: {type: String, enum: UserState.values(), required: true}
         , role: {type: String, enum: UserRole.valueList(), default: UserRole.Customer.value()}
+        , setRoleTime: {type: Date} //设置用户角色时间
         , sourceType: {type: String, enum: UserSourceType.valueList(), default: UserSourceType.WechatSite.value()}
         , siteUser: {type: String, ref: 'User'}
 
@@ -41,6 +42,7 @@ var schema = DomainBuilder
         , wx_city: {type: String}
         , wx_privilege: {type: String}
 
+        //bot user properties
         , bot_id: {type: String} //bot id is made like wechat site id + ':' + wechat site openid
         , bot_uid: {type: String} //bid is make like 'bot' + randomid(idGen.next('WechatBotContact))
         , bot_nickname: {type: String}

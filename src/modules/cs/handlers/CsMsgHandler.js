@@ -3,6 +3,7 @@ var MsgContentType = require('../../common/models/TypeRegistry').item('MsgConten
 var wechatApi = require('../../wechat/common/api').api;
 var ConversationKv = require('../../conversation/kvs/Conversation');
 var messageService = require('../../message/services/MessageService');
+var mediaFileService = require('../../file/services/MediaFileService');
 var userService = require('../../user/services/UserService');
 var co = require('co');
 module.exports = function(emitter){
@@ -14,11 +15,23 @@ module.exports = function(emitter){
                 if (cvsId) {
                     var cvs = yield ConversationKv.loadByIdAsync(cvsId);
                     var customer = cvs.initiator;
+                    var an_media_id = '';
+                    switch (message.MsgType){
+                        case MsgContentType.image.value():
+                            an_media_id = yield mediaFileService.saveImage(message.MediaId);
+                            break;
+                        case MsgContentType.voice.value():
+                            an_media_id = yield mediaFileService.saveVoice(message.MediaId);
+                            break;
+                    }
                     var msg = {
                         from: user,
                         to: customer,
                         contentType: MsgContentType.names(message.MsgType),
-                        content: message.Content || message.MediaId,
+                        content: message.Content || null,
+                        wx_media_id: message.MediaId || null,
+                        an_media_id: an_media_id,
+                        recognition: message.Recognition || null,
                         channel: cvs._id
                     };
                     try {
