@@ -1,9 +1,9 @@
+var co = require('co');
 var cskv = require('../../cs/kvs/CustomerService');
 var ConversationKv = require('../../conversation/kvs/Conversation');
 var messageService = require('../../message/services/MessageService');
 var conversationService = require('../../conversation/services/ConversationService');
 var userService = require('../../user/services/UserService');
-var co = require('co');
 var wechatApi = require('../../wechat/common/api').api;
 module.exports = function(emitter){
     emitter.conversation(function(cvs, message){
