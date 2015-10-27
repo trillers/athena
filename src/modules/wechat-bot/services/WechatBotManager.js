@@ -170,7 +170,7 @@ WechatBotManager.prototype.sendText = function(botInfo, msg){
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  * @param bid
  */
-WechatBotManager.prototype.requestProfile = function(botInfo, bid, callback){
+WechatBotManager.prototype.requestProfile = function(botInfo, bid){
     this.proxy.requestProfile(this._encodeBotid(botInfo), bid);
 };
 

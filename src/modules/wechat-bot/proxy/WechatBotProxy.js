@@ -95,9 +95,6 @@ var WechatBotProxy = function(pub, sub){
 util.inherits(WechatBotProxy, EventEmitter);
 
 WechatBotProxy.prototype._handleMessage = function(channel, data){
-    console.info(channel);
-    console.error(oData);
-
     var oData = JSON.parse(data);
     var event = channel.split(':')[1];
 
@@ -126,6 +123,7 @@ WechatBotProxy.prototype.send = function(msg){
 
 WechatBotProxy.prototype.requestProfile = function(botid, bid){
     this.pubClient.publish(channels.profileRequest, JSON.stringify({botid: botid, bid: bid}));
+    console.error(' profile message is published...');
 };
 
 module.exports = WechatBotProxy;

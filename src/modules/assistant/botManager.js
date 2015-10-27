@@ -2,6 +2,7 @@ var WechatBotManager = require('../wechat-bot/services/WechatBotManager');
 var wechatApi = require('../wechat/common/api').api;
 var logger = require('../../app/logging').logger;
 var WechatBotProxy = require('../wechat-bot/proxy/WechatBotProxy');
+var wechatBotUserService = require('../user/services/WechatBotUserService');
 var botManager = new WechatBotManager();
 
 botManager.on('init', function(botInfos){
@@ -35,12 +36,16 @@ console.log(url);
 botManager.on('contact-added', function(contact){
     console.error('contact');
     console.error(contact);
-
+    wechatBotUserService.createFromContact(contact, function(err, userJson){
+        console.error(userJson);
+        botManager.requestProfile(contact, contact.bid);
+    })
 });
 
 botManager.on('profile', function(profile){
-    console.info('profile');
-    console.info(profile);
+    wechatBotUserService.updateFromProfile(profile.bid, profile, function(err, userJson){
+        console.warn(userJson);
+    })
 });
 
 botManager.on('message', function(msg){
@@ -50,7 +55,7 @@ botManager.on('message', function(msg){
 
 setTimeout(function(){
     botManager.proxy.init();
-    //botManager.init();
+    botManager.init();
 }, 2000);
 
 module.exports = botManager;
