@@ -1,24 +1,40 @@
-//var assert = require('assert');
-//var request = require('request');
-//var fs = require('fs');
-//var streamifier = require('streamifier');
-//var wechatApi = require('../../../src/modules/wechat/common/api').api;
+var assert = require('assert');
+var request = require('request');
+var fs = require('fs');
+var streamifier = require('streamifier');
+var wechatApi = require('../../../src/modules/wechat/common/api').api;
+var co = require('co');
 
-//describe('file upload', function(){
-//   it('success upload file', function(done){
-//       var formData = {
-//           file: fs.createReadStream(__dirname + '/test.png')
-//       }
-//       request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
-//           console.log(err);
-//           console.log(body);
-//           assert.ok(!err);
-//           assert.ok(JSON.parse(body).media_id);
-//           done();
-//       });
-//   });
-//
-//});
+describe('file upload', function(){
+   it('success upload image file', function(done){
+       var formData = {
+           file: fs.createReadStream(__dirname + '/test.png')
+       }
+       request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
+           console.log(err);
+           console.log(body);
+           assert.ok(!err);
+           assert.ok(JSON.parse(body).media_id);
+           assert.ok(JSON.parse(body).wx_media_id);
+           done();
+       });
+   });
+
+    it('success upload voice file', function(done){
+        var formData = {
+            file: fs.createReadStream(__dirname + '/test.mp3')
+        }
+        request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
+            console.log(err);
+            console.log(body);
+            assert.ok(!err);
+            assert.ok(JSON.parse(body).media_id);
+            assert.ok(JSON.parse(body).wx_media_id);
+            done();
+        });
+    });
+
+});
 
 //describe('get file', function(){
 //    var media_id = '';
@@ -45,7 +61,7 @@
 //        })
 //    })
 //})
-
+//
 //describe('upload media file', function(){
 //    var mediaId = '';
 //    before(function(done){
