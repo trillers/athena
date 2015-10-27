@@ -3,6 +3,7 @@ var wechatApi = require('../wechat/common/api').api;
 var logger = require('../../app/logging').logger;
 var WechatBotProxy = require('../wechat-bot/proxy/WechatBotProxy');
 var wechatBotUserService = require('../user/services/WechatBotUserService');
+var customerBotHandler = require('../customer/handlers/customerBotHandler');
 var botManager = new WechatBotManager();
 
 botManager.on('init', function(botInfos){
@@ -22,7 +23,7 @@ botManager.on('need-login', function(msg){
     var url = 'http://ci.www.wenode.org/api/file?media_id=' + msg.media_id;
     //TODO use variables to make url
     //TODO generate wechat media id;
-console.log(url);
+    console.log(url);
     wechatApi.sendText(msg.openid, url, function(err, result){
         if(err){
             logger.error('Fail to send wechat bot login qrcode: ' + err);
@@ -48,10 +49,7 @@ botManager.on('profile', function(profile){
     })
 });
 
-botManager.on('message', function(msg){
-    console.info('new message is coming');
-    console.info(msg);
-});
+botManager.on('message', customerBotHandler);
 
 setTimeout(function(){
     botManager.proxy.init();
