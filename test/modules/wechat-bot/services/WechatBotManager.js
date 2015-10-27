@@ -21,6 +21,8 @@ describe('WechatBotManager', function() {
             //var botManager = new WechatBotManager();
             botManager.on('init', function(){
                 console.info('wechat bot manager is initiated!');
+                var map = botManager.getNameMap();
+                console.log(map);
                 done();
             });
             botManager.on('init-error', function(err){
@@ -102,7 +104,7 @@ describe('WechatBotManager', function() {
         })
     })
 
-    describe.only('#requestProfile', function() {
+    describe('#requestProfile', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqs_VftHruzwFV9rx4Pbd_fno'; //包三哥的错题本openid
         var bid = "5835e1a0-7539-";
@@ -120,15 +122,6 @@ describe('WechatBotManager', function() {
                 , nickname: '包三哥'
             };
 
-            //botManager.on('need-login', function(msg){
-            //    setTimeout(function(){
-            //        botManager.requestProfile(botInfo, bid);
-            //        console.error('request profile is sent');
-            //        done();
-            //    }, 5000);
-            //});
-
-            //botManager.start(botInfo);
             botManager.requestProfile(botInfo, bid);
             setTimeout(function(){
                 done();
