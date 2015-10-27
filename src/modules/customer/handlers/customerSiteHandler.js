@@ -5,6 +5,7 @@ var ConversationKv = require('../../conversation/kvs/Conversation');
 var mediaFileService = require('../../file/services/MediaFileService');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 
+
 var customerEmitter = require('../CustomerEmitter');
 module.exports = function(emitter){
     emitter.customer(function(event, context){
