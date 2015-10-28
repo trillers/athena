@@ -2,9 +2,36 @@
 <html>
 <head lang="en">
     <meta charset="UTF-8">
-    <title></title>
+    <title>跟谁学西安</title>
+    <script src="../../components/seajs/dist/sea.js"></script>
+    <script src="../../components/seajs-wrap/dist/seajs-wrap.js"></script>
+    <script type="text/javascript">
+        window.__app = {{ JSON.stringify(__app) }};
+        window.__page = {{ JSON.stringify(__page) }};
+        window.prdOrNot =( __app.settings.env.NODE_ENV === "production" );
+        var scripthook = document.createElement( "script" );
+
+//        if(prdOrNot){
+//            scripthook.src = "spm/build/spm/0.0.1/index.js";
+//        }else {
+            scripthook.src = "index.js";
+        //}
+        document.getElementsByTagName( "head" )[0].appendChild( scripthook );
+    </script>
+    <!-- Bootstrap core CSS -->
+    <link href="../../components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <!--<link href="navbar-fixed-top.css" rel="stylesheet">-->
 </head>
 <body>
-    <span>welcome to index</span>
+    <dvi id="welcome_pag"></dvi>
+    <div id="wary">
+        {% include "./index-tag.html"%}
+    </div>
+
+    <!-- Bootstrap import -->
+    <script src="../../components/jquery/jquery.min.js"></script>
+    <script src="../../components/bootstrap/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

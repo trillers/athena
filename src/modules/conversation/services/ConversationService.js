@@ -107,7 +107,11 @@ Service.find = function (params, callback) {
         query.find(params.conditions);
     }
 
-
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
+    }
     //TODO: specify select list, exclude comments in list view
     query.lean(true);
     query.exec(function (err, docs) {
@@ -141,6 +145,13 @@ Service.filter = function (params, callback) {
     if (params.conditions) {
         query.find(params.conditions);
     }
+
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
+    }
+
     query.lean(true);
     query.exec(function (err, docs) {
         if (err) {
@@ -185,6 +196,15 @@ Service.close = function(cvs, callback){
     })
 };
 
+Service.getFilterDocCount = function(filter, callback){
+    Conversation.count(filter, function(err, count){
+        if(err){
+            if(callback) return callback(err, null);
+        }
+        if(callback) return callback(null, count);
+    });
+}
+
 Service.getTodayCvsSum = function(callback){
     var startTime = new Date();
     startTime.setHours(0);
@@ -195,10 +215,10 @@ Service.getTodayCvsSum = function(callback){
     endTime.setMinutes(59);
     endTime.setSeconds(59);
     Conversation.count({createTime: {$gt: startTime, $lt: endTime}}, function(err, count){
-       if(err){
-           if(callback) return callback(err, null);
-       }
-       if(callback) return callback(null, count);
+        if(err){
+            if(callback) return callback(err, null);
+        }
+        if(callback) return callback(null, count);
     });
 }
 

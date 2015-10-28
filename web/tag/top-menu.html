@@ -1,0 +1,30 @@
+<top-menu>
+    <nav class="navbar navbar-default navbar-inverse" role="navigation">
+        <div class="collapse navbar-collapse">
+            <a class="navbar-brand" style="font-size: 2em;color: white">微信后台</a>
+            <ul class="nav navbar-nav" style="width: 85%">
+                <li class="navbtn"><a route="cvs/index" class="active" style="font-size: 1.5em" onclick={active}>会话</a></li>
+                <li class="navbtn"><a route="cs/index" style="font-size: 1.5em" onclick={active}>客服</a></li>
+                <li class="navbtn"><a route="customer/index" style="font-size: 1.5em" onclick={active}>客户</a></li>
+                <li  style="float: right; margin-left:5em"><a href="#" style="font-size: 1.4em" onclick="{logout}">退出</a></li>
+            </ul>
+        </div>
+    </nav>
+    <style scoped>
+        .navbtn{padding-left: 3em}
+        .active{color: #ffffff !important;}
+    </style>
+    <script>
+        logout(e){
+            $.get('/logout', function(data){
+               window.location.href = '/login';
+            });
+        }
+        active(e){
+            e.preventUpdate = true;
+            $('.navbtn a').removeClass('active');
+            $(e.currentTarget).addClass('active');
+            riot.route($(e.currentTarget).attr('route'));
+        }
+    </script>
+</top-menu>

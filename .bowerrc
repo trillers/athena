@@ -1,0 +1,12 @@
+{
+  "directory" : "public/components",
+  "json" : "bower.json",
+  "analytics": false,
+  "timeout": 120000,
+  "registry": {
+    "search": [
+      "https://bower.herokuapp.com"
+    ]
+  }
+
+}

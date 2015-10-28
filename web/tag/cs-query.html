@@ -1,0 +1,104 @@
+<cs-query>
+    <div if="{!hidden}">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="col-md-3 col-xs-3 col-sm-3" >
+                    <div class="well sidebar-nav" style="height: 38em">
+                        <ul class="nav nav-list" style="margin-top: 1em">
+                            <li class="leftlist"><a href="#cs/index">客服总览</a></li>
+                            <li class="leftlist" style="background: #e7e7e7"><a href="#cs/query">信息查询</a></li>
+                        </ul>
+                    </div><!--/.well -->
+                </div><!--/span-->
+                <div class="col-md-9 col-xs-9 col-sm-9">
+                    <div class="jumbotron" style="height: auto;padding-top: 2em; padding-left: 2em;padding-right: 4em;">
+                        <br>
+                        <div>
+                            <ul>
+
+                                <li class="numberlist">
+                                    <div class="panel " style="min-height: 30em;padding-top: 1em">
+                                        <ul class="numberlist" style="margin-bottom: 5em; padding-left: 0em">
+
+                                            <li>
+                                                <strong class="col-md-2 formItem"> 头像</strong>
+                                                <strong class="col-md-2 formItem"> 昵称</strong>
+                                                <strong class="col-md-2 formItem"> 真实姓名</strong>
+                                                <strong class="col-md-2 formItem"> 手机</strong>
+                                                <strong class="col-md-2 formItem"> 验证状态</strong>
+                                                <strong class="col-md-2 formItem">创建时间</strong>
+                                                <strong class="col-md-2 formItem"> 操作</strong>
+                                            </li>
+
+
+                                            <li>  <hr width="100%" >  </li>
+                                            <cs-item each="{items}" curritem = "{this}"/>
+                                        </ul>
+
+                                    </div><!-- panel-->
+                                </li>
+
+                            </ul>
+                        </div> <!--  ul -->
+                    </div><!--  jumbotron -->
+                </div><!--/span-->
+            </div><!--/row-->
+
+
+        </div><!--/container-->
+        <style scoped>
+            .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+            .numberlist{list-style-type: none ; text-align: center}
+            .formItem{width: 14%; padding-left: 0.5em; padding-right: 0.5em;}
+        </style>
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+            var loadCs = domain.action('loadCs');
+            var delCs = domain.action('delCs');
+
+            var onLoadCs = function(data){
+                if(data){
+                    self.items = data;
+                    self.update();
+                }
+            }
+
+            var onDelCs = function(data){
+                loadCs.execute();
+            }
+            this.on('mount', function(){
+                console.info('tag cs query is mounted');
+                loadCs.onDone(onLoadCs);
+                delCs.onDone(onDelCs);
+            });
+            this.on('unmount', function(){
+                console.info('tag cs query is unmounted');
+                loadCs.offDone(onLoadCs);
+                delCs.offDone(onDelCs)
+            });
+            this.on('open', function(options){
+                console.info('tag cvs query is opening');
+                self.trigger('ready', false);
+                self.trigger('view-route-to');
+                loadCs.execute();
+            });
+
+            this.on('leave', function(){
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function(){
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function(){
+                console.info('tag cvs index is refreshing');
+                //_refresh();
+            });
+        </script>
+    </div>
+</cs-query>

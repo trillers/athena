@@ -1,0 +1,36 @@
+<cs-item>
+    <li style="width: 100%">
+        <span class="col-md-2 formItem"> <img src="{headUrl}"  style="max-width: 2em"></span>
+        <span class="col-md-2 formItem"> {nickname}</span>
+        <span class="col-md-2 formItem"> 空</span>
+        <span class="col-md-2 formItem"> 空</span>
+        <span class="col-md-2 formItem"> 未验证 </span>
+        <span class="col-md-2 formItem"> {date} </span>
+        <a class="col-md-2 formItem" onclick="{del}"> <img src="../images/del.png"  style="max-width: 1em"></a>
+    </li>
+    <br>
+    <br>
+    <style scoped>
+        .formItem{width: 14%; padding-left: 0.5em; padding-right: 0.5em;}
+    </style>
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        self.headUrl = item.wx_headimgurl;
+        self.nickname = item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 5) + '...';
+        var delCs = domain.action('delCs');
+        self.date = '--';
+        if(item.setRoleTime) {
+            var setRoleTime = new Date(item.setRoleTime);
+            var year = setRoleTime.getFullYear();
+            var month = setRoleTime.getMonth() + 1;
+            var day = setRoleTime.getDate();
+            self.date = year + '-' + month + '-' + day;
+        }
+        del(e){
+            if(confirm('确认删除该管理员？')){
+                delCs.execute(item.wx_openid);
+            }
+        }
+    </script>
+</cs-item>
