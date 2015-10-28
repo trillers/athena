@@ -15,7 +15,7 @@
         var self = this;
         var item = self.opts.curritem;
         self.headUrl = item.wx_headimgurl;
-        self.nickname = item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 4) + '...';
+        self.nickname = item.wx_nickname ? (item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 4) + '...') : '空';
         var createTime = new Date(item.crtOn);
         var year = createTime.getFullYear();
         var month = createTime.getMonth() + 1;

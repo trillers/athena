@@ -13,7 +13,7 @@
     <script>
         var self = this;
         var item = self.opts.curritem;
-        self.customer = item.initiator ? (item.initiator.wx_nickname.length < 6 ? item.initiator.wx_nickname : item.initiator.wx_nickname.slice(0, 5) + '...') : '空';
+        self.customer = item.initiator && item.initiator.wx_nickname ? (item.initiator.wx_nickname.length < 6 ? item.initiator.wx_nickname : item.initiator.wx_nickname.slice(0, 5) + '...') : '空';
         self.cs = item.csId ? (item.csId.wx_nickname.length < 6 ? item.csId.wx_nickname : item.csId.wx_nickname.slice(0, 5) + '...') : '空';
         var createTime = new Date(item.createTime);
         var year = createTime.getFullYear();
