@@ -162,6 +162,7 @@ WechatBotManager.prototype.stop = function(botInfo){
  *  }
  */
 WechatBotManager.prototype.sendText = function(botInfo, msg){
+    console.log(botInfo);
     msg.MsgType = 'text';
     msg.FromUserName = this._encodeBotid(botInfo);
     this.proxy.send(msg);
