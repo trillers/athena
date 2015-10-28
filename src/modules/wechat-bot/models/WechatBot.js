@@ -10,6 +10,7 @@ var schema = DomainBuilder
         bucketid: {type: String, required: true}
         , openid: {type: String, required: true}
         , nickname: {type: String}
+        , remark: {type: String}
     })
     .build();
 
