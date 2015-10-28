@@ -91,7 +91,6 @@ var getMediaUrl = function*(media_id){
         console.log('getMediaUrl err: ' + err);
         return null;
     }
-
 }
 
 module.exports = Service;
