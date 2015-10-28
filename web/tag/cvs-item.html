@@ -1,0 +1,35 @@
+<cvs-item>
+    <li>
+        <span class="col-md-2">{customer}</span>
+        <span class="col-md-2">{cs}</span>
+        <span class="col-md-2">{date}</span>
+        <span class="col-md-2">{time}</span>
+        <span class="col-md-2">{resTime}</span>
+        <a class="col-md-2" onclick="{showMessages}" style="cursor: pointer">查看</a>
+    </li>
+    <br>
+    <br>
+
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        self.customer = item.initiator && item.initiator.wx_nickname ? (item.initiator.wx_nickname.length < 6 ? item.initiator.wx_nickname : item.initiator.wx_nickname.slice(0, 5) + '...') : '空';
+        self.cs = item.csId ? (item.csId.wx_nickname.length < 6 ? item.csId.wx_nickname : item.csId.wx_nickname.slice(0, 5) + '...') : '空';
+        var createTime = new Date(item.createTime);
+        var year = createTime.getFullYear();
+        var month = createTime.getMonth() + 1;
+        var day = createTime.getDate();
+        self.date =  year + '-' + month + '-' + day;
+        self.time = createTime.getHours() + ':' + createTime.getMinutes();
+        self.resTime = '--';
+        if(item.takenTime){
+            var takenTime = new Date(item.takenTime);
+            self.resTime = ((takenTime.getMinutes() - createTime.getMinutes())*60 + takenTime.getSeconds() - createTime.getSeconds()) + 's';
+        }
+
+        showMessages(e){
+            e.preventUpdate = true;
+            riot.route('cvs/_' + item._id);
+        }
+    </script>
+</cvs-item>

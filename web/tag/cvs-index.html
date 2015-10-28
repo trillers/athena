@@ -1,0 +1,95 @@
+<cvs-index>
+    <div if="{!hidden}">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="col-md-3 col-xs-3 col-sm-3" >
+                <div class="well sidebar-nav" style="height: 38em">
+                    <ul class="nav nav-list" style="margin-top: 1em">
+                        <li class="leftlist" style="background: #e7e7e7"><a href="#cvs/index">会话总览</a></li>
+                        <li class="leftlist"><a href="#cvs/query">会话查询</a></li>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
+            <div class="col-md-9 col-xs-9 col-sm-9">
+                <div class="jumbotron" style="height: 38em">
+                    <br >
+                    <ul>
+                        <li class="numberlist">
+                            <p>
+                                <span style="font-size: 1.5em">今天</span>
+                                ({today})
+                                <span style="font-size: 1.5em">会话</span>数为：
+                                <span style="font-size: 1.5em">{todayCvsSum}</span></p>
+                        </li>
+                        <li class="numberlist">
+                            <p>进行中：{wipCvsSum} &nbsp;&nbsp;&nbsp;&nbsp;  已关闭：{fnCvsSum} </p>
+                        </li>
+                        </br>
+                        </br>
+                        <li class="numberlist">
+                            <p>
+                                <span style="font-size: 1.5em">截至今天</span>
+                                总会话数为：
+                                <span style="font-size: 1.5em">{totalSum}</span>
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div><!--/span-->
+        </div><!--/row-->
+
+
+    </div><!--/container-->
+    <style scoped>
+        .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+        .numberlist{list-style-type: none ; text-align: center}
+    </style>
+    <script>
+        this.app = this.opts.app; //keep spa object
+        var self = nest.presentable(this);
+        self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+        var getCvsSnapshot = domain.action('getCvsSnapshot');
+        var onGetCvsSnapshot = function(data){
+            self.today = util.formatChineseDate(new Date());
+            self.update(data);
+        }
+        this.on('mount', function(){
+            console.info('tag cvs index is mounted');
+            getCvsSnapshot.onDone(onGetCvsSnapshot);
+        });
+        this.on('unmount', function(){
+            console.info('tag cvs index is unmounted');
+            getCvsSnapshot.offDone(onGetCvsSnapshot);
+        });
+        this.on('open', function(options){
+            console.info('tag cvs index is opening');
+            self.trigger('ready', false);
+            self.trigger('view-route-to');
+            getCvsSnapshot.execute();
+        });
+
+        this.on('leave', function(){
+            self.mask = true;
+            self.update();
+        });
+
+        this.on('reenter', function(){
+            self.mask = false;
+            self.update();
+        });
+
+        this.on('refresh', function(){
+            console.info('tag cvs index is refreshing');
+            //_refresh();
+        });
+
+        this.on('show', function(cmd){
+            if(cmd){
+                __page.holder().setTitle('会话');
+            }
+            $(window).scrollTop(__page.holder().getTop());
+
+        });
+    </script>
+    </div>
+</cvs-index>

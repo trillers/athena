@@ -1,0 +1,156 @@
+<cvs-query>
+    <div if="{!hidden}">
+    <div class="container">
+        <div class="row-fluid">
+            <div class="col-md-3 col-xs-3 col-sm-3" >
+                <div class="well sidebar-nav" style="height: 38em">
+                    <ul class="nav nav-list" style="margin-top: 1em">
+                        <li class="leftlist"><a href="#cvs/index">会话总览</a></li>
+                        <li class="leftlist" style="background: #e7e7e7"><a href="#cvs/query">会话查询</a></li>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
+            <div class="col-md-9 col-xs-9 col-sm-9">
+                <div class="jumbotron" style="height: auto;padding-top: 0em; padding-left: 2em;padding-right: 4em;">
+                    <br>
+                    <div>
+                        <ul>
+                            <li class="numberlist">
+                                <div>
+                                    <label style="font-size: 0.5em; color: #337ab7; cursor: pointer">
+                                        <input id="total" type="checkbox" checked="{totalDone}" onclick="{total}"/>&nbsp;&nbsp;全部&nbsp;&nbsp;</label>
+                                        <a title="上一天" style="text-decoration: none;font-size: 0.5em; cursor: pointer" onclick="{preDay}">《</a>&nbsp;&nbsp;
+                                        <span style="font-size: 0.5em">{date}</span>&nbsp;&nbsp;
+
+                                        <a title="下一天" style="text-decoration: none; font-size: 0.5em; cursor: pointer" onclick="{nextDay}">》</a>&nbsp;&nbsp;
+                                    <div class="mask" style="display: none"></div>
+                                </div>
+                            </li >
+
+                            <li class="numberlist">
+                                <div class="panel " style="min-height: 30em">
+                                    <ul class="numberlist" style="padding-left: 0; margin-bottom: 5em">
+
+                                        <li>
+                                            <strong class="col-md-2"> 客户</strong>
+                                            <strong class="col-md-2"> 客服</strong>
+                                            <strong class="col-md-2"> 日期</strong>
+                                            <strong class="col-md-2"> 时间</strong>
+                                            <strong class="col-md-2"> 响应时间</strong>
+                                            <strong class="col-md-2"> 会话记录</strong>
+                                        </li>
+
+
+                                        <li>  <hr width="110%" style="margin-left: -3em">  </li>
+                                        <cvs-item each={items} curritem="{this}" />
+
+                                    </ul>
+                                </div><!-- panel-->
+                            </li>
+
+                        </ul>
+                    </div> <!--  ul -->
+                </div><!--  jumbotron -->
+            </div><!--/span-->
+        </div><!--/row-->
+
+
+    </div><!--/container-->
+    <style scoped>
+        .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+        .numberlist{list-style-type: none ; text-align: center}
+        .mask{ margin-top: -1.7em;
+            height: 1.7em;
+            width: 15em;
+            margin-left: 21em;
+            background: rgb(238, 238, 238);
+            opacity: 0.7;}
+    </style>
+    <script>
+        this.app = this.opts.app; //keep spa object
+        var self = nest.presentable(this);
+        self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+        var date = new Date();
+        self.loaded = false;
+        self.totalDone = false;
+        var params = {
+            conditions: {
+                createTime: {$gt: util.getDateStartTime(date), $lt: util.getDateEndTime(date)}
+            }
+        };
+        var loadCvs = domain.action('loadCvs');
+        var onLoadCvs = function(data){
+            if(data) {
+                self.date = util.formatChineseDate(date);
+                self.items = data;
+                self.update();
+            }
+        }
+
+        this.on('mount', function(){
+            console.info('tag cvs index is mounted');
+            loadCvs.onDone(onLoadCvs);
+        });
+        this.on('unmount', function(){
+            console.info('tag cvs index is unmounted');
+            loadCvs.offDone(onLoadCvs);
+        });
+        this.on('open', function(options){
+            console.info('tag cvs query is opening');
+            self.trigger('ready', false);
+            self.trigger('view-route-to');
+            if(!self.loaded){
+                self.loaded = true;
+                loadCvs.execute(params);
+            }
+        });
+
+        this.on('leave', function(){
+            self.mask = true;
+            self.update();
+        });
+
+        this.on('reenter', function(){
+            self.mask = false;
+            self.update();
+        });
+
+        this.on('refresh', function(){
+            console.info('tag cvs index is refreshing');
+            //_refresh();
+        });
+
+        this.on('show', function(cmd){
+            if(cmd){
+                __page.holder().setTitle('会话');
+            }
+            $(window).scrollTop(__page.holder().getTop());
+
+        });
+
+        preDay(e){
+            date = util.getAddedDaysTime(date, -1);
+            params.conditions.createTime['$gt'] = util.getDateStartTime(date);
+            params.conditions.createTime['$lt']= util.getDateEndTime(date);
+            loadCvs.execute(params);
+        }
+        nextDay(e){
+            date = util.getAddedDaysTime(date, 1);
+            params.conditions.createTime['$gt'] = util.getDateStartTime(date);
+            params.conditions.createTime['$lt']= util.getDateEndTime(date);
+            loadCvs.execute(params);
+        }
+        total(e){
+            self.totalDone = !self.totalDone;
+            if(self.totalDone){
+                $('.mask').show();
+                loadCvs.execute();
+            }else{
+                $('.mask').hide();
+                loadCvs.execute(params);
+            }
+            return true;
+        }
+    </script>
+        </div>
+</cvs-query>

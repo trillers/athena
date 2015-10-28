@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns="http://www.w3.org/1999/html"><head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>登录</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="../../components/jquery/jquery.min.js"></script>
+    <script src="../../components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            $('#login').click(function(){
+                $.post('/login',{username: $('#username').val(), password: $('#password').val()}, function(data){
+                    if(data.success){
+                        window.location.href='/';
+                    }else{
+                        alert('登陆失败');
+                    }
+                })
+            });
+        })
+        //回车时，默认是登陆
+        function on_return(){
+            if(window.event.keyCode == 13){
+                $('#login').trigger('click');
+            }
+        }
+    </script>
+</head>
+<body background="../../images/bg2.jpg" style="background-repeat: no-repeat;
+        background-attachment: fixed; background-size: cover;background-position: center bottom;" onkeydown="on_return();">
+<div class="container" style="text-align: center ; margin-top: 15%">
+    <div class="panel col-md-4 col-md-offset-4"  style=" height: 13em ; border-color: silver"; >
+
+        <br/>
+        <div class="input-group" style="width: 80% ; margin-left: 2em">
+            <span class="input-group-addon glyphicon glyphicon-user" ></span>
+            <input id="username" type="text" class="form-control" placeholder="用户名" aria-describedby="basic-addon1" >
+        </div>
+
+        <br/>
+
+        <div class="input-group" style="width: 80% ; margin-left: 2em">
+            <span class="input-group-addon glyphicon glyphicon-off" ></span>
+            <input id="password" type="password" class="form-control" placeholder="密码" aria-describedby="basic-addon1">
+        </div>
+        <br/>
+        <div class="btn-group" style="float: right ; padding-right: 1em">
+            <button id='login' type="submit" class="btn btn-default" >
+                确定
+            </button>
+        </div>
+
+    </div>
+
+</div>
+</body>
+</html>

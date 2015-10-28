@@ -1,0 +1,40 @@
+<customer-item>
+    <li style="width: 100%">
+        <span class="col-md-2 formItem" style="text-align: left; padding-left: 1.5em"> <img src="{headUrl}"  style="max-width: 2em"> <span>{nickname}</span></span>
+        <span class="col-md-2 formItem"> {type}</span>
+        <span class="col-md-2 formItem"> {from} </span>
+        <span class="col-md-2 formItem"> {date}</span>
+        <span class="col-md-2 formItem"> {timeWindow}</span>
+    </li>
+    <br>
+    <br>
+    <style scoped>
+        .formItem{width: 20%; padding-left: 8px; padding-right: 8px;}
+    </style>
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        self.headUrl = item.wx_headimgurl;
+        self.nickname = item.wx_nickname ? (item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 4) + '...') : '空';
+        var createTime = new Date(item.crtOn);
+        var year = createTime.getFullYear();
+        var month = createTime.getMonth() + 1;
+        var day = createTime.getDate();
+        self.date =  year + '-' + month + '-' + day;
+        if(item.sourceType == 'site'){
+            self.timeWindow = item.activeTime == -2 ? 'timeout' : formatDate(item.activeTime);
+            self.type = '公众号';
+        }else{
+            self.type = '助手号';
+            self.timeWindow = 'N/A';
+        }
+
+        function formatDate(seconds){
+            var time = (seconds/3600).toFixed(2);
+            var timeArr = time.toString().split('.');
+            var hour = timeArr[0] + '小时';
+            var minute = (parseInt(timeArr[1]) * 0.06).toFixed(0) + '分钟';
+            return hour + minute;
+        }
+    </script>
+</customer-item>
