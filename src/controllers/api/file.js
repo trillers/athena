@@ -55,7 +55,7 @@ module.exports = function(router){
                 console.log(result);
                 this.body = {err: null, media_id: result._id, wx_media_id: wx_media_id};
             } catch (err) {
-                logger.err('save file info err:' + err);
+                logger.error('save file info err:' + err);
                 this.body = {err: err, media_id: null, wx_media_id: null};
             }
             //var files = self.req.files;
