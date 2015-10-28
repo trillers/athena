@@ -55,7 +55,7 @@ function* sendMessage(cvs, cs, customer, message){
             yield wechatApi.sendTextAsync(cs.wx_openid, '[系统]: 您只能发送文字');
             return;
         }
-        botManager.sendText(cvs.botId, null, {
+        botManager.sendText(cvs.botId, {
             FromUserName: cvs.botId,
             ToUserName: customer.bot_uid,
             MsgType: 'text',
