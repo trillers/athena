@@ -9,6 +9,7 @@ var schema = DomainBuilder
         name: {type: String},
         path: {type: String},
         ext: {type: String},
+        wx_media_id: {type: String},
         size: {type: String},
         mimeType: {type: String}
     })

@@ -21,6 +21,30 @@ var registry = new CommandRegistry();
 registry.addCommand('上线', require('./commands/onlineCommand'));
 registry.addCommand('下线', require('./commands/offlineCommand'));
 registry.addCommand('关闭', require('./commands/closeCvsCommand'));
+
+module.exports = function(emitter){
+    emitter.cs(function(event, context){
+        console.log('emit customer service handler');
+        co(function*(){
+            var message = context.weixin;
+            var stt = null;
+            var handler = null;
+            try{
+                context.user = yield context.getUser();
+                stt = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
+                context.user.status = stt || 'off';  //TODO temp
+                handler = registry.extractCommandFromContext(context);
+                if(handler){
+                    handler();
+                }else{
+                    csEmitter.emit(context);
+                }
+            }catch(e){
+                console.log(e);
+            }
+        })
+    });
+};
 //var handle = function(user, message){
 //    var stt;
 //    cskv.loadCSStatusByCSOpenIdAsync(user.wx_openid)
@@ -96,27 +120,3 @@ registry.addCommand('关闭', require('./commands/closeCvsCommand'));
 //            if(err && err.message != 'isCase' && err.message != 'isCmd' &&err.message != 'illegalOperation') console.log(err);
 //        })
 //}
-
-module.exports = function(emitter){
-    emitter.cs(function(event, context){
-        console.log('emit customer service handler');
-        co(function*(){
-            var message = context.weixin;
-            var stt = null;
-            var handler = null;
-            try{
-                context.user = yield context.getUser();
-                stt = yield cskv.loadCSStatusByCSOpenIdAsync(message.FromUserName);
-                context.user.status = stt || 'off';  //TODO temp
-                handler = registry.extractCommandFromContext(context);
-                if(handler){
-                    handler();
-                }else{
-                    csEmitter.emit(context);
-                }
-            }catch(e){
-                console.log(e);
-            }
-        })
-    });
-};

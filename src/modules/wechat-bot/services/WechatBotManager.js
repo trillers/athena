@@ -13,6 +13,7 @@ var WechatBotProxy = require('../proxy/WechatBotProxy');
 var WechatBotManager = function(){
     EventEmitter.call(this);
     this.buckets = {};
+    this.bots = {};
     this.persister = WechatBotService;
     this.proxy = new WechatBotProxy();
 
@@ -174,20 +175,20 @@ WechatBotManager.prototype.requestProfile = function(botInfo, bid){
     this.proxy.requestProfile(this._encodeBotid(botInfo), bid);
 };
 
-WechatBotManager.prototype._get = function(botInfo){
-    var bucket = this.buckets[botInfo.bucketid];
-    var bot = bucket && bucket[botInfo.openid];
-    return bot;
+WechatBotManager.prototype.getNameMap = function(){
+    return this.bots;
 };
 
 WechatBotManager.prototype._addBot = function(botInfo){
-    var bot = new WechatBot(botInfo);
     var bucket = this.buckets[botInfo.bucketid];
 
     !bucket && (bucket = this.buckets[botInfo.bucketid] = {});
-    bucket[botInfo.openid] = bot;
+    bucket[botInfo.openid] = botInfo;
 
-    return bot;
+    var botid = this._encodeBotid(botInfo);
+    this.bots[botid] = botInfo.nickname;
+
+    return botInfo;
 };
 
 WechatBotManager.prototype._removeBot = function(botInfo){
@@ -196,7 +197,8 @@ WechatBotManager.prototype._removeBot = function(botInfo){
 
     bot && (delete bucket[botInfo.openid]);
 
-    return bot;
+    var botid = this._encodeBotid(botInfo);
+    this.bots[botid] && (delete this.bots[botid]);
 };
 
 WechatBotManager.prototype._addBots = function(botInfos){

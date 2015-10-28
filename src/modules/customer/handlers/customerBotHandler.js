@@ -1,6 +1,6 @@
 /**
- *     ToUserName: bid
- *     FromUserName: botid (bucketid:openid)
+ *     ToUserName: botid (bucketid:openid)
+ *     FromUserName: bid
  *     MsgType: 'text'
  *     Content: to-be-sent text String
  *     bucketid
@@ -17,17 +17,24 @@ var ConversationKv = require('../../conversation/kvs/Conversation');
 var mediaFileService = require('../../file/services/MediaFileService');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
 var customerEmitter = require('../CustomerEmitter');
-
+var wechatBotUserService = require('../../user/services/WechatBotUserService');
 var handler = function(msg){
     co(function* (){
         try{
-            var user = yield getUser();
+            console.log("msg---------------");
+            console.log(msg);
+            var user = yield wechatBotUserService.loadByBuid(msg.FromUserName);
+            console.log(user);
             var cvs = null;
-            var an_media_id = msg.FsMediaId;
+            var an_media_id = msg.FsMediaId || '';
             var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
             if(!cvsId){
+
                 cvs = yield conversationService.createAsync({
-                    initiator: user.id, createTime: new Date()
+                    initiator: user.id,
+                    createTime: new Date(),
+                    terminalType: 'SB',
+                    botId: msg.ToUserName
                 });
                 yield ConversationKv.createAsync(cvs);
                 cvsId = cvs.id;

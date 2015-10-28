@@ -27,7 +27,9 @@ module.exports = function(emitter){
                 var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
                 if(!cvsId){
                     cvs = yield conversationService.createAsync({
-                        initiator: user.id, createTime: new Date()
+                        initiator: user.id,
+                        createTime: new Date(),
+                        terminalType: 'SS'
                     });
                     yield ConversationKv.createAsync(cvs);
                     cvsId = cvs.id;

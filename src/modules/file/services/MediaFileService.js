@@ -6,9 +6,7 @@ var Promise = require('bluebird');
 var settings = require('athena-settings').api;
 var token = require('../../wechat/common/token');
 var request = require('request');
-var Service = {};
-var urlCore = require('url');
-var qs = require('qs');
+var Service = {}
 
 /**
  * save conversation image message by media_id
@@ -80,13 +78,6 @@ Service.saveVoice = function* (media_id){
     }
 }
 
-Service.saveImageToWx = function(){
-
-}
-
-Service.saveVoiceToWx = function(){
-
-}
 /**
  * get media file url by media_id
  * @param media_id
@@ -99,26 +90,6 @@ var getMediaUrl = function*(media_id){
     }catch(err){
         console.log('getMediaUrl err: ' + err);
         return null;
-    }
-}
-
-function* getWxMediaIdByFsMediaId(msg){
-    try{
-        var at = yield token.generateGetAt(false)();
-        var fileUrl = settings.url + '/file?media_id=' + media_id;
-        var options = {
-            protocol: 'https',
-            host: 'api.weixin.qq.com/cgi-bin/media/upload',
-            search: qs.stringify({
-                access_token: at,
-                type: msg.MsgType
-            })
-        };
-        request(fileUrl).pipe(urlCore.format(options)).on('close', function(err, data){
-            console.log()
-        });
-    }catch(err){
-
     }
 }
 
