@@ -13,6 +13,8 @@ var schema = DomainBuilder
         , createTime: {type: Date, required: true}
         , takenTime: {type: Date}
         , closeTime: {type: Date}
+        , terminalType: {type: String}
+        , botId: {type:String}
     })
     .build();
 

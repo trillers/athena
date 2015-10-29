@@ -17,7 +17,7 @@ var WechatSite = function(wechat, info){
     this.idOpenids = {};
     this.openidUserInfos = {};
     this.wechat = wechat;
-    this.id = wechat._nextId('site');
+    this.id = info.id || wechat._nextId('site');
     this.sessions = {};
     this.sceneIds = {};
     this.tempSceneIds = {};
@@ -40,8 +40,8 @@ var WechatSite = function(wechat, info){
     this.api = new WechatSiteApi(this);
 };
 WechatSite.prototype.getJson = function(){return this.info};
-WechatSite.prototype.getId = function(){return this.info.id;};
-WechatSite.prototype._setId = function(id){this.info.id = id;};
+WechatSite.prototype.getId = function(){return this.id;};
+WechatSite.prototype._setId = function(id){this.id = id;};
 WechatSite.prototype.getCode = function(){return this.info.code;};
 WechatSite.prototype.setCode = function(code){this.info.code = code;};
 WechatSite.prototype.getName = function(){return this.info.name;};

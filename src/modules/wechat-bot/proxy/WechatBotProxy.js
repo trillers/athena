@@ -32,6 +32,21 @@ var events = {
     /*
      * {
      *   botid
+     *   list: [
+     *      {
+     *          name:
+     *          username:
+     *      },
+     *      ...
+     *   ]
+     * }
+     */
+    'group-list': true,
+
+
+    /*
+     * {
+     *   botid
      *   bid:
      *   nickname:
      * }
@@ -80,7 +95,15 @@ var channels = {
      */
     profileRequest: 'sbot:profile-request',
 
+    /*
+     * {
+     *     botid: (String)
+     * }
+     */
+    groupListRequest: 'sbot:group-list-request',
+
     profileResponse: 'sbot:profile',
+    groupListResponse: 'sbot:group-list',
     messageReceived: 'sbot:message',
     contactAdded: 'sbot:contact-added',
     needLogin: 'sbot:need-login'
@@ -104,6 +127,7 @@ WechatBotProxy.prototype._handleMessage = function(channel, data){
 WechatBotProxy.prototype.init = function(){
     this.subClient.subscribe(channels.messageReceived);
     this.subClient.subscribe(channels.profileResponse);
+    this.subClient.subscribe(channels.groupListResponse);
     this.subClient.subscribe(channels.contactAdded);
     this.subClient.subscribe(channels.needLogin);
     this.subClient.on('message', this._handleMessage.bind(this));
@@ -123,7 +147,10 @@ WechatBotProxy.prototype.send = function(msg){
 
 WechatBotProxy.prototype.requestProfile = function(botid, bid){
     this.pubClient.publish(channels.profileRequest, JSON.stringify({botid: botid, bid: bid}));
-    console.error(' profile message is published...');
+};
+
+WechatBotProxy.prototype.requestGroupList = function(botid){
+    this.pubClient.publish(channels.groupListRequest, JSON.stringify({botid: botid}));
 };
 
 module.exports = WechatBotProxy;

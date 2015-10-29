@@ -34,11 +34,12 @@ Util.newSignedInClient = function(platform, config){
     return client;
 };
 
-Util.newRegisteredSite = function(platform){
+Util.newRegisteredSite = function(platform, siteId){
     var no = nextSeq('site');
     var siteInfo = {};
     siteInfo.code = 'site_' + no;
     siteInfo.name = 'Site ' + no;
+    siteInfo && (siteInfo.id = siteId);
 
     return platform.registerSite(siteInfo);
 };

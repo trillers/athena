@@ -23,7 +23,8 @@ module.exports = function(emitter){
                     var customer = yield userService.loadByIdAsync(cvs.initiator);
                     var cs = yield userService.loadByIdAsync(cid);
                     //send the customer,s profile to cs
-                    yield _sendMsg(cs.wx_openid, {contentType: 'text', content: '[系统]: 您正在为“'+ customer.wx_nickname +'”服务'});
+                    var targetNickname = customer.wx_nickname || customer.nickname;
+                    yield _sendMsg(cs.wx_openid, {contentType: 'text', content: '[系统]: 您正在为“'+ targetNickname +'”服务'});
                     //if the message,s terminal type is SB, notify cs
                     if(cvs.terminalType === 'SB'){
                         yield _sendMsg(cs.wx_openid, {contentType: 'text', content: '[系统]: 这是一个助手号消息, 您只能发送文本'});
