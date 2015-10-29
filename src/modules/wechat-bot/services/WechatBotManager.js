@@ -1,7 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var util = require('util');
 var logger = require('../../../app/logging').logger;
-var WechatBot = require('./WechatBot');
 var WechatBotService = require('./WechatBotService');
 var WechatBotProxy = require('../proxy/WechatBotProxy');
 
@@ -144,7 +143,8 @@ WechatBotManager.prototype.lock = function(botInfo, callback){
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  */
 WechatBotManager.prototype.start = function(botInfo){
-    this.proxy.start(this._encodeBotid(botInfo));
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.start(botid);
 };
 
 /**
@@ -152,7 +152,8 @@ WechatBotManager.prototype.start = function(botInfo){
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  */
 WechatBotManager.prototype.stop = function(botInfo){
-    this.proxy.stop(this._encodeBotid(botInfo));
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.stop(botid);
 };
 
 /**
@@ -166,9 +167,9 @@ WechatBotManager.prototype.stop = function(botInfo){
  *  }
  */
 WechatBotManager.prototype.sendText = function(botInfo, msg){
-    console.log(botInfo);
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
     msg.MsgType = 'text';
-    msg.FromUserName = this._encodeBotid(botInfo);
+    msg.FromUserName = botid;
     this.proxy.send(msg);
 };
 
@@ -177,7 +178,8 @@ WechatBotManager.prototype.sendText = function(botInfo, msg){
  * @param bid
  */
 WechatBotManager.prototype.requestProfile = function(botInfo, bid){
-    this.proxy.requestProfile(this._encodeBotid(botInfo), bid);
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.requestProfile(botid, bid);
 };
 
 WechatBotManager.prototype.getNameMap = function(){
