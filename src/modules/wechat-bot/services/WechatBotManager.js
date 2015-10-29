@@ -44,6 +44,21 @@ var WechatBotManager = function(){
         }
     });
 
+    this.proxy.on('group-list', function(err, data){
+        if(err){
+            //TODO
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            data.time = new Date();
+            logger.debug(data);
+            me.emit('group-list', data);
+        }
+    });
+
     this.proxy.on('contact-added', function(err, data){
         if(err){
             //TODO
@@ -174,12 +189,22 @@ WechatBotManager.prototype.sendText = function(botInfo, msg){
 };
 
 /**
+ * Request a profile of a user of a bot.
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  * @param bid
  */
 WechatBotManager.prototype.requestProfile = function(botInfo, bid){
     var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
     this.proxy.requestProfile(botid, bid);
+};
+
+/**
+ * Request a group list of a bot.
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ */
+WechatBotManager.prototype.requestGroupList = function(botInfo){
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.requestGroupList(botid);
 };
 
 WechatBotManager.prototype.getNameMap = function(){
