@@ -50,19 +50,21 @@ module.exports = function(emitter){
     })
 };
 function* sendMessage(cvs, cs, customer, message){
+    console.log("cvs---------------");
+    console.log(cvs);
     if(cvs.terminalType === 'SB'){
         if(message.MsgType != 'text'){
             yield wechatApi.sendTextAsync(cs.wx_openid, '[系统]: 您只能发送文字');
             return;
         }
-        botManager.sendText(cvs.botId, null, {
+        botManager.sendText(cvs.botId, {
             FromUserName: cvs.botId,
             ToUserName: customer.bot_uid,
             MsgType: 'text',
             Content: message.Content
         });
     }else{
-        var openid = user.wx_openid;
+        var openid = cs.wx_openid;
         switch (message.MsgType) {
             case 'text':
                 yield wechatApi.sendTextAsync(openid, message.Content);

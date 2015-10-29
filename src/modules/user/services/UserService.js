@@ -345,10 +345,19 @@ Service.resetUser = function(openidArray, update, callback){
 
 Service.getRoleSum = function(role, callback){
     User.count({role: role}, function(err, count){
-       if(err) {
-           if(callback) return callback(err, null);
-       }
-       if(callback) return callback(null, count);
+        if(err) {
+            if(callback) return callback(err, null);
+        }
+        if(callback) return callback(null, count);
+    });
+}
+
+Service.getDocSum = function(filter, callback){
+    User.count(filter, function(err, count){
+        if(err) {
+            if(callback) return callback(err, null);
+        }
+        if(callback) return callback(null, count);
     });
 }
 

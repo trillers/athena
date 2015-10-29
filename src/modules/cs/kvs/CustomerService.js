@@ -234,7 +234,7 @@ var CustomerService = {
 
     loadWcCSSet: function(callback){
         var key = getWcCSSetKey();
-        redis.lrange(key, 0, -1, function(err, result){
+        redis.smembers(key, function(err, result){
             cbUtil.logCallback(
                 err,
                 'Fail to load wc customer server  set : ' + err,

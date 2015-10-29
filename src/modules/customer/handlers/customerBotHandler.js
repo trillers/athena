@@ -28,8 +28,10 @@ var handler = function(msg){
             var cvs = null;
             var an_media_id = msg.FsMediaId || '';
             var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
+            console.log("cvsId---------------")
+            console.log(cvsId);
             if(!cvsId){
-
+                console.log("##############")
                 cvs = yield conversationService.createAsync({
                     initiator: user.id,
                     createTime: new Date(),
@@ -53,6 +55,7 @@ var handler = function(msg){
                 customerEmitter.emit('conversation', cvs, msg);
             }
             else{
+                console.log("~~~~~~~~~~~~~~~~~")
                 cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
                 yield messageService.createAsync({
                     from: user.id,

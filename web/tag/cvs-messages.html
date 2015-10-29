@@ -1,0 +1,106 @@
+<cvs-messages>
+    <div if="{!hidden}">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="col-md-3 col-xs-3 col-sm-3" >
+                    <div class="well sidebar-nav" style="height: 38em">
+                        <ul class="nav nav-list" style="margin-top: 1em">
+                            <li class="leftlist"><a href="#cvs/index">会话总览</a></li>
+                            <li class="leftlist"  style="background: #e7e7e7"><a href="#cvs/query">会话查询</a></li>
+                        </ul>
+                    </div><!--/.well -->
+                </div><!--/span-->
+                <div class="col-md-9 col-xs-9 col-sm-9">
+                    <div class="jumbotron" style="min-height: 38em; overflow: hidden; padding-bottom: 0em">
+                            <div class="panel panel-default container-fluid" style="min-height: 29em; padding-left: 0em">
+                                <div id="dialog" style="min-height: 29em; margin-bottom: 0em">
+                                        <ul style="list-style-type: none">
+                                            <li each='{item, i in items}'  class={ right: parent.from != item.from._id}  style="width: 50%; overflow: hidden">
+                                                <div class={ floatRight: parent.from != item.from._id}>
+                                                    <div class={ textRight: parent.from != item.from._id}>
+                                                        <small>{'('+ new Date(item.crtOn).getHours() + ':' + new Date(item.crtOn).getMinutes() + ')'}</small>
+                                                        <strong>{item.from.wx_nickname}：</strong>
+                                                    </div>
+                                                    <div if= "{item.contentType == 'text'}">
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;{item.content}</span>
+                                                    </div>
+                                                    <div if= "{item.contentType == 'image'}">
+                                                        <img style="height: 7em" src="{parent.api + '/file/?media_id=' + item.an_media_id}" alt=""/>
+                                                    </div>
+                                                    <div if= "{item.contentType == 'voice'}">
+                                                        <span>&nbsp;&nbsp;&nbsp;&nbsp;[语音]{item.recognition}</span>
+                                                    </div>
+                                                    <br>
+                                                    <br>
+                                                </div>
+
+                                            </li>
+
+                                        </ul>
+                                </div>
+
+                                <hr width="110%" style="margin-bottom: 0em ">
+                                <a style="float: right ; margin-left: 1em ;font-size: 1.5em; margin-bottom: 0em; cursor: pointer" onclick="{returnPage}">返回</a>
+                            </div>
+                        </div>
+                </div><!--/span-->;
+            </div><!--/row-->
+
+
+        </div><!--/container-->
+
+        <style scoped>
+            .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+            .right{margin-left: 50%; padding-right: 1.2em}
+            .textRight{text-align: right}
+            .floatRight{float: right}
+        </style>
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+            var loadMsgOfCvs = domain.action('loadMsgOfCvs');
+            self.api =  __app.settings.api.url;
+
+            var onLoadMsgOfCvs = function(data){
+                self.items = data;
+                self.from = data[0].from && data[0].from._id;
+                self.update();
+            }
+            this.on('mount', function(){
+                console.info('tag cvs messages is mounted');
+                loadMsgOfCvs.onDone(onLoadMsgOfCvs);
+            });
+            this.on('unmount', function(){
+                console.info('tag cvs messages is unmounted');
+                loadMsgOfCvs.offDone(onLoadMsgOfCvs);
+            });
+            this.on('open', function(opts){
+                console.info('tag cvs messages is opening');
+                self.trigger('ready', true);
+                self.trigger('view-route-to');
+                loadMsgOfCvs.execute(opts._id);
+            });
+
+            this.on('leave', function(){
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function(){
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function(){
+                console.info('tag cvs index is refreshing');
+                //_refresh();
+            });
+
+            returnPage(e){
+                e.preventUpdate = true;
+                riot.route('cvs/query');
+            }
+        </script>
+    </div>
+</cvs-messages>

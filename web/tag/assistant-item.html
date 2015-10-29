@@ -1,0 +1,24 @@
+<assistant-item>
+    <li style="width: 100%">
+        <strong class="col-md-1"></strong>
+        <span class="col-md-2"> {nickname}</span>
+        <span class="col-md-2"> {date}</span>
+        <span class="col-md-2"> {lFlg} </span>
+        <span class="col-md-2"> {remark}</span>
+        <span class="col-md-2">群发</span>
+        <strong class="col-md-1"></strong>
+    </li>
+    <br>
+    <br>
+
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        var createTime = new Date(item.crtOn);
+        var year = createTime.getFullYear();
+        var month = createTime.getMonth() + 1;
+        var day = createTime.getDate();
+        debugger;
+        self.date =  year + '-' + month + '-' + day;
+    </script>
+</assistant-item>

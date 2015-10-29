@@ -1,8 +1,8 @@
+var Promise = require('bluebird');
 var logger = require('../../../app/logging').logger;
 var cbUtil = require('../../../framework/callback');
 var WechatBot = require('../models/WechatBot').model;
 var lifeFlagEnum = require('../../../framework/model/enums').LifeFlag;
-
 var Service = {};
 
 /**
@@ -127,5 +127,7 @@ Service.lock = function(botInfo, callback){
             }
         });
 };
+
+Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

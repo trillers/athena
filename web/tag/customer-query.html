@@ -1,0 +1,100 @@
+<customer-query>
+    <div if="{!hidden}">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="col-md-3 col-xs-3 col-sm-3" >
+                    <div class="well sidebar-nav" style="height: 38em">
+                        <ul class="nav nav-list" style="margin-top: 1em">
+                            <li class="leftlist"><a href="#customer/index">客户总览</a></li>
+                            <li class="leftlist" style="background: #e7e7e7"><a href="#customer/query">信息查询</a></li>
+                            <li class="leftlist"><a href="#assistant/query">助手号</a></li>
+
+                        </ul>
+                    </div><!--/.well -->
+                </div><!--/span-->
+                <div class="col-md-9 col-xs-9 col-sm-9">
+                    <div class="jumbotron" style="height: auto;padding-top: 2em; padding-left: 2em;padding-right: 4em;">
+                        <br>
+                        <div>
+                            <ul>
+
+                                <li class="numberlist">
+                                    <div class="panel " style="min-height: 30em;padding-top: 1em ;">
+
+                                        <ul class="numberlist" style="padding-left: 0em; margin-bottom: 5em">
+
+                                            <li>
+                                                <strong class="col-md-2 formItem">用户</strong>
+                                                <strong class="col-md-2 formItem">类型</strong>
+                                                <strong class="col-md-2 formItem">来源</strong>
+                                                <strong class="col-md-2 formItem">创建时间</strong>
+                                                <strong class="col-md-2 formItem"> 会话窗口</strong>
+                                            </li>
+
+
+                                            <li>  <hr width="100%" >  </li>
+
+                                            <customer-item each="{items}" curritem="{this}" />
+                                        </ul>
+
+                                    </div><!-- panel-->
+                                </li>
+
+                            </ul>
+                        </div> <!--  ul -->
+                    </div><!--  jumbotron -->
+                </div><!--/span-->
+            </div><!--/row-->
+
+
+        </div><!--/container-->
+        <style scoped>
+            .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+            .numberlist{list-style-type: none ; text-align: center}
+            .formItem{width: 20%; padding-left: 8px; padding-right: 8px;}
+        </style>
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+            var loadCustomer = domain.action('loadCustomer');
+
+            var onLoadCustomer = function(data){
+                if(data){
+                    self.items = data;
+                    self.update();
+                }
+            }
+
+            this.on('mount', function(){
+                console.info('tag customer query is mounted');
+                loadCustomer.onDone(onLoadCustomer);
+            });
+            this.on('unmount', function(){
+                console.info('tag customer query is unmounted');
+                loadCustomer.offDone(onLoadCustomer);
+            });
+            this.on('open', function(options){
+                console.info('tag customer query is opening');
+                self.trigger('ready', false);
+                self.trigger('view-route-to');
+                loadCustomer.execute();
+            });
+
+            this.on('leave', function(){
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function(){
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function(){
+                console.info('tag customer query is refreshing');
+                //_refresh();
+            });
+        </script>
+    </div>
+</customer-query>
