@@ -54,4 +54,5 @@ module.exports = function(app){
     assistant_router.prefix('/api/assistant');
     require('./assistant')(assistant_router);
     app.use(assistant_router.routes());
+
 }

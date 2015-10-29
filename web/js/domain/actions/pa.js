@@ -34,7 +34,11 @@ domain.action('loadCustomer').onExecute(function(){
 });
 
 domain.action('loadAssistant').onExecute(function(){
-    apiFactory.get('/assistant/load').drive(this).send();
+    apiFactory.get('/assistant/loadAll').drive(this).send();
+});
+
+domain.action('loadAssistantById').onExecute(function(id){
+    apiFactory.get('/assistant/loadOne?id=' + id).drive(this).send();
 });
 
 domain.action('loadCustomerById').onExecute(function(id){
@@ -43,5 +47,9 @@ domain.action('loadCustomerById').onExecute(function(id){
 
 domain.action('sendMsgToCustomer').onExecute(function(data){
     apiFactory.post('/customer/sendMsg').drive(this).send(data);
+});
+
+domain.action('assistantMass').onExecute(function(data){
+    apiFactory.post('/assistant/mass').drive(this).send(data);
 });
 module.exports = null;

@@ -5,7 +5,7 @@
         <span class="col-md-2"> {date}</span>
         <span class="col-md-2"> {lFlg} </span>
         <span class="col-md-2"> {remark}</span>
-        <span class="col-md-2">群发</span>
+        <span class="col-md-2"><input onclick="{mass}" class="btn btn-info" style="padding: 3px 12px; font-size: 10px;" type="button" value="群发"/></span>
         <strong class="col-md-1"></strong>
     </li>
     <br>
@@ -18,7 +18,11 @@
         var year = createTime.getFullYear();
         var month = createTime.getMonth() + 1;
         var day = createTime.getDate();
-        debugger;
         self.date =  year + '-' + month + '-' + day;
+
+        mass(e){
+            e.preventUpdate = true;
+            riot.route('assistant/mass/_' + item._id);
+        }
     </script>
 </assistant-item>

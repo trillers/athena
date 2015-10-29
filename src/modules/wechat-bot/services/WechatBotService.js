@@ -6,6 +6,26 @@ var lifeFlagEnum = require('../../../framework/model/enums').LifeFlag;
 var Service = {};
 
 /**
+ * Load wechat bots by id.
+ * @param callback
+ * @param id
+ */
+Service.loadById = function(id, callback){
+    WechatBot
+        .findOne({_id: id, lFlg: 'a'}, null, {lean: true, sort: {bucketid: -1, crtOn: -1}})
+        .exec(function(err, result){
+            if(err){
+                logger.error('Fail to load wechat bots by id: ' + id + ' err: ' + err);
+                callback(err);
+            }
+            else{
+                logger.info('Succeed to load wechat bots by id:' + id);
+                callback(null, result);
+            }
+        });
+};
+
+/**
  * Load all wechat bots.
  * @param callback
  */
