@@ -35,7 +35,6 @@ Platform.prototype.registerSite = function(info){
     }
 
     var site = new WechatSite(this, info);
-    site._setId(this._nextId('site'));
     site._setQrcode(this._nextId('site_client'));
     this.sites[site.getId()] = site;
     this.codeSites[site.getCode()] = site;

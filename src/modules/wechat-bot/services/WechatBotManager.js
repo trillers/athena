@@ -135,6 +135,10 @@ WechatBotManager.prototype.unregister = function(botInfo, callback){
     });
 };
 
+WechatBotManager.prototype.lock = function(botInfo, callback){
+    this.persister.lock(botInfo, callback);
+};
+
 /**
  * start a bot
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot

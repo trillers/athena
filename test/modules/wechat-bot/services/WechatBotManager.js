@@ -96,8 +96,49 @@ describe('WechatBotManager', function() {
             };
             botManager.unregister(botInfo, function(err, bot){
                 assert.ok(bot);
-                assert.equal(bot.info.bucketid, siteId);
-                assert.equal(bot.info.openid, openid);
+                assert.equal(bot.bucketid, siteId);
+                assert.equal(bot.openid, openid);
+                console.info(bot);
+                done();
+            });
+        })
+    })
+
+    describe.only('#lock', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var nickname = '包三哥';
+        //var botManager = new WechatBotManager();
+        before(function(done){
+            botManager.on('register', function(bot){
+                console.info('wechat bot is registered successfully!');
+                console.info(bot);
+                console.info('\r\n');
+                done();
+            });
+            botManager.on('register-error', function(err){
+                console.info('wechat bot fails to be registered: ' + err);
+                done();
+            });
+
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: nickname
+            };
+            botManager.register(botInfo);
+        })
+
+        it('lock a bot by bot bucketid and openid', function (done) {
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: nickname
+            };
+            botManager.lock(botInfo, function(err, bot){
+                assert.ok(bot);
+                assert.equal(bot.bucketid, siteId);
+                assert.equal(bot.openid, openid);
                 console.info(bot);
                 done();
             });
