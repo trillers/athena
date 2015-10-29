@@ -1,7 +1,8 @@
+var Promise = require('bluebird');
 var logger = require('../../../app/logging').logger;
 var cbUtil = require('../../../framework/callback');
 var WechatBot = require('../models/WechatBot').model;
-var Promise = require('bluebird');
+var lifeFlagEnum = require('../../../framework/model/enums').LifeFlag;
 var Service = {};
 
 /**
@@ -85,6 +86,44 @@ Service.remove = function(botInfo, callback){
             else{
                 logger.info('Succeed to remove wechat bot ' + JSON.stringify(botInfo));
                 callback();
+            }
+        });
+};
+
+Service.lock = function(botInfo, callback){
+    WechatBot.findOne(
+        {
+            bucketid: botInfo.bucketid,
+            openid: botInfo.openid
+        },
+        function (err, user) {
+            if (err) {
+                logger.error('Fail to lock wechat bot '+ JSON.stringify(botInfo) +': ' + err);
+                callback(err);
+            }
+            else{
+                if(user){
+                    user.lFlg = lifeFlagEnum.Inactive;
+                    user.save(function(err, doc, numAffected){
+                        if(err){
+                            logger.error('Fail to lock wechat bot ' + JSON.stringify(botInfo) + ' : ' + err);
+                            callback(err);
+                        }
+                        else{
+                            if(numAffected){
+                                logger.info('Succeed to lock wechat bot ' + JSON.stringify(botInfo));
+                            }
+                            else{
+                                logger.warn('Fail to lock wechat bot ' + JSON.stringify(botInfo) + ', no record is updated.');
+                            }
+                            callback(null, doc);
+                        }
+                    });
+                }
+                else{
+                    logger.warn('Fail to lock wechat bot ' + JSON.stringify(botInfo) + ', no record is found ');
+                    callback();
+                }
             }
         });
 };
