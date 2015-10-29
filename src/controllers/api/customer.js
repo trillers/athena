@@ -5,9 +5,46 @@ var UserRole = require('../../modules/common/models/TypeRegistry').item('UserRol
 var csState = require('../../modules/common/models/TypeRegistry').item('CSState');
 var userKvs = require('../../modules/user/kvs/User');
 var botManager = require('../../modules/assistant/botManager');
+var wechatApi = require('../../modules/wechat/common/api').api;
+
 var Promise = require('bluebird');
 
 module.exports = function(router) {
+    router.post('/sendMsg', function*(){
+        try{
+            var msg = this.request.body.msg;
+            var bid = this.request.body.bid;
+            var bot_id = this.request.body.bot_id;
+            var openid = this.request.body.openid;
+            if(openid){
+                yield wechatApi.sendTextAsync(openid, msg);
+            }else if(bot_id){
+                var message = {
+                    ToUserName: bid,
+                    FromUserName: bot_id,
+                    MsgType: 'text',
+                    Content: msg
+                }
+                botManager.sendText(bot_id, message);
+            }
+            this.body = {success: true, err: null};
+        }catch(err){
+            console.error('load customer by id err: ' + err);
+            this.body = {success: false, err: err};
+        }
+    });
+
+    router.get('/load', function*(){
+        try{
+            var userId = this.query.id;
+            var customer = yield userKvs.loadByIdAsync(userId);
+            this.body = customer;
+        }catch(err){
+            console.error('load customer by id err: ' + err);
+            this.body = null;
+        }
+    });
+
     router.get('/find', function*(){
         try{
             var customerList = yield userService.getRoleListAsync(UserRole.Customer.value());

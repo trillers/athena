@@ -36,4 +36,12 @@ domain.action('loadCustomer').onExecute(function(){
 domain.action('loadAssistant').onExecute(function(){
     apiFactory.get('/assistant/load').drive(this).send();
 });
+
+domain.action('loadCustomerById').onExecute(function(id){
+    apiFactory.get('/customer/load?id=' + id).drive(this).send();
+});
+
+domain.action('sendMsgToCustomer').onExecute(function(data){
+    apiFactory.post('/customer/sendMsg').drive(this).send(data);
+});
 module.exports = null;

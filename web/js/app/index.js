@@ -104,6 +104,19 @@ app.routeView('assistant/query', nest.viewable({
     this.tag.trigger('open', ctx.req.query);
   }
 }));
+
+app.routeView('customer/chat/_:id', nest.viewable({
+  name: 'customer/chat/_:id',
+  mount: function(ctx){
+    var tags = riot.mount('customer-chat', {_id: ctx.req.params.id, app: this.parent});
+    this.tag = tags[0];
+  },
+  route: function(ctx) {
+    this.context = ctx;
+    this.tag.trigger('open', {_id: ctx.req.params.id, share: ctx.req.query.share, guest: ctx.req.query.guest});
+  }
+}));
+
 app.on('init', function(){
   var attentionUrl = util.getCookie('attentionUrl');
   var hash = attentionUrl || window.location.hash;
