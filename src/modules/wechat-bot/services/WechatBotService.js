@@ -11,7 +11,7 @@ var Service = {};
  */
 Service.load = function(callback){
     WechatBot
-        .find({}, null, {lean: true, sort: {bucketid: -1, crtOn: -1}})
+        .find({lFlg: 'a'}, null, {lean: true, sort: {bucketid: -1, crtOn: -1}})
         .exec(function(err, results){
             if(err){
                 logger.error('Fail to load all wechat bots: ' + err);
