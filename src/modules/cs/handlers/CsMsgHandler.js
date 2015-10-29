@@ -58,9 +58,7 @@ function* sendMessage(cvs, cs, customer, message){
             return;
         }
         botManager.sendText(cvs.botId, {
-            FromUserName: cvs.botId,
             ToUserName: customer.bot_uid,
-            MsgType: 'text',
             Content: message.Content
         });
     }else{
