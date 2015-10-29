@@ -13,18 +13,20 @@ module.exports = function(router) {
     router.post('/sendMsg', function*(){
         try{
             var msg = this.request.body.msg;
-            var bid = this.request.body.bid;
+            var bot_uid = this.request.body.bot_uid;
             var bot_id = this.request.body.bot_id;
             var openid = this.request.body.openid;
             if(openid){
                 yield wechatApi.sendTextAsync(openid, msg);
             }else if(bot_id){
                 var message = {
-                    ToUserName: bid,
+                    ToUserName: bot_uid,
                     FromUserName: bot_id,
                     MsgType: 'text',
                     Content: msg
                 }
+                console.log('*************************');
+                console.log(message);
                 botManager.sendText(bot_id, message);
             }
             this.body = {success: true, err: null};

@@ -43,10 +43,11 @@
             var sendMsgToCustomer = domain.action('sendMsgToCustomer');
 
             var onLoadCustomerById = function(data){
-                self.nickname = data.wx_nickname;
+                debugger;
+                self.nickname = data.wx_nickname || data.nickname;
                 self.openid = data.wx_openid;
                 self.bot_id = data.bot_id;
-                self.bid = data.bid;
+                self.bot_uid = data.bot_uid;
                 self.update();
             }
 
@@ -102,6 +103,7 @@
                     var data = {
                         openid: self.openid,
                         bot_id: self.bot_id,
+                        bot_uid: self.bot_uid,
                         msg: msg
                     }
                     sendMsgToCustomer.execute(data);
