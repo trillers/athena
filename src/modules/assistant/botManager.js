@@ -33,6 +33,19 @@ botManager.on('need-login', function(msg){
     });
 });
 
+botManager.on('login', function(msg){
+    //botManager.setLoginFlag(msg.botid); //TODO
+    console.info('login');
+    console.info(msg);
+    setTimeout(function(){
+        botManager.requestGroupList(msg.botid);
+    }, 2000);
+});
+
+botManager.on('abort', function(msg){
+    //botManager.setAbortFlag(msg.botid); //TODO
+});
+
 botManager.on('contact-added', function(contact){
     console.error('contact');
     console.error(contact);
@@ -70,10 +83,10 @@ setTimeout(function(){
     botManager.init();
 }, 1000);
 
-setTimeout(function(){
-    setInterval(function(){
-        botManager.requestAllGroupLists();
-    }, 20000);
-}, 20000);
+//setTimeout(function(){
+//    setInterval(function(){
+//        botManager.requestAllGroupLists();
+//    }, 10*60*1000); //10 minutes
+//}, 20000);
 
 module.exports = botManager;

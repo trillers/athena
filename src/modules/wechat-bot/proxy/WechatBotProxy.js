@@ -136,7 +136,8 @@ util.inherits(WechatBotProxy, EventEmitter);
 WechatBotProxy.prototype._handleMessage = function(channel, data){
     var oData = JSON.parse(data);
     var event = channel.split(':')[1];
-
+console.info(channel);
+console.info(data);
     this.emit(event, oData.err, oData.data);
 };
 
