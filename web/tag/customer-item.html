@@ -1,15 +1,16 @@
 <customer-item>
     <li style="width: 100%">
-        <span class="col-md-2 formItem" style="text-align: left; padding-left: 1.5em"> <img src="{headUrl}"  style="max-width: 2em"> <span>{nickname}</span></span>
-        <span class="col-md-2 formItem"> {type}</span>
-        <span class="col-md-2 formItem"> {from} </span>
-        <span class="col-md-2 formItem"> {date}</span>
-        <span class="col-md-2 formItem"> {timeWindow}</span>
+        <span class="col-md-3" style="text-align: left; width: 22% !important; padding-left: 1em !important;"> <img src="{headUrl}"  style="max-width: 2em"> <span>{nickname}</span></span>
+        <span class="col-md-2"> {type}</span>
+        <span class="col-md-2"> {from} </span>
+        <span class="col-md-2"> {date}</span>
+        <span class="col-md-2"> {timeWindow}</span>
+        <span class="col-md-1"> <input onclick="{chat}" class="btn btn-info" style="padding: 3px 12px; font-size: 10px;" type="button" value="会话"/></span>
     </li>
     <br>
     <br>
     <style scoped>
-        .formItem{width: 20%; padding-left: 8px; padding-right: 8px;}
+        li span {padding-left: 0 !important; padding-right: 0 !important;}
     </style>
     <script>
         var self = this;
@@ -35,6 +36,11 @@
             var hour = timeArr[0] + '小时';
             var minute = (parseInt(timeArr[1]) * 0.06).toFixed(0) + '分钟';
             return hour + minute;
+        }
+
+        chat(e){
+            e.preventUpdate = true;
+            riot.route('customer/chat/_' + item._id);
         }
     </script>
 </customer-item>

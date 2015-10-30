@@ -1,0 +1,111 @@
+<assistant-mass>
+    <div if="{!hidden}">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="col-md-3 col-xs-3 col-sm-3" >
+                    <div class="well sidebar-nav" style="height: 38em">
+                        <ul class="nav nav-list" style="margin-top: 1em">
+                            <li class="leftlist"><a href="#customer/index">客户总览</a></li>
+                            <li class="leftlist"><a href="#customer/query">信息查询</a></li>
+                            <li class="leftlist" style="background: #e7e7e7"><a href="#assistant/query">助手号</a></li>
+
+                        </ul>
+                    </div><!--/.well -->
+                </div><!--/span-->
+                <div class="col-md-9 col-xs-9 col-sm-9">
+                    <div class="jumbotron" style="min-height: 38em; overflow: hidden; padding-bottom: 0em">
+                        <div class="panel panel-default container-fluid" style="min-height: 29em; padding-left: 1.1em">
+                            <div id="dialog" style="padding-top: 2em; min-height: 29em; margin-bottom: 0em">
+                                <span>助手号 {nickname} 群发</span>
+                                <textarea id="msg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
+                                <button type="button" onclick="{send}" style="float: right; margin-top: 1em; width: 7em" class="btn btn-success">发送</button>
+
+                            </div>
+
+                            <hr width="110%" style="margin-bottom: 0em ">
+                            <input type="button" class="btn btn-primary" style="float: right; padding: 3px 12px; margin: 11px 0;" value="返回" onclick="{returnPage}"/>
+                        </div>
+                    </div>
+                </div><!--/span-->;
+            </div><!--/row-->
+
+
+        </div><!--/container-->
+
+        <style scoped>
+            .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+        </style>
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+            var loadAssistantById = domain.action('loadAssistantById');
+            var assistantMass = domain.action('assistantMass');
+
+            var onLoadAssistantById = function(data){;
+                self.nickname = data.nickname;
+                self.bot_id = data.bucketid + ':' + data.openid;
+                self.update();
+            }
+
+            var onAssistantMass = function(data){
+                if(data.success){
+                    alert('发送成功')
+                    $('#msg').val('');
+                }else{
+                    alert('发送失败')
+                }
+            }
+
+            this.on('mount', function(){
+                console.info('tag assistant mass is mounted');
+                loadAssistantById.onDone(onLoadAssistantById);
+                assistantMass.onDone(onAssistantMass);
+            });
+            this.on('unmount', function(){
+                console.info('tag assistant mass is unmounted');
+                loadAssistantById.offDone(onLoadAssistantById);
+                assistantMass.offDone(onAssistantMass);
+            });
+            this.on('open', function(opts){
+                console.info('tag cassistant mass is opening');
+                self.trigger('ready', true);
+                self.trigger('view-route-to');
+                loadAssistantById.execute(opts._id);
+            });
+
+            this.on('leave', function(){
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function(){
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function(){
+                console.info('tag assistant mass is refreshing');
+                //_refresh();
+            });
+
+            returnPage(e){
+                e.preventUpdate = true;
+                riot.route('assistant/query');
+            }
+
+            send(e){
+                var msg = $('#msg').val().trim();
+                if(msg.length > 0) {
+                    var data = {
+                        bot_id: self.bot_id,
+                        msg: msg
+                    }
+                    assistantMass.execute(data);
+                }else{
+                    alert('发送内容不能为空');
+                }
+            }
+        </script>
+    </div>
+</assistant-mass>

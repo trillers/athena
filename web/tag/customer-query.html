@@ -24,11 +24,12 @@
                                         <ul class="numberlist" style="padding-left: 0em; margin-bottom: 5em">
 
                                             <li>
-                                                <strong class="col-md-2 formItem">用户</strong>
-                                                <strong class="col-md-2 formItem">类型</strong>
-                                                <strong class="col-md-2 formItem">来源</strong>
-                                                <strong class="col-md-2 formItem">创建时间</strong>
-                                                <strong class="col-md-2 formItem"> 会话窗口</strong>
+                                                <strong class="col-md-3" style="width: 22% !important;">用户</strong>
+                                                <strong class="col-md-2">类型</strong>
+                                                <strong class="col-md-2">来源</strong>
+                                                <strong class="col-md-2">创建时间</strong>
+                                                <strong class="col-md-2">会话窗口</strong>
+                                                <strong class="col-md-1">操作</strong>
                                             </li>
 
 
@@ -51,17 +52,19 @@
         <style scoped>
             .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
             .numberlist{list-style-type: none ; text-align: center}
-            .formItem{width: 20%; padding-left: 8px; padding-right: 8px;}
+            li strong{padding-left: 0 !important; padding-right: 0 !important;}
         </style>
         <script>
             this.app = this.opts.app; //keep spa object
             var self = nest.presentable(this);
             self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
             var loadCustomer = domain.action('loadCustomer');
+            self.loaded = false;
 
             var onLoadCustomer = function(data){
                 if(data){
                     self.items = data;
+                    self.loaded = true;
                     self.update();
                 }
             }
@@ -78,7 +81,9 @@
                 console.info('tag customer query is opening');
                 self.trigger('ready', false);
                 self.trigger('view-route-to');
-                loadCustomer.execute();
+                if(!self.loaded){
+                    loadCustomer.execute();
+                }
             });
 
             this.on('leave', function(){

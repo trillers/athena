@@ -94,7 +94,11 @@ Service.find = function (params, callback) {
         query.find(params.conditions);
     }
 
-
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
+    }
     //TODO: specify select list, exclude comments in list view
     query.lean(true);
     query.exec(function (err, docs) {
@@ -127,6 +131,12 @@ Service.filter = function (params, callback) {
 
     if (params.conditions) {
         query.find(params.conditions);
+    }
+
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
     }
     query.lean(true);
     query.exec(function (err, docs) {
