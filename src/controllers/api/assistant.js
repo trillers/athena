@@ -7,10 +7,29 @@ var botManager = require('../../modules/assistant/botManager');
 var Promise = require('bluebird');
 
 module.exports = function(router) {
+
+    router.get('/contacts', function*(){
+        try{
+            var bot_id = this.query.bot_id;
+            var params = {
+                conditions: {
+                    bot_id: bot_id,
+                    role: UserRole.Customer.value()
+                }
+            }
+            var sbotUsers = yield userService.findAsync(params);
+            this.body = sbotUsers;
+        }catch(err){
+            console.log('assistant router load one err:' + err);
+            this.body = null;
+        }
+    });
+
     router.get('/loadOne', function*(){
         try{
             var id = this.query.id;
             var assistant = yield wechatBotService.loadByIdAsync(id);
+            assistant.lFlg = lifeFlagEnum.text(assistant.lFlg);//change lFlag to text
             this.body = assistant;
         }catch(err){
             console.log('assistant router load one err:' + err);
@@ -34,15 +53,14 @@ module.exports = function(router) {
 
     router.post('/mass', function*(){
         try{
+            var bot_id = this.request.body.bot_id;
+            var msg = this.request.body.msg;
             var params = {
                 conditions: {
-                    bot_id: {$ne: null},
+                    bot_id: bot_id,
                     role: UserRole.Customer.value()
                 }
             }
-
-            var bot_id = this.request.body.bot_id;
-            var msg = this.request.body.msg;
             var sbotUsers = yield userService.findAsync(params);
             for(var i = 0; i < sbotUsers.length; i++){
                 var message = {

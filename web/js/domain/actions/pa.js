@@ -41,6 +41,10 @@ domain.action('loadAssistantById').onExecute(function(id){
     apiFactory.get('/assistant/loadOne?id=' + id).drive(this).send();
 });
 
+domain.action('loadAssistantContacts').onExecute(function(bot_id){
+    apiFactory.get('/assistant/contacts?bot_id=' + bot_id).drive(this).send();
+});
+
 domain.action('loadCustomerById').onExecute(function(id){
     apiFactory.get('/customer/load?id=' + id).drive(this).send();
 });
