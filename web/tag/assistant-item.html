@@ -1,12 +1,9 @@
 <assistant-item>
     <li style="width: 100%">
-        <strong class="col-md-1"></strong>
-        <span class="col-md-2"> {nickname}</span>
-        <span class="col-md-2"> {date}</span>
-        <span class="col-md-2"> {lFlg} </span>
-        <span class="col-md-2"> {remark}</span>
-        <span class="col-md-2"><input onclick="{mass}" class="btn btn-info" style="padding: 3px 12px; font-size: 10px;" type="button" value="群发"/></span>
-        <strong class="col-md-1"></strong>
+        <span class="col-md-3"> <a  onclick="{operation}" style="text-decoration: none; cursor: pointer">{nickname || '匿名'}</a></span>
+        <span class="col-md-3"> {date}</span>
+        <span class="col-md-3"> {lFlg} </span>
+        <span class="col-md-3"> {remark}</span>
     </li>
     <br>
     <br>
@@ -23,6 +20,11 @@
         mass(e){
             e.preventUpdate = true;
             riot.route('assistant/mass/_' + item._id);
+        }
+
+        operation(e){
+            e.preventUpdate = true;
+            riot.route('assistant/operation/_' + item._id);
         }
     </script>
 </assistant-item>

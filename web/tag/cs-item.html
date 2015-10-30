@@ -16,7 +16,7 @@
     <script>
         var self = this;
         var item = self.opts.curritem;
-        self.headUrl = item.wx_headimgurl;
+        self.headUrl = item.wx_headimgurl || item.headimgurl || '../images/default_avatar.jpg';
         self.nickname = item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 5) + '...';
         var delCs = domain.action('delCs');
         self.date = '--';

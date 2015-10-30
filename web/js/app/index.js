@@ -129,6 +129,18 @@ app.routeView('assistant/mass/_:id', nest.viewable({
   }
 }));
 
+app.routeView('assistant/operation/_:id', nest.viewable({
+  name: 'assistant/operation/_:id',
+  mount: function(ctx){
+    var tags = riot.mount('assistant-operation', {_id: ctx.req.params.id, app: this.parent});
+    this.tag = tags[0];
+  },
+  route: function(ctx) {
+    this.context = ctx;
+    this.tag.trigger('open', {_id: ctx.req.params.id, share: ctx.req.query.share, guest: ctx.req.query.guest});
+  }
+}));
+
 app.on('init', function(){
   var attentionUrl = util.getCookie('attentionUrl');
   var hash = attentionUrl || window.location.hash;
