@@ -52,11 +52,10 @@
                                         </div>
                                         <div id="group" style="display: none; padding-top: 1em">
                                             <ul class="list-group">
-                                                <li class="list-group-item">Cras justo odio</li>
-                                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                                <li class="list-group-item">Morbi leo risus</li>
-                                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                                <li class="list-group-item">Vestibulum at eros</li>
+                                                <ul class="list-group">
+                                                    <li each="{groups}" class="list-group-item"><span>{name || '匿名'}</span>
+                                                    </li>
+                                                </ul>
                                             </ul>
                                         </div>
                                     </div>
@@ -76,16 +75,6 @@
                                         </div>
                                         <div id="massToGroup" style="display: none; padding-top: 1em">
                                             <span>&nbsp;&nbsp;助手号 {bot_nickname} 群发给群</span>
-                                            <br>
-                                            <br>
-                                            <ul class="list-group">
-                                                <li class="list-group-item">Cras justo odio</li>
-
-                                                <li class="list-group-item">Dapibus ac facilisis in</li>
-                                                <li class="list-group-item">Morbi leo risus</li>
-                                                <li class="list-group-item">Porta ac consectetur ac</li>
-                                                <li class="list-group-item">Vestibulum at eros</li>
-                                            </ul>
                                             <textarea id="massToGroupMsg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
                                             <button type="button" onclick="{sendToGroup}" style="margin-left: 83%; margin-top: 1em; width: 7em; margin-right: 1em; margin-bottom: 1em;" class="btn btn-success">发送</button>
                                         </div>
@@ -112,6 +101,7 @@
             self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
             var loadAssistantById = domain.action('loadAssistantById');
             var loadAssistantContacts = domain.action('loadAssistantContacts');
+            var loadAssistantGroups = domain.action('loadAssistantGroups');
             var assistantMass = domain.action('assistantMass');
 
             var onLoadAssistantById = function(data){
@@ -125,7 +115,9 @@
                 self.bot_lFlg = data.lFlg;
 
                 self.bot_id = data.bucketid + ':' + data.openid;
+                self.botId = data._id;
                 loadAssistantContacts.execute(self.bot_id);
+                loadAssistantGroups.execute(data._id);
 
                 self.update();
             }
@@ -133,6 +125,13 @@
             var onLoadAssistantContacts = function(data){
                 if(data){
                     self.contacts = data;
+                    self.update();
+                }
+            }
+
+            var onLoadAssistantGroups = function(data){
+                if(data){
+                    self.groups = data;
                     self.update();
                 }
             }
@@ -151,12 +150,14 @@
                 console.info('tag assistant mass is mounted');
                 loadAssistantById.onDone(onLoadAssistantById);
                 loadAssistantContacts.onDone(onLoadAssistantContacts);
+                loadAssistantGroups.onDone(onLoadAssistantGroups);
                 assistantMass.onDone(onAssistantMass);
             });
             this.on('unmount', function(){
                 console.info('tag assistant mass is unmounted');
                 loadAssistantById.offDone(onLoadAssistantById);
                 loadAssistantContacts.offDone(onLoadAssistantContacts);
+                loadAssistantGroups.offDone(onLoadAssistantGroups);
                 assistantMass.offDone(onAssistantMass);
             });
             this.on('open', function(opts){
@@ -244,7 +245,8 @@
                 if(msg.length > 0) {
                     var data = {
                         bot_id: self.bot_id,
-                        msg: msg
+                        msg: msg,
+                        type: 'single'
                     }
                     assistantMass.execute(data);
                 }else{
@@ -257,8 +259,10 @@
                 var msg = $('#massToGroupMsg').val().trim();
                 if(msg.length > 0) {
                     var data = {
+                        botId: self.botId,
                         bot_id: self.bot_id,
-                        msg: msg
+                        msg: msg,
+                        type: 'group'
                     }
                     assistantMass.execute(data);
                 }else{
