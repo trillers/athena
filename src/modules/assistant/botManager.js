@@ -22,16 +22,12 @@ botManager.on('register', function(msg){
 });
 
 botManager.on('need-login', function(msg){
-    var url = 'http://ci.www.wenode.org/api/file?media_id=' + msg.media_id;
-    //TODO use variables to make url
-    //TODO generate wechat media id;
-    console.log(url);
-    wechatApi.sendText(msg.openid, url, function(err, result){
+    wechatApi.sendImage(msg.openid, msg.wx_media_id, function(err, result){
         if(err){
-            logger.error('Fail to send wechat bot login qrcode: ' + err);
+            logger.error('Fail to send login qrcode for bot ' + msg.botid + ': ' + err);
         }
         else{
-            logger.info('Succeed to send wechat bot login qrcode of ' + msg.openid + ' of ' + msg.bucketid );
+            logger.info('Succeed to send login qrcode for bot ' + msg.botid);
         }
     });
 });
