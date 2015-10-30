@@ -11,7 +11,8 @@ var botManager = new WechatBotManager();
 botManager.on('init', function(botInfos){
     if(botInfos && botInfos.length){
         botInfos.forEach(function(botInfo){
-            logger.info('Wechat bot ' + botManager._encodeBotid(botInfo) + ' starting...');
+            var botid = botManager._encodeBotid(botInfo);
+            logger.info('Wechat bot ' + botid + ' starting...');
             botManager.start(botInfo);
         });
     }
@@ -49,7 +50,7 @@ botManager.on('profile', function(profile){
 
 botManager.on('group-list', function(data){
     var bot = botManager.getBot(data.botid);
-    wechatBotGroupService.syncGroupList(data.botid, data.list, function(err, result){
+    wechatBotGroupService.syncGroupList(bot._id, data.list, function(err, result){
         if(err){
             logger.error('Fail to request and sync the group list of a bot ' + data.botid);
         }

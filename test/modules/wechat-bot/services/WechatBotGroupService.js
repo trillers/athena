@@ -34,8 +34,8 @@ describe('wechatBotGroupService', function() {
                 { username: 'group6', name: '群6'},
                 { username: 'group7', name: '群7'},
                 { username: 'group8', name: '群8'},
-                { username: 'group9', name: '群9-updated'},
-                { username: 'group10', name: '群10-updated'},
+                { username: 'group9-updated', name: '群9-updated'},
+                { username: 'group10-updated', name: '群10-updated'},
                 { username: 'group11', name: '群11'},
                 { username: 'group12', name: '群12'}
             ];
@@ -47,7 +47,7 @@ describe('wechatBotGroupService', function() {
         })
     })
 
-    describe('#syncGroupList', function() {
+    describe.only('#syncGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         var wechatBot = null;
@@ -103,17 +103,17 @@ describe('wechatBotGroupService', function() {
                 { username: 'group6', name: '群6'},
                 { username: 'group7', name: '群7'},
                 { username: 'group8', name: '群8'},
-                { username: 'group9', name: '群9-updated'},
-                { username: 'group10', name: '群10-updated'},
+                { username: 'group9-updated', name: '群9-updated'},
+                { username: 'group10-updated', name: '群10-updated'},
                 { username: 'group11', name: '群11'},
                 { username: 'group12', name: '群12'}
             ];
 
             wechatBotGroupService.syncGroupList(wechatBot._id, newGroupList, function(err, result){
                 console.info(result);
-                assert.equal(result.adds, 2);
-                assert.equal(result.removes, 2);
-                assert.equal(result.updates, 2);
+                assert.equal(result.adds, 4);
+                assert.equal(result.removes, 4);
+                assert.equal(result.updates, 0);
                 done();
             });
         })

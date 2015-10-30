@@ -167,7 +167,7 @@ describe('WechatBotManager', function() {
         })
     })
 
-    describe.only('#requestGroupList', function() {
+    describe('#requestGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
 

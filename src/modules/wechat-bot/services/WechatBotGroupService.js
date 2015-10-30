@@ -72,18 +72,20 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
     var oldGroupMap = {};
     for(var i=0; i<newLen; i++){
         var group = oldGroupList[i];
-        oldGroupMap[group.username] = group;
+        oldGroupMap[group.name] = group;
     }
     var newLen = newGroupList.length;
     for(var i=0; i<newLen; i++){
         var group = newGroupList[i];
-        var theSameGroup = oldGroupMap[group.username];
+        group.name && (group.name = group.name.trim());
+
+        var theSameGroup = oldGroupMap[group.name];
         if(theSameGroup) {
-            if(theSameGroup.name !== group.name){
-                theSameGroup.name = group.name;
-                ret.toUpdate.push(theSameGroup);
-            }
-            delete oldGroupMap[group.username];
+            //if(theSameGroup.name !== group.name){
+            //    theSameGroup.name = group.name;
+            //    ret.toUpdate.push(theSameGroup);
+            //}
+            delete oldGroupMap[group.name];
         }
         else{
             group.bot = botId;
