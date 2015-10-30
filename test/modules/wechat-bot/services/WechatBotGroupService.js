@@ -12,6 +12,36 @@ describe('wechatBotGroupService', function() {
         },2000);
     })
 
+    describe.only('#getGroupList', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var wechatBot = null;
+        before(function(done){
+            botManager.on('register', function(bot){
+                console.info('wechat bot is registered successfully!');
+                console.info(bot);
+                console.info('\r\n');
+                wechatBot = bot;
+                done();
+            });
+
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: '包三哥'
+            };
+            botManager.register(botInfo);
+        });
+
+        it('get all active groups of a bot', function (done) {
+            wechatBotGroupService.getGroupList(wechatBot._id, function(err, result){
+                console.info(result.length);
+                console.info(result);
+                done();
+            });
+        })
+    })
+
     describe('#diffGroupList', function() {
         it('some to-update groups, some to-add groups and some to-remove groups', function (done) {
             var oldGroupList = [
@@ -47,7 +77,7 @@ describe('wechatBotGroupService', function() {
         })
     })
 
-    describe.only('#syncGroupList', function() {
+    describe('#syncGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
         var wechatBot = null;

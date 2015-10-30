@@ -5,12 +5,29 @@ var WechatBotGroup = require('../models/WechatBotGroup').model;
 var lifeFlagEnum = require('../../../framework/model/enums').LifeFlag;
 var Service = {};
 
+Service.getGroupList = function(botId,  callback){
+    WechatBotGroup.find(
+        {bot: botId, lFlg: lifeFlagEnum.Active},
+        null,
+        {lean: true},
+        function (err, storedGroups) {
+            if (err) {
+                logger.error('Fail to get wechat bot ' + botId + ': ' + err);
+                callback(err);
+            }
+            else{
+                logger.info('Succeed to get wechat bot ' + botId);
+                callback(null, storedGroups);
+            }
+        });
+};
+
 Service.syncGroupList = function(botId, list, callback){
     WechatBotGroup.find(
         {bot: botId},
         function (err, storedGroups) {
             if (err) {
-                logger.error('Fail to lock wechat bot '+ botId +': ' + err);
+                logger.error('Fail to find all groups of wechat bot '+ botId +': ' + err);
                 callback(err);
             }
             else{
@@ -70,9 +87,11 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
     };
     var newLen = oldGroupList.length;
     var oldGroupMap = {};
+    var oldLeftGroupMap = {};
     for(var i=0; i<newLen; i++){
         var group = oldGroupList[i];
         oldGroupMap[group.name] = group;
+        oldLeftGroupMap[group.name] = group;
     }
     var newLen = newGroupList.length;
     for(var i=0; i<newLen; i++){
@@ -81,11 +100,7 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
 
         var theSameGroup = oldGroupMap[group.name];
         if(theSameGroup) {
-            //if(theSameGroup.name !== group.name){
-            //    theSameGroup.name = group.name;
-            //    ret.toUpdate.push(theSameGroup);
-            //}
-            delete oldGroupMap[group.name];
+            oldLeftGroupMap[group.name] && (delete oldLeftGroupMap[group.name]);
         }
         else{
             group.bot = botId;
@@ -93,9 +108,9 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
         }
     }
 
-    for(var p in oldGroupMap){
-        ret.toRemove.push(oldGroupMap[p]);
-        ret.toRemoveIds.push(oldGroupMap[p]._id);
+    for(var p in oldLeftGroupMap){
+        ret.toRemove.push(oldLeftGroupMap[p]);
+        ret.toRemoveIds.push(oldLeftGroupMap[p]._id);
     }
 
     return ret;
