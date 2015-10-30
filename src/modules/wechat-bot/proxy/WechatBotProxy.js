@@ -59,7 +59,21 @@ var events = {
      *   media_id:
      * }
      */
-    'need-login': true
+    'need-login': true,
+
+    /*
+     * {
+     *   botid
+     * }
+     */
+    'login': true,
+
+    /*
+     * {
+     *   botid
+     * }
+     */
+    'abort': true
 };
 
 var channels = {
@@ -106,7 +120,9 @@ var channels = {
     groupListResponse: 'sbot:group-list',
     messageReceived: 'sbot:message',
     contactAdded: 'sbot:contact-added',
-    needLogin: 'sbot:need-login'
+    needLogin: 'sbot:need-login',
+    login: 'sbot:login',
+    abort: 'sbot:abort'
 };
 
 var WechatBotProxy = function(pub, sub){
@@ -130,6 +146,8 @@ WechatBotProxy.prototype.init = function(){
     this.subClient.subscribe(channels.groupListResponse);
     this.subClient.subscribe(channels.contactAdded);
     this.subClient.subscribe(channels.needLogin);
+    this.subClient.subscribe(channels.login);
+    this.subClient.subscribe(channels.abort);
     this.subClient.on('message', this._handleMessage.bind(this));
 };
 

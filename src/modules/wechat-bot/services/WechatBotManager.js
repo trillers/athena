@@ -83,6 +83,32 @@ var WechatBotManager = function(){
         }
     });
 
+    this.proxy.on('login', function(err, data){
+        if(err){
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            logger.debug(data);
+            me.emit('login', data);
+        }
+    });
+
+    this.proxy.on('abort', function(err, data){
+        if(err){
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            logger.debug(data);
+            me.emit('abort', data);
+        }
+    });
+
 };
 
 util.inherits(WechatBotManager, EventEmitter);
