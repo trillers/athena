@@ -21,17 +21,11 @@ var wechatBotUserService = require('../../user/services/WechatBotUserService');
 var handler = function(msg){
     co(function* (){
         try{
-            console.log("msg---------------");
-            console.log(msg);
-            var user = yield wechatBotUserService.loadByBuid(msg.FromUserName);
-            console.log(user);
+            var user = yield getWechatBotUser(msg.FromUserName);
             var cvs = null;
             var an_media_id = msg.FsMediaId || '';
             var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
-            console.log("cvsId---------------")
-            console.log(cvsId);
             if(!cvsId){
-                console.log("##############")
                 cvs = yield conversationService.createAsync({
                     initiator: user.id,
                     createTime: new Date(),
@@ -55,8 +49,7 @@ var handler = function(msg){
                 customerEmitter.emit('conversation', cvs, msg);
             }
             else{
-                console.log("~~~~~~~~~~~~~~~~~")
-                cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
+                cvs = yield ConversationKv.loadByIdAsync(cvsId);
                 yield messageService.createAsync({
                     from: user.id,
                     to: null,
@@ -70,8 +63,27 @@ var handler = function(msg){
                 customerEmitter.emit('message', cvs, msg);
             }
         }catch(e){
-            console.log(e.stack);
+            if((e.message != 'USER_NOT_CONTRACT') || (e.message != 'USER_NOT_IN_DB')){
+                console.log(e.stack);
+            }
         }
     });
 };
+function* getWechatBotUser(username){
+    var user = null;
+    try{
+        if(username.split('-')[0] != 'bu'){
+            console.warn('current user is not a contract, FromUserName is ' + username);
+            throw new Error('USER_NOT_CONTRACT');
+        }
+        user = yield wechatBotUserService.loadByBuid(username);
+        if(!user){
+            console.warn('current user is not in db, FromUserName is ' + username);
+            throw new Error('USER_NOT_IN_DB');
+        }
+    }catch(e){
+        throw e;
+    }
+    return user;
+}
 module.exports = handler;

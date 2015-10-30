@@ -48,7 +48,7 @@ module.exports = function(emitter){
                     customerEmitter.emit('conversation', cvs, msg);
                 }
                 else{
-                    cvs = yield conversationService.loadByIdAsync(cvsId);//TODO should load cvs from redis
+                    cvs = yield ConversationKv.loadByIdAsync(cvsId);//TODO should load cvs from redis
                     yield messageService.createAsync({
                         from: user.id,
                         to: null,
