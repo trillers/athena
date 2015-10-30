@@ -207,8 +207,18 @@ WechatBotManager.prototype.requestGroupList = function(botInfo){
     this.proxy.requestGroupList(botid);
 };
 
+WechatBotManager.prototype.requestAllGroupLists = function(){
+    for(var botid in this.bots){
+        this.requestGroupList(botid);
+    }
+};
+
 WechatBotManager.prototype.getNameMap = function(){
     return this.bots;
+};
+
+WechatBotManager.prototype.getBot = function(botid){
+    return this.bots[botid];
 };
 
 WechatBotManager.prototype._addBot = function(botInfo){
