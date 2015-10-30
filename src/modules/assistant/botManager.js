@@ -52,7 +52,6 @@ botManager.on('profile', function(profile){
 });
 
 botManager.on('group-list', function(data){
-    console.log(data);
     var bot = botManager.getBot(data.botid);
     wechatBotGroupService.syncGroupList(data.botid, data.list, function(err, result){
         if(err){

@@ -32,7 +32,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('profile', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -46,7 +45,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('group-list', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -61,7 +59,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('contact-added', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -75,7 +72,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('need-login', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
