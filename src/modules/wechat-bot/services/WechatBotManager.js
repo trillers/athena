@@ -13,6 +13,7 @@ var WechatBotManager = function(){
     EventEmitter.call(this);
     this.buckets = {};
     this.bots = {};
+    this.botNames = {};
     this.persister = WechatBotService;
     this.proxy = new WechatBotProxy();
 
@@ -32,7 +33,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('profile', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -46,7 +46,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('group-list', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -61,7 +60,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('contact-added', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -75,7 +73,6 @@ var WechatBotManager = function(){
 
     this.proxy.on('need-login', function(err, data){
         if(err){
-            //TODO
             logger.error(err);
         }
         else{
@@ -84,6 +81,32 @@ var WechatBotManager = function(){
             data.openid = botInfo.openid;
             logger.debug(data);
             me.emit('need-login', data);
+        }
+    });
+
+    this.proxy.on('login', function(err, data){
+        if(err){
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            logger.debug(data);
+            me.emit('login', data);
+        }
+    });
+
+    this.proxy.on('abort', function(err, data){
+        if(err){
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            logger.debug(data);
+            me.emit('abort', data);
         }
     });
 
@@ -207,8 +230,22 @@ WechatBotManager.prototype.requestGroupList = function(botInfo){
     this.proxy.requestGroupList(botid);
 };
 
+WechatBotManager.prototype.requestAllGroupLists = function(){
+    for(var botid in this.botNames){
+        this.requestGroupList(botid);
+    }
+};
+
+WechatBotManager.prototype.getBot = function(botid){
+    return this.bots[botid];
+};
+
 WechatBotManager.prototype.getNameMap = function(){
-    return this.bots;
+    return this.botNames;
+};
+
+WechatBotManager.prototype.getBotName = function(botid){
+    return this.botNames[botid];
 };
 
 WechatBotManager.prototype._addBot = function(botInfo){
@@ -218,7 +255,8 @@ WechatBotManager.prototype._addBot = function(botInfo){
     bucket[botInfo.openid] = botInfo;
 
     var botid = this._encodeBotid(botInfo);
-    this.bots[botid] = botInfo.nickname;
+    this.bots[botid] = botInfo;
+    this.botNames[botid] = botInfo.nickname;
 
     return botInfo;
 };
@@ -231,6 +269,8 @@ WechatBotManager.prototype._removeBot = function(botInfo){
 
     var botid = this._encodeBotid(botInfo);
     this.bots[botid] && (delete this.bots[botid]);
+    this.botNames[botid] && (delete this.botNames[botid]);
+
 };
 
 WechatBotManager.prototype._addBots = function(botInfos){

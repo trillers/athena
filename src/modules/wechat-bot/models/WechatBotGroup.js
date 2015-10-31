@@ -7,7 +7,7 @@ var schema = DomainBuilder
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
-        botId: {type: String, ref: 'WechatBot'}
+        bot: {type: String, ref: 'WechatBot'}
         , username: {type: String}
         , name: {type: String}
         , remark: {type: String}
