@@ -21,7 +21,15 @@ var wechatBotUserService = require('../../user/services/WechatBotUserService');
 var handler = function(msg){
     co(function* (){
         try{
-            var user = yield getWechatBotUser(msg.FromUserName);
+            if(!validateFromUser(msg.FromUserName)){
+                console.warn('current user is not a contract, FromUserName is ' + msg.FromUserName + ' ignore it');
+                return;
+            }
+            var user = yield wechatBotUserService.loadByBuid(msg.FromUserName);
+            if(!user){
+                console.warn('current user is not in db, FromUserName is ' + msg.FromUserName + ' ignore it');
+                return;
+            }
             var cvs = null;
             var an_media_id = msg.FsMediaId || '';
             var cvsId = yield ConversationKv.getCurrentIdAsync(user.id);
@@ -62,28 +70,13 @@ var handler = function(msg){
                 });
                 customerEmitter.emit('message', cvs, msg);
             }
-        }catch(e){
-            if((e.message != 'USER_NOT_CONTRACT') || (e.message != 'USER_NOT_IN_DB')){
-                console.log(e.stack);
-            }
+        }
+        catch(e){
+            console.error(e);
         }
     });
 };
-function* getWechatBotUser(username){
-    var user = null;
-    try{
-        if(username.split('-')[0] != 'bu'){
-            console.warn('current user is not a contract, FromUserName is ' + username);
-            throw new Error('USER_NOT_CONTRACT');
-        }
-        user = yield wechatBotUserService.loadByBuid(username);
-        if(!user){
-            console.warn('current user is not in db, FromUserName is ' + username);
-            throw new Error('USER_NOT_IN_DB');
-        }
-    }catch(e){
-        throw e;
-    }
-    return user;
+function validateFromUser(username){
+    return username.split('-')[0] === 'bu';
 }
 module.exports = handler;
