@@ -40,6 +40,8 @@ module.exports = function(router){
                 path: file.path,
                 mimeType: file.type
             }
+            console.log('*************************************');
+            console.log(fileJson);
             try {
                 var wx_media_id = null;
                 if(file.type.split('/')[0] === 'image'){
