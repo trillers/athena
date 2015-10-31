@@ -86,7 +86,7 @@ setTimeout(function(){
 setTimeout(function(){
     setInterval(function(){
         botManager.requestAllGroupLists();
-    }, 1*60*1000); //1 minutes
+    }, 5*60*1000); //5 minutes
 }, 20000);
 
 module.exports = botManager;
