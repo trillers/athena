@@ -44,10 +44,10 @@ module.exports = function(router){
             console.log(fileJson);
             try {
                 var wx_media_id = null;
-                if(file.type.split('/')[0] === 'image'){
+                if(file.type && file.size > 0 && file.type.split('/')[0] === 'image'){
                     var imageData = yield wechatApi.uploadMediaAsync(file.path, 'image');
                     wx_media_id = imageData[0].media_id;
-                } else if(file.type.split('/')[0] === 'audio'){
+                } else if(file.type && file.size > 0 && file.type.split('/')[0] === 'audio'){
                     var voiceData = yield wechatApi.uploadMediaAsync(file.path, 'voice');
                     wx_media_id = voiceData[0].media_id;
                 }
