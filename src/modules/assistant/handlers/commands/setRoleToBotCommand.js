@@ -13,7 +13,8 @@ var commandHandler = function(context){
             else{
                 var botInfo = {
                     bucketid: context.weixin.ToUserName,
-                    openid: openid
+                    openid: openid,
+                    nickname: user.nickname
                 };
                 wechatApi.sendTextAsync(openid, '[系统]: 用户 ['+ (user && user.wx_nickname || openid) +'] 切换微信助手成功');
                 botManager.register(botInfo, function(){
