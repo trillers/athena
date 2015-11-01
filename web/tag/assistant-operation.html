@@ -47,7 +47,7 @@
                                         </div>
                                         <div id="single" style="padding-top: 1em">
                                             <ul class="list-group">
-                                                <li each="{contacts}" class="list-group-item"><img src="{bot_headimgurl || '../images/default_avatar.jpg'}" style="max-width: 2em" alt=""/> <span>{bot_nickname || '匿名'}</span></li>
+                                                <li each="{contacts}" class="list-group-item"><img src="{bot_headimgid && (api + '/file?media_id=' + bot_headimgid) || '../images/default_avatar.jpg'}" style="max-width: 2em" alt=""/> <span>{bot_nickname || '匿名'}</span></li>
                                             </ul>
                                         </div>
                                         <div id="group" style="display: none; padding-top: 1em">
