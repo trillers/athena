@@ -62,7 +62,7 @@ function* sendMessage(cvs, cs, customer, message){
             Content: message.Content
         });
     }else{
-        var openid = cs.wx_openid;
+        var openid = customer.wx_openid;
         switch (message.MsgType) {
             case 'text':
                 yield wechatApi.sendTextAsync(openid, message.Content);
