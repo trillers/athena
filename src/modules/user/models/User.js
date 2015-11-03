@@ -46,7 +46,7 @@ var schema = DomainBuilder
         , bot_id: {type: String} //bot id is made like wechat site id + ':' + wechat site openid
         , bot_uid: {type: String} //bid is make like 'bot' + randomid(idGen.next('WechatBotContact))
         , bot_nickname: {type: String}
-        , bot_headimgurl: {type: String}
+        , bot_headimgid: {type: String} //bot user headImg id of athena file system
         , bot_place: {type: String}
     })
     .build();

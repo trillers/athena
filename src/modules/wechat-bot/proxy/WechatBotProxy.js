@@ -23,7 +23,7 @@ var events = {
      *   botid
      *   bid:
      *   nickname:
-     *   headIconUrl:
+     *   headimgid:
      *   place:
      * }
      */
