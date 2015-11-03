@@ -43,7 +43,7 @@ botManager.on('login', function(msg){
     if(!id) return;
 
     //Set login flag of the bot
-    //botManager.setLoginFlag(id, true); //TODO
+    botManager.setLoginFlag(id, true); //TODO
 
     /**
      * Schedule group-listing-job for the bot
@@ -74,7 +74,7 @@ botManager.on('abort', function(msg){
     if(!id) return;
 
     //Set login flag of the bot
-    //botManager.setLoginFlag(id, false); //TODO
+    botManager.setLoginFlag(id, false); //TODO
 
     /**
      * Cancel scheduling group-listing-job for the bot
