@@ -41,7 +41,6 @@
             var sendMsgToCustomer = domain.action('sendMsgToCustomer');
 
             var onLoadCustomerById = function(data){
-                debugger;
                 self.nickname = data.wx_nickname || data.nickname;
                 self.openid = data.wx_openid;
                 self.bot_id = data.bot_id;
