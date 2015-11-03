@@ -34,10 +34,18 @@ module.exports = function(router){
         if(self.request.body.files) {
             var file = self.request.body.files.file;
             var fileType = file.type && file.type.split('/')[0];
-            if(fileType === 'image' || fileType === 'voice') {
+            var ext = '';
+            var pos = file.name.lastIndexOf('.');
+            if(pos != -1){
+                ext = file.name.substring(pos + 1, file.name.length);
+            }
+            if(fileType === 'image' || fileType === 'audio' || ext === 'amr') {
+                if(ext === 'amr'){
+                    file.type = 'audio/amr'
+                }
                 var fileJson = {
                     name: file.name,
-                    ext: file.extension,
+                    ext: ext,
                     size: file.size,
                     path: file.path,
                     mimeType: file.type
@@ -49,7 +57,7 @@ module.exports = function(router){
                     if (file.type && file.size > 0 && fileType === 'image') {
                         var imageData = yield wechatApi.uploadMediaAsync(file.path, 'image');
                         wx_media_id = imageData[0].media_id;
-                    } else if (file.type && file.size > 0 && fileType === 'audio') {
+                    } else if (file.type && file.size > 0 && fileType === 'audio' || ext === 'amr') {
                         var voiceData = yield wechatApi.uploadMediaAsync(file.path, 'voice');
                         wx_media_id = voiceData[0].media_id;
                     }

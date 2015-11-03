@@ -22,7 +22,7 @@ Service.create = function (json, callback) {
     var file = new File(json);
     file.save(function (err, doc, numberAffected) {
         if (err) {
-            if (callback) callback(err);
+            if (callback) callback(err, null);
             return;
         }
         if (numberAffected) {
