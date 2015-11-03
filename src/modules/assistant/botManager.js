@@ -120,6 +120,6 @@ botManager.on('message', customerBotHandler);
 setTimeout(function(){
     botManager.proxy.init();
     botManager.init();
-}, 1000);
+}, 5000);
 
 module.exports = botManager;
