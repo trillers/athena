@@ -33,41 +33,39 @@ module.exports = function(router){
         var self = this;
         if(self.request.body.files) {
             var file = self.request.body.files.file;
-            var fileJson = {
-                name: file.name,
-                ext: file.extension,
-                size: file.size,
-                path: file.path,
-                mimeType: file.type
-            }
-            console.log('*************************************');
-            console.log(fileJson);
-            try {
-                var wx_media_id = null;
-                if(file.type && file.size > 0 && file.type.split('/')[0] === 'image'){
-                    var imageData = yield wechatApi.uploadMediaAsync(file.path, 'image');
-                    wx_media_id = imageData[0].media_id;
-                } else if(file.type && file.size > 0 && file.type.split('/')[0] === 'audio'){
-                    var voiceData = yield wechatApi.uploadMediaAsync(file.path, 'voice');
-                    wx_media_id = voiceData[0].media_id;
+            var fileType = file.type && file.type.split('/')[0];
+            if(fileType === 'image' || fileType === 'voice') {
+                var fileJson = {
+                    name: file.name,
+                    ext: file.extension,
+                    size: file.size,
+                    path: file.path,
+                    mimeType: file.type
                 }
-                fileJson.wx_media_id = wx_media_id;
-                var result = yield FileService.createAsync(fileJson);
-                console.log('++++++');
-                console.log(result);
-                this.body = {err: null, media_id: result._id, wx_media_id: wx_media_id};
-            } catch (err) {
-                logger.error('save file info err:' + err);
-                this.body = {err: err, media_id: null, wx_media_id: null};
+                console.log('*************************************');
+                console.log(fileJson);
+                try {
+                    var wx_media_id = null;
+                    if (file.type && file.size > 0 && fileType === 'image') {
+                        var imageData = yield wechatApi.uploadMediaAsync(file.path, 'image');
+                        wx_media_id = imageData[0].media_id;
+                    } else if (file.type && file.size > 0 && fileType === 'audio') {
+                        var voiceData = yield wechatApi.uploadMediaAsync(file.path, 'voice');
+                        wx_media_id = voiceData[0].media_id;
+                    }
+                    fileJson.wx_media_id = wx_media_id;
+                    var result = yield FileService.createAsync(fileJson);
+                    console.log('++++++');
+                    console.log(result);
+                    this.body = {err: null, media_id: result._id, wx_media_id: wx_media_id};
+                } catch (err) {
+                    logger.error('save file info err:' + err);
+                    this.body = {err: err, media_id: null, wx_media_id: null};
+                }
+            } else {
+                logger.error('save file info err: file type invalid');
+                this.body = {err: 'file_type_invalid', media_id: null, wx_media_id: null};
             }
-            //var files = self.req.files;
-            //for(var key in files){
-            //    var file = files[key];
-            //    var fileName = Math.random() + '.' + file.extension;
-            //    var newPath = path.join(__dirname, '../../../public/qrCode',  fileName);
-            //    console.log(newPath);
-            //    fs.renameSync(file.path, newPath);  //重命名
-            //}
         }
     });
 
