@@ -1,7 +1,7 @@
 <cs-item>
     <li style="width: 100%">
         <span class="col-md-2 formItem"> <img src="{headUrl}"  style="max-width: 2em"></span>
-        <span class="col-md-2 formItem"> {nickname}</span>
+        <span class="col-md-2 formItem"> {name}</span>
         <span class="col-md-2 formItem"> 空</span>
         <span class="col-md-2 formItem"> 空</span>
         <span class="col-md-2 formItem"> 未验证 </span>
@@ -17,7 +17,7 @@
         var self = this;
         var item = self.opts.curritem;
         self.headUrl = item.wx_headimgurl || item.headimgurl || '../images/default_avatar.jpg';
-        self.nickname = item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 5) + '...';
+        self.name = item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 5) + '...';
         var delCs = domain.action('delCs');
         self.date = '--';
         if(item.setRoleTime) {
