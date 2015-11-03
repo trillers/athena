@@ -34,7 +34,8 @@ botManager.on('need-login', function(msg){
 });
 
 botManager.on('login', function(msg){
-    //botManager.setLoginFlag(msg.botid); //TODO
+    var bot = botManager.getBot(msg.botid);
+    botManager.setLoginFlag(bot._id, true);
     console.info('login');
     console.info(msg);
     setTimeout(function(){
@@ -43,6 +44,8 @@ botManager.on('login', function(msg){
 });
 
 botManager.on('abort', function(msg){
+    var bot = botManager.getBot(msg.botid);
+    botManager.setLoginFlag(bot._id, false);
     //botManager.setAbortFlag(msg.botid); //TODO
 });
 

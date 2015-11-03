@@ -1,13 +1,16 @@
 <assistant-item>
     <li style="width: 100%">
-        <span class="col-md-3"> <a  onclick="{operation}" style="text-decoration: none; cursor: pointer">{nickname || '匿名'}</a></span>
-        <span class="col-md-3"> {date}</span>
-        <span class="col-md-3"> {lFlg} </span>
-        <span class="col-md-3"> {remark}</span>
+        <span class="col-md-3 assistantList"> <a  onclick="{operation}" style="text-decoration: none; cursor: pointer">{nickname || '匿名'}</a></span>
+        <span class="col-md-3 assistantList"> {date}</span>
+        <span class="col-md-3 assistantList"> {lFlg} </span>
+        <span class="col-md-3 assistantList"> {loginFlag ? '已登陆' : '未登录'} </span>
+        <span class="col-md-3 assistantList"> {remark}</span>
     </li>
     <br>
     <br>
-
+    <style scoped>
+        .assistantList{width: 20%}
+    </style>
     <script>
         var self = this;
         var item = self.opts.curritem;

@@ -291,4 +291,17 @@ WechatBotManager.prototype._decodeBotid = function(botid){
     };
 };
 
+/**
+ * set sbot login flag
+ * */
+WechatBotManager.prototype.setLoginFlag = function(id, flag, callback){
+    this.persister.setLoginFlag(id, flag, function(err, data){
+        if(err){
+            if(callback) callback(err, null);
+        }
+        else{
+            if(callback) callback(null, data);
+        }
+    });
+};
 module.exports = WechatBotManager;
