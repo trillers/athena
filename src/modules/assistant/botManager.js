@@ -81,12 +81,12 @@ botManager.on('message', customerBotHandler);
 setTimeout(function(){
     botManager.proxy.init();
     botManager.init();
-}, 1000);
+}, 2000);
 
 setTimeout(function(){
     setInterval(function(){
         botManager.requestAllGroupLists();
-    }, 30*1000); //20 seconds
-}, 2000);
+    }, 2*60*1000); //2 minutes
+}, 2*60*1000);
 
 module.exports = botManager;
