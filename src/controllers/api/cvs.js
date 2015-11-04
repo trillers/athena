@@ -51,11 +51,11 @@ module.exports = function(router){
         params.populate = [
             {
                 path: 'initiator',
-                select: 'wx_nickname'
+                select: 'nickname'
             },
             {
                 path: 'csId',
-                select: 'wx_nickname'
+                select: 'nickname'
             }
         ];
         try {

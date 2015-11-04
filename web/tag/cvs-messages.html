@@ -19,15 +19,15 @@
                                                 <div class={ floatRight: parent.from != item.from._id}>
                                                     <div class={ textRight: parent.from != item.from._id}>
                                                         <small>{'('+ new Date(item.crtOn).getHours() + ':' + new Date(item.crtOn).getMinutes() + ')'}</small>
-                                                        <strong>{item.from.wx_nickname}：</strong>
+                                                        <strong>{item.from.nickname}：</strong>
                                                     </div>
-                                                    <div if= "{item.contentType == 'text'}">
+                                                    <div if="{item.contentType == 'text'}">
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;{item.content}</span>
                                                     </div>
-                                                    <div if= "{item.contentType == 'image'}">
-                                                        <img style="height: 7em" src="{parent.api + '/file/?media_id=' + item.an_media_id}" alt=""/>
+                                                    <div if="{item.contentType == 'image'}">
+                                                        <img style="height: 7em" riot-src="{item.contentType == 'image' && item.an_media_id && parent.api + '/file/?media_id=' + item.an_media_id}" alt=""/>
                                                     </div>
-                                                    <div if= "{item.contentType == 'voice'}">
+                                                    <div if="{item.contentType == 'voice'}">
                                                         <span>&nbsp;&nbsp;&nbsp;&nbsp;[语音]{item.recognition}</span>
                                                     </div>
                                                     <br>
@@ -43,7 +43,7 @@
                                 <input type="button" class="btn btn-primary" style="float: right; padding: 3px 12px; margin: 11px 0;" value="返回" onclick="{returnPage}"/>
                             </div>
                         </div>
-                </div><!--/span-->;
+                </div><!--/span-->
             </div><!--/row-->
 
 

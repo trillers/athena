@@ -15,8 +15,10 @@
     <script>
         var self = this;
         var item = self.opts.curritem;
-        self.headUrl = item.wx_headimgurl || item.headimgurl || '../images/default_avatar.jpg';
-        self.name = item.wx_nickname ? (item.wx_nickname.length < 6 ? item.wx_nickname : item.wx_nickname.slice(0, 4) + '...') : '空';
+        self.api =  __app.settings.api.url;
+
+        self.headUrl = item.wx_headimgurl || item.bot_headimgid && self.api + '/file?media_id=' + item.bot_headimgid || '../images/default_avatar.jpg';
+        self.name = item.nickname ? (item.nickname.length < 6 ? item.nickname : item.nickname.slice(0, 4) + '...') : '空';
         var createTime = new Date(item.crtOn);
         var year = createTime.getFullYear();
         var month = createTime.getMonth() + 1;

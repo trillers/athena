@@ -13,12 +13,12 @@ module.exports = function(router) {
             populate:[
                 {
                     path: 'from',
-                    select: 'wx_nickname',
+                    select: 'nickname',
                     model: 'User'
                 },
                 {
                     path: 'to',
-                    select: 'wx_nickname',
+                    select: 'nickname',
                     model: 'User'
                 }
             ]
