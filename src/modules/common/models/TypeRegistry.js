@@ -40,6 +40,10 @@ registry
     .addChild('video','video', '视频')
     .addChild('shortvideo','shortvideo', '小视频')
 
+    .up().item('BatchType', 'BatchType', '群发类型')
+    .addChild('single','single', '个人')
+    .addChild('group','group', '群组')
+
     .up().item('Party', 'Party', '方')
     .addChild('Org','og', '机构')
     .addChild('Person','pr', '个人')

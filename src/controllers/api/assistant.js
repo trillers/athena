@@ -1,7 +1,10 @@
 var wechatBotService = require('../../modules/wechat-bot/services/WechatBotService');
 var lifeFlagEnum = require('../../framework/model/enums').LifeFlag;
 var userService = require('../../modules/user/services/UserService');
+var batchMessageService = require('../../modules/message/services/BatchMessageService');
 var UserRole = require('../../modules/common/models/TypeRegistry').item('UserRole');
+var MsgContentType = require('../../modules/common/models/TypeRegistry').item('MsgContent');
+var BatchType = require('../../modules/common/models/TypeRegistry').item('BatchType');
 var botManager = require('../../modules/assistant/botManager');
 var wechatBotGroupService = require('../../modules/wechat-bot/services/WechatBotGroupService');
 
@@ -69,6 +72,11 @@ module.exports = function(router) {
             var botId = this.request.body.botId;//sbot _id
             var type = this.request.body.type;
             var msg = this.request.body.msg;
+            var batchMessage = {
+                from: botId,
+                contentType: MsgContentType.text.value(),
+                content: msg
+            }
             if(type === 'single') {
                 var params = {
                     conditions: {
@@ -76,6 +84,8 @@ module.exports = function(router) {
                         role: UserRole.Customer.value()
                     }
                 }
+                batchMessage.batchType = BatchType.single.value();
+                var toUsers = [];
                 var sbotUsers = yield userService.findAsync(params);
                 for (var i = 0; i < sbotUsers.length; i++) {
                     var message = {
@@ -86,9 +96,13 @@ module.exports = function(router) {
                     }
                     console.log('*************************');
                     console.log(message);
+                    toUsers.push(sbotUsers[i]._id);
                     botManager.sendText(bot_id, message);
                 }
+                batchMessage.toUsers = toUsers;
             }else if(type === 'group'){
+                batchMessage.batchType = BatchType.group.value();
+                var toGroups = [];
                 var groups = yield wechatBotGroupService.getGroupListAsync(botId);
                 for (var i = 0; i < groups.length; i++) {
                     var message = {
@@ -99,9 +113,12 @@ module.exports = function(router) {
                     }
                     console.log('*************************');
                     console.log(message);
+                    toGroups.push(groups[i]._id);
                     botManager.sendText(bot_id, message);
                 }
+                batchMessage.toGroups = toGroups;
             }
+            yield batchMessageService.createAsync(batchMessage);
             this.body = {success: true, err: null};
         }catch(err){
             console.log('assistant router mass err:' + err);
