@@ -6,23 +6,23 @@ var wechatApi = require('../../../src/modules/wechat/common/api').api;
 var co = require('co');
 
 describe('file upload', function(){
-   it('success upload image file', function(done){
-       var formData = {
-           file: fs.createReadStream(__dirname + '/test.png')
-       }
-       request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
-           console.log(err);
-           console.log(body);
-           assert.ok(!err);
-           assert.ok(JSON.parse(body).media_id);
-           assert.ok(JSON.parse(body).wx_media_id);
-           done();
-       });
-   });
+    it('success upload image file', function(done){
+        var formData = {
+            file: fs.createReadStream(__dirname + '/test.png')
+        }
+        request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
+            console.log(err);
+            console.log(body);
+            assert.ok(!err);
+            assert.ok(JSON.parse(body).media_id);
+            assert.ok(JSON.parse(body).wx_media_id);
+            done();
+        });
+    });
 
     it('success upload voice file', function(done){
         var formData = {
-            file: fs.createReadStream(__dirname + '/test.mp3')
+            file: fs.createReadStream(__dirname + '/test.amr')
         }
         request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
             console.log(err);
@@ -35,7 +35,7 @@ describe('file upload', function(){
     });
 
 });
-
+//
 //describe('get file', function(){
 //    var media_id = '';
 //    before(function(done){
@@ -72,28 +72,28 @@ describe('file upload', function(){
 //        })
 //    });
 //
-//   it('success upload media file', function(done){
-//       wechatApi.getLatestToken(function(err, token){
-//           var url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='+ token.accessToken + '&media_id=' + mediaId;
+//    it('success upload media file', function(done){
+//        wechatApi.getLatestToken(function(err, token){
+//            var url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='+ token.accessToken + '&media_id=' + mediaId;
 //
-//           assert.ok(!err);
-//           var formData = {
-//               file: {
-//                   value: request(url),
-//                   options: {
-//                       filename:  mediaId + '.jpeg',
-//                       contentType: 'image/jpeg'
-//                   }
-//               }
-//               //file: request(url)
-//           }
-//           request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
-//               console.log(err);
-//               console.log(body);
-//               assert.ok(!err);
-//               assert.ok(JSON.parse(body).media_id);
-//               done();
-//           });
-//       });
-//   });
+//            assert.ok(!err);
+//            var formData = {
+//                file: {
+//                    value: request(url),
+//                    options: {
+//                        filename:  mediaId + '.jpeg',
+//                        contentType: 'image/jpeg'
+//                    }
+//                }
+//                //file: request(url)
+//            }
+//            request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
+//                console.log(err);
+//                console.log(body);
+//                assert.ok(!err);
+//                assert.ok(JSON.parse(body).media_id);
+//                done();
+//            });
+//        });
+//    });
 //});

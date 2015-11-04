@@ -148,6 +148,21 @@ Service.lock = function(botInfo, callback){
         });
 };
 
+/**
+ * set assistant login flag
+ * @param id of bot
+ * @param flag true or false
+* */
+Service.setLoginFlag = function(id, flag, callback){
+    WechatBot.findByIdAndUpdate(id, {loginFlag: flag}, function(err, data){
+       if(err){
+           if(callback) callback(err, null);
+       }else{
+           if(callback) callback(null, data);
+       }
+    });
+};
+
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

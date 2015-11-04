@@ -34,16 +34,55 @@ botManager.on('need-login', function(msg){
 });
 
 botManager.on('login', function(msg){
-    //botManager.setLoginFlag(msg.botid); //TODO
-    console.info('login');
-    console.info(msg);
+    /*
+     * Get and check the _id of the bot which is just logged in
+     */
+    var botid = msg && msg.botid;
+    var bot = botManager.getBot(botid);
+    var id = bot && bot._id;
+    if(!id) return;
+
+    //Set login flag of the bot
+    botManager.setLoginFlag(id, true); //TODO
+
+    /**
+     * Schedule group-listing-job for the bot
+     */
+    if(bot.groupListingScheduleId){
+        clearInterval(bot.groupListingScheduleId);
+        bot.groupListingScheduleId = null;
+    }
+
     setTimeout(function(){
-        botManager.requestGroupList(msg.botid);
-    }, 2000);
+        //Schedule
+        bot.groupListingScheduleId = setInterval(function(){
+            botManager.requestGroupList(botid);
+        }, 1*60*60*1000); //Run job per hour
+
+        //Run it right now
+        botManager.requestGroupList(botid);
+    }, 10*1000); //schedule the job after 10 seconds of logging in
 });
 
 botManager.on('abort', function(msg){
-    //botManager.setAbortFlag(msg.botid); //TODO
+    /*
+     * Get and check the _id of the bot which is just logged in
+     */
+    var botid = msg && msg.botid;
+    var bot = botManager.getBot(botid);
+    var id = bot && bot._id;
+    if(!id) return;
+
+    //Set login flag of the bot
+    botManager.setLoginFlag(id, false); //TODO
+
+    /**
+     * Cancel scheduling group-listing-job for the bot
+     */
+    if(bot.groupListingScheduleId){
+        clearInterval(bot.groupListingScheduleId);
+        bot.groupListingScheduleId = null;
+    }
 });
 
 botManager.on('contact-added', function(contact){
@@ -69,9 +108,9 @@ botManager.on('group-list', function(data){
         }
         else{
             logger.info('Succeed to request and sync the group list of a bot ' + data.botid);
-            logger.info('Remove ' + result && result.removes + ' groups of bot ' + data.botid);
-            logger.info('Add ' + result && result.adds + ' groups of bot ' + data.botid);
-            logger.info('updates ' + result && result.updates + ' groups of bot ' + data.botid);
+            logger.info('Remove ' + (result && result.removes) + ' groups of bot ' + data.botid);
+            logger.info('Add ' + (result && result.adds) + ' groups of bot ' + data.botid);
+            logger.info('Update ' + (result && result.updates) + ' groups of bot ' + data.botid);
         }
     })
 });
@@ -81,12 +120,6 @@ botManager.on('message', customerBotHandler);
 setTimeout(function(){
     botManager.proxy.init();
     botManager.init();
-}, 1000);
-
-setTimeout(function(){
-    setInterval(function(){
-        botManager.requestAllGroupLists();
-    }, 30*1000); //20 seconds
-}, 2000);
+}, 5000);
 
 module.exports = botManager;

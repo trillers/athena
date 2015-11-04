@@ -3,9 +3,12 @@
  */
 
 var Promise = require('bluebird');
-var settings = require('athena-settings').api;
-var token = require('../../wechat/common/token');
-var request = require('request');
+var fs = require('fs');
+var wechatApi = require('../../wechat/common/api').api;
+var fileService = require('./FileService');
+var thunkify = require('thunkify');
+var writeFileAsyn = thunkify(fs.writeFile);
+var path = require('path');
 var Service = {}
 
 /**
@@ -15,28 +18,24 @@ var Service = {}
  **/
 Service.saveImage = function* (media_id){
     try{
-        var imgUrl = yield getMediaUrl(media_id);
-        var formData = {
-            file: {
-                value: request(imgUrl),
-                options: {
-                    filename: media_id + '.jpeg',
-                    contentType: 'image/jpeg'
-                }
-            }
+        var data = yield wechatApi.getMediaAsync(media_id);
+        var mediaData = data[0];
+        var filePath = path.join(__dirname, '../../../../public/uploads/' + media_id + '.jpeg');
+        yield writeFileAsyn(filePath, mediaData, 0, mediaData.length);
+        var fileJson = {
+            name: media_id + '.jpeg',
+            ext: 'jpeg',
+            wx_media_id: media_id,
+            size: mediaData.length,
+            path: filePath,
+            mimeType: 'image/jpeg'
         }
-        var uploadUrl = settings.url + '/file/upload';
-        var result = yield new Promise(function(resolved, rejected){
-            request.post({url: uploadUrl, formData: formData}, function optionalCallback(err, httpResponse, body) {
-                if(err){
-                    console.log('save media file upload image file err:' + err);
-                    resolved(null);
-                }else{
-                    resolved(JSON.parse(body).media_id);
-                }
-            });
-        });
-        return result;
+
+        var result = yield fileService.createAsync(fileJson);
+
+        console.log('++++++');
+        console.log(result);
+        return result._id;
     }catch(err){
         console.log('save conversation image message err: ' + err);
         return null;
@@ -50,45 +49,23 @@ Service.saveImage = function* (media_id){
  **/
 Service.saveVoice = function* (media_id){
     try{
-        var imgUrl = yield getMediaUrl(media_id);
-        var formData = {
-            file: {
-                value: request(imgUrl),
-                options: {
-                    filename: media_id + '.amr',
-                    contentType: 'audio/amr'
-                }
-            }
+        var data = yield wechatApi.getMediaAsync(media_id);
+        var mediaData = data[0];
+        var filePath = path.join(__dirname, '../../../../public/uploads/' + media_id + '.amr');
+        yield writeFileAsyn(filePath, mediaData, 0, mediaData.length);
+        var fileJson = {
+            name: media_id + '.amr',
+            ext: 'amr',
+            size: mediaData.length,
+            path: filePath,
+            mimeType: 'audio/amr'
         }
-        var uploadUrl = settings.url + '/file/upload';
-        var result = yield new Promise(function(resolved, rejected){
-            request.post({url: uploadUrl, formData: formData}, function optionalCallback(err, httpResponse, body) {
-                if(err){
-                    console.log('save media file upload voice file err:' + err);
-                    resolved(null);
-                }else{
-                    resolved(JSON.parse(body).media_id);
-                }
-            });
-        });
-        return result;
+        var result = yield fileService.createAsync(fileJson);
+        console.log('++++++');
+        console.log(result);
+        return result._id;
     }catch(err){
         console.log('save conversation voice message err: ' + err);
-        return null;
-    }
-}
-
-/**
- * get media file url by media_id
- * @param media_id
- **/
-var getMediaUrl = function*(media_id){
-    try{
-        var at = yield token.generateGetAt(false)();
-        var url = 'https://api.weixin.qq.com/cgi-bin/media/get?access_token='+ at + '&media_id=' + media_id;
-        return url;
-    }catch(err){
-        console.log('getMediaUrl err: ' + err);
         return null;
     }
 }

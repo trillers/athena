@@ -9,6 +9,7 @@ var schema = DomainBuilder
     .withProperties({
         bucketid: {type: String, required: true}
         , openid: {type: String, required: true}
+        , loginFlag: {type: Boolean}
         , nickname: {type: String}
         , remark: {type: String}
     })
