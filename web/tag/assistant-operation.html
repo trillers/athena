@@ -16,13 +16,13 @@
                             <div id="dialog" style="padding-top: 1.5em; min-height: 29em; margin-bottom: 0em">
                                 <div class="btn-group btn-group-justified topGroup" role="group" aria-label="...">
                                     <div class="btn-group" role="group">
-                                        <button onclick="{baseInfo}" type="button" class="btn btn-default" style="background-color: #EEE">基本信息</button>
+                                        <button onclick="{baseInfo}" type="button" class="btn btn-default" style="background-color: #fff">基本信息</button>
                                     </div>
                                     <div class="btn-group" role="group">
-                                        <button onclick="{contacts}" type="button" class="btn btn-default">联系人</button>
+                                        <button onclick="{contacts}" type="button" class="btn btn-default" style="background-color: #EEE">联系人</button>
                                     </div>
                                     <div class="btn-group" role="group">
-                                        <button onclick="{mass}" type="button" class="btn btn-default">群发</button>
+                                        <button onclick="{mass}" type="button" class="btn btn-default" style="background-color: #EEE">群发</button>
                                     </div>
                                 </div>
                                 <div class="panel panel-default" style="min-height: 25em; margin-bottom: 0 !important;">
@@ -39,10 +39,10 @@
                                     <div class="operation" id="contacts" style="width: 100%; display: none;">
                                         <div class="btn-group btn-group-justified contactsGroup" role="group" aria-label="...">
                                             <div class="btn-group" role="group">
-                                                <button style="background-color: #EEE" onclick="{single}" type="button" class="btn btn-default">个人</button>
+                                                <button style="background-color: #fff" onclick="{single}" type="button" class="btn btn-default">个人</button>
                                             </div>
                                             <div class="btn-group" role="group">
-                                                <button onclick="{group}" type="button" class="btn btn-default">群</button>
+                                                <button onclick="{group}" type="button" class="btn btn-default" style="background-color: #EEE">群</button>
                                             </div>
                                         </div>
                                         <div id="single" style="padding-top: 1em">
@@ -62,19 +62,45 @@
                                     <div class="operation" id="mass" style="height:auto; display: none;">
                                         <div class="btn-group btn-group-justified massGroup" role="group" aria-label="...">
                                             <div class="btn-group" role="group">
-                                                <button style="background-color: #EEE" onclick="{massToSingle}" type="button" class="btn btn-default">群发个人</button>
+                                                <button style="background-color: #fff" onclick="{massToSingle}" type="button" class="btn btn-default">群发个人</button>
                                             </div>
                                             <div class="btn-group" role="group">
-                                                <button onclick="{massToGroup}" type="button" class="btn btn-default">群发群</button>
+                                                <button onclick="{massToGroup}" type="button" class="btn btn-default" style="background-color: #EEE">群发群</button>
                                             </div>
                                         </div>
                                         <div id="massToSingle" style="padding-top: 1em">
-                                            <span>&nbsp;&nbsp;助手号 {bot_nickname} 群发给个人</span>
+                                            <span>&nbsp;&nbsp;历史消息:</span>
+                                            <div if="{!singleBatchMsg}" class="panel panel-default" style="height: 3em; margin-top: 1em; line-height: 3em; text-align: center">
+                                                <span>无纪录</span>
+                                            </div>
+                                            <div if="{singleBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
+                                                <ul class="list-group">
+                                                    <li each="{singleBatchMsg}" class="list-group-item">
+                                                        <div style="height: 100%; width: 100%">
+                                                            <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
+                                                            <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                             <textarea id="massToSingleMsg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
                                             <button type="button" onclick="{sendToSingle}" style="margin-left: 83%; margin-top: 1em; width: 7em; margin-right: 1em; margin-bottom: 1em;" class="btn btn-success">发送</button>
                                         </div>
                                         <div id="massToGroup" style="display: none; padding-top: 1em">
-                                            <span>&nbsp;&nbsp;助手号 {bot_nickname} 群发给群</span>
+                                            <span>&nbsp;&nbsp;历史消息:</span>
+                                            <div if="{!groupBatchMsg}" class="panel panel-default" style="height: 3em; line-height: 3em; margin-top: 1em; text-align: center">
+                                                <span>无纪录</span>
+                                            </div>
+                                            <div if="{groupBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
+                                                <ul class="list-group">
+                                                    <li each="{groupBatchMsg}" class="list-group-item">
+                                                        <div style="height: 100%; width: 100%">
+                                                            <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
+                                                            <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
                                             <textarea id="massToGroupMsg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
                                             <button type="button" onclick="{sendToGroup}" style="margin-left: 83%; margin-top: 1em; width: 7em; margin-right: 1em; margin-bottom: 1em;" class="btn btn-success">发送</button>
                                         </div>
@@ -103,6 +129,7 @@
             var loadAssistantById = domain.action('loadAssistantById');
             var loadAssistantContacts = domain.action('loadAssistantContacts');
             var loadAssistantGroups = domain.action('loadAssistantGroups');
+            var getBatchMsg = domain.action('getBatchMsg');
             var assistantMass = domain.action('assistantMass');
 
             var onLoadAssistantById = function(data){
@@ -119,7 +146,8 @@
                 self.botId = data._id;
                 loadAssistantContacts.execute(self.bot_id);
                 loadAssistantGroups.execute(data._id);
-
+                getBatchMsg.execute(self.botId, 'single');
+                getBatchMsg.execute(self.botId, 'group');
                 self.update();
             }
 
@@ -146,12 +174,24 @@
                 }
             }
 
+            var onGetBatchMsg = function(data){
+                if(data.batchMsg){
+                    if(data.type === 'single'){
+                        self.singleBatchMsg = data.batchMsg;
+                    }else if(data.type === 'group'){
+                        self.groupBatchMsg = data.batchMsg;
+                    }
+                    self.update();
+                }
+            }
+
             this.on('mount', function(){
                 console.info('tag assistant mass is mounted');
                 loadAssistantById.onDone(onLoadAssistantById);
                 loadAssistantContacts.onDone(onLoadAssistantContacts);
                 loadAssistantGroups.onDone(onLoadAssistantGroups);
                 assistantMass.onDone(onAssistantMass);
+                getBatchMsg.onDone(onGetBatchMsg);
             });
             this.on('unmount', function(){
                 console.info('tag assistant mass is unmounted');
@@ -159,6 +199,7 @@
                 loadAssistantContacts.offDone(onLoadAssistantContacts);
                 loadAssistantGroups.offDone(onLoadAssistantGroups);
                 assistantMass.offDone(onAssistantMass);
+                getBatchMsg.offDone(onGetBatchMsg);
             });
             this.on('open', function(opts){
                 console.info('tag cassistant mass is opening');
@@ -182,6 +223,11 @@
                 //_refresh();
             });
 
+            self.formatDate = function(date){
+                var dateStr = new Date(date).toLocaleDateString();
+                return dateStr.replace(/\//g, '-');
+            }
+
             returnPage(e){
                 e.preventUpdate = true;
                 riot.route('assistant/query');
@@ -189,11 +235,11 @@
 
             function btnClickCommon(e, group){
                 e.preventUpdate = true;
-                $('.' + group + ' button').css('background-color', '#fff');
+                $('.' + group + ' button').css('background-color', '#EEE');
                 var target = e.currentTarget;
-                $(target).css('background-color', '#EEE');
+                $(target).css('background-color', '#fff');
                 $(target).one('blur', function(){
-                    $(target).css('background-color', '#EEE');
+                    $(target).css('background-color', '#fff');
                 })
             }
 
@@ -244,6 +290,7 @@
                 var msg = $('#massToSingleMsg').val().trim();
                 if(msg.length > 0) {
                     var data = {
+                        botId: self.botId,
                         bot_id: self.bot_id,
                         msg: msg,
                         type: 'single'

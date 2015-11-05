@@ -72,6 +72,7 @@ module.exports = function(router) {
             var botId = this.request.body.botId;//sbot _id
             var type = this.request.body.type;
             var msg = this.request.body.msg;
+            console.log(botId);
             var batchMessage = {
                 from: botId,
                 contentType: MsgContentType.text.value(),
@@ -118,11 +119,32 @@ module.exports = function(router) {
                 }
                 batchMessage.toGroups = toGroups;
             }
+            console.log(batchMessage);
             yield batchMessageService.createAsync(batchMessage);
             this.body = {success: true, err: null};
         }catch(err){
             console.log('assistant router mass err:' + err);
             this.body = {success: false, err: null};
         }
+    });
+
+    router.get('/getBatchMsg', function*(){
+        var botId = this.query.botId;
+        var batchType = this.query.type;
+        var params = {
+            conditions:{
+                from: botId,
+                batchType: batchType
+            }
+        }
+        try {
+            var data = yield batchMessageService.findAsync(params);
+            var batchMsg = data.length > 0 ? data : null;
+            this.body = {batchMsg: batchMsg, type: batchType};
+        }catch(err){
+            console.log('getBatchMsg err: ' + err);
+            this.body = {batchMsg: null, type: batchType};
+        }
+
     });
 }

@@ -8,7 +8,7 @@ var co = require('co');
 describe('file upload', function(){
     it('success upload image file', function(done){
         var formData = {
-            file: fs.createReadStream(__dirname + '/test.png')
+            file: fs.createReadStream(__dirname + '/test.jpeg')
         }
         request.post({url:'http://localhost:3020/api/file/upload', formData: formData}, function optionalCallback(err, httpResponse, body) {
             console.log(err);

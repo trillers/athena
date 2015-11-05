@@ -53,6 +53,10 @@ domain.action('loadCustomerById').onExecute(function(id){
     apiFactory.get('/customer/load?id=' + id).drive(this).send();
 });
 
+domain.action('getBatchMsg').onExecute(function(botId, type){
+    apiFactory.get('/assistant/getBatchMsg?botId=' + botId + '&type=' + type).drive(this).send();
+});
+
 domain.action('sendMsgToCustomer').onExecute(function(data){
     apiFactory.post('/customer/sendMsg').drive(this).send(data);
 });
