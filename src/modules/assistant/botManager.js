@@ -62,6 +62,24 @@ botManager.on('login', function(msg){
         //Run it right now
         botManager.requestGroupList(botid);
     }, 10*1000); //schedule the job after 10 seconds of logging in
+
+    /**
+     * Schedule group-listing-job for the bot
+     */
+    if(bot.contactListRemarkingScheduleId){
+        clearInterval(bot.contactListRemarkingScheduleId);
+        bot.contactListRemarkingScheduleId = null;
+    }
+
+    setTimeout(function(){
+        //Schedule
+        bot.contactListRemarkingScheduleId = setInterval(function(){
+            botManager.requestContactListRemark(botid);
+        }, 12*60*60*1000); //Run job per hour
+
+        //Run it right now
+        botManager.requestContactListRemark(botid);
+    }, 20*1000); //schedule the job after 10 seconds of logging in
 });
 
 botManager.on('abort', function(msg){
@@ -86,17 +104,22 @@ botManager.on('abort', function(msg){
 });
 
 botManager.on('contact-added', function(contact){
-    console.error('contact');
-    console.error(contact);
     wechatBotUserService.createFromContact(contact, function(err, userJson){
-        console.error(userJson);
         botManager.requestProfile(contact, contact.bid);
+    })
+});
+
+botManager.on('contact-remarked', function(contact){
+    console.error('contact-remarked');
+    console.error(contact);
+    wechatBotUserService.updateFromProfile(contact.bid, contact, function(err, userJson){
+        logger.info('Succeed to remark and create stock user:' + contact);
     })
 });
 
 botManager.on('profile', function(profile){
     wechatBotUserService.updateFromProfile(profile.bid, profile, function(err, userJson){
-        logger.info('Succeed to request and update profile of a bot user');
+        logger.info('Succeed to update the newly added user with profile:' + profile);
     })
 });
 

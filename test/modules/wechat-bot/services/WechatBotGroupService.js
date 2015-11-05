@@ -12,9 +12,9 @@ describe('wechatBotGroupService', function() {
         },2000);
     })
 
-    describe.only('#getGroupList', function() {
+    describe('#getGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
-        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var openid = 'oO9zswwIYYtgOdugwQifYiLjtLN8'; //包三哥的错题本openid
         var wechatBot = null;
         before(function(done){
             botManager.on('register', function(bot){
@@ -77,9 +77,9 @@ describe('wechatBotGroupService', function() {
         })
     })
 
-    describe('#syncGroupList', function() {
+    describe.only('#syncGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
-        var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA'; //包三哥的错题本openid
+        var openid = 'oO9zswwIYYtgOdugwQifYiLjtLN8'; //包三哥的错题本openid
         var wechatBot = null;
         before(function(done){
             botManager.on('register', function(bot){

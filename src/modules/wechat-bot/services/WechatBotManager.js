@@ -71,6 +71,19 @@ var WechatBotManager = function(){
         }
     });
 
+    this.proxy.on('contact-remarked', function(err, data){
+        if(err){
+            logger.error(err);
+        }
+        else{
+            var botInfo = me._decodeBotid(data.botid);
+            data.bucketid = botInfo.bucketid;
+            data.openid = botInfo.openid;
+            logger.debug(data);
+            me.emit('contact-remarked', data);
+        }
+    });
+
     this.proxy.on('need-login', function(err, data){
         if(err){
             logger.error(err);
@@ -234,6 +247,15 @@ WechatBotManager.prototype.requestAllGroupLists = function(){
     for(var botid in this.botNames){
         this.requestGroupList(botid);
     }
+};
+
+/**
+ * Request to remark all contacts which does not added and remarked after bot is registered.
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ */
+WechatBotManager.prototype.requestContactListRemark = function(botInfo){
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.requestContactListRemark(botid);
 };
 
 WechatBotManager.prototype.getBot = function(botid){

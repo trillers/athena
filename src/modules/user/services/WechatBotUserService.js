@@ -34,18 +34,6 @@ var createModelUser = function (userInfo, callback) {
 };
 var createModelUserAsync = Promise.promisify(createModelUser);
 
-//var updateModelUserByBuid = function (buid, update, callback) {
-//    User.update({bot_uid: buid}, update, function (err, doc) {
-//        if (err) {
-//            logger.error('Fail to update user [buid=' + buid + ']: ' + err);
-//            if (callback) callback(err);
-//        }
-//        else {
-//            logger.info('Succeed to update user [buid=' + buid + ']: ' + JSON.stringify(doc));
-//            if (callback) callback(null, doc);
-//        }
-//    });
-//};
 var updateModelUserByBuid = function (user, update, callback) {
     for(var p in update){
         user[p] = update[p];
@@ -166,6 +154,7 @@ Service.createFromContact = function (contactInfo, callback) {
     userInfo.bot_nickname = contactInfo.nickname;
     userInfo.bot_headimgid = contactInfo.headimgid || null;
     userInfo.bot_place = contactInfo.place || null;
+    userInfo.bot_sex = contactInfo.sex || 0;
 
     return createUserAsync(userInfo, callback);
 };
@@ -231,6 +220,8 @@ Service.updateFromProfile = function (buid, profileInfo, callback) {
                 toUpdate.bot_nickname = profileInfo.nickname;
                 toUpdate.bot_headimgid = profileInfo.headimgid;
                 toUpdate.bot_place = profileInfo.place;
+                toUpdate.bot_sex = profileInfo.sex;
+
                 var nickname = profileInfo.nickname;
                 if(!user.siteUser){
                     findTheSameSiteUserAsync(nickname)
@@ -247,6 +238,9 @@ Service.updateFromProfile = function (buid, profileInfo, callback) {
                 }
             }
             else{
+                profileInfo.stt = UserState.Registered;
+                profileInfo.sourceType = UserSourceType.WechatBot.value();
+                profileInfo.siteUser = null;
                 return Service.createFromContact(profileInfo, callback);
             }
         });
