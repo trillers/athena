@@ -86,17 +86,22 @@ botManager.on('abort', function(msg){
 });
 
 botManager.on('contact-added', function(contact){
-    console.error('contact');
-    console.error(contact);
     wechatBotUserService.createFromContact(contact, function(err, userJson){
-        console.error(userJson);
         botManager.requestProfile(contact, contact.bid);
+    })
+});
+
+botManager.on('contact-remarked', function(contact){
+    console.error('contact-remarked');
+    console.error(contact);
+    wechatBotUserService.updateFromProfile(contact.bid, contact, function(err, userJson){
+        logger.info('Succeed to remark and create stock user:' + contact);
     })
 });
 
 botManager.on('profile', function(profile){
     wechatBotUserService.updateFromProfile(profile.bid, profile, function(err, userJson){
-        logger.info('Succeed to request and update profile of a bot user');
+        logger.info('Succeed to update the newly added user with profile:' + profile);
     })
 });
 

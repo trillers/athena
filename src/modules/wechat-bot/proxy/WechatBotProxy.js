@@ -139,7 +139,7 @@ var channels = {
     groupListResponse: 'sbot:group-list',
     messageReceived: 'sbot:message',
     contactAdded: 'sbot:contact-added',
-    contactRemark: 'sbot:contact-remarked',
+    contactRemarked: 'sbot:contact-remarked',
     needLogin: 'sbot:need-login',
     login: 'sbot:login',
     abort: 'sbot:abort'
@@ -165,9 +165,8 @@ WechatBotProxy.prototype.init = function(){
     this.subClient.subscribe(channels.messageReceived);
     this.subClient.subscribe(channels.profileResponse);
     this.subClient.subscribe(channels.groupListResponse);
-    this.subClient.subscribe(channels.contactListResponse);
-
     this.subClient.subscribe(channels.contactAdded);
+    this.subClient.subscribe(channels.contactRemarked);
     this.subClient.subscribe(channels.needLogin);
     this.subClient.subscribe(channels.login);
     this.subClient.subscribe(channels.abort);
@@ -192,6 +191,10 @@ WechatBotProxy.prototype.requestProfile = function(botid, bid){
 
 WechatBotProxy.prototype.requestGroupList = function(botid){
     this.pubClient.publish(channels.groupListRequest, JSON.stringify({botid: botid}));
+};
+
+WechatBotProxy.prototype.requestContactListRemark = function(botid){
+    this.pubClient.publish(channels.contactListRemarkRequest, JSON.stringify({botid: botid}));
 };
 
 module.exports = WechatBotProxy;
