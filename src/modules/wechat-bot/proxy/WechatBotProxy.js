@@ -25,6 +25,7 @@ var events = {
      *   nickname:
      *   headimgid:
      *   place:
+     *   sex: 1: male, 0: female -1: unknown
      * }
      */
     'profile': true,
@@ -43,7 +44,6 @@ var events = {
      */
     'group-list': true,
 
-
     /*
      * {
      *   botid
@@ -52,6 +52,18 @@ var events = {
      * }
      */
     'contact-added': true,
+
+    /*
+     * {
+     *   botid
+     *   bid:
+     *   nickname:
+     *   headimgid:
+     *   place
+     *   sex
+     * }
+     */
+    'contact-remarked': true,
 
     /*
      * {
@@ -116,10 +128,18 @@ var channels = {
      */
     groupListRequest: 'sbot:group-list-request',
 
+    /*
+     * {
+     *     botid: (String)
+     * }
+     */
+    contactListRemarkRequest: 'sbot:contact-list-remark-request',
+
     profileResponse: 'sbot:profile',
     groupListResponse: 'sbot:group-list',
     messageReceived: 'sbot:message',
     contactAdded: 'sbot:contact-added',
+    contactRemark: 'sbot:contact-remarked',
     needLogin: 'sbot:need-login',
     login: 'sbot:login',
     abort: 'sbot:abort'
@@ -145,6 +165,8 @@ WechatBotProxy.prototype.init = function(){
     this.subClient.subscribe(channels.messageReceived);
     this.subClient.subscribe(channels.profileResponse);
     this.subClient.subscribe(channels.groupListResponse);
+    this.subClient.subscribe(channels.contactListResponse);
+
     this.subClient.subscribe(channels.contactAdded);
     this.subClient.subscribe(channels.needLogin);
     this.subClient.subscribe(channels.login);
