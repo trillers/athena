@@ -6,6 +6,7 @@ var csState = require('../../modules/common/models/TypeRegistry').item('CSState'
 var userKvs = require('../../modules/user/kvs/User');
 var botManager = require('../../modules/assistant/botManager');
 var wechatApi = require('../../modules/wechat/common/api').api;
+var settings = require('athena-settings');
 
 var Promise = require('bluebird');
 
@@ -51,8 +52,12 @@ module.exports = function(router) {
         try{
             var customerList = yield userService.getRoleListAsync(UserRole.Customer.value());
             for(var i = 0; i < customerList.length; i++){
-                customerList[i].activeTime = yield userKvs.loadSessionTTLByOpenidAsync(customerList[i].wx_openid);
-                customerList[i].from = botManager.getNameMap[customerList[i].bot_id];
+                if(customerList[i].sourceType === 'site'){
+                    customerList[i].activeTime = yield userKvs.loadSessionTTLByOpenidAsync(customerList[i].wx_openid);
+                    customerList[i].from = settings.wechat.siteName;
+                }else if(customerList[i].sourceType === 'bot'){
+                    customerList[i].from = botManager.getNameMap(customerList[i].bot_id)[customerList[i].bot_id];
+                }
             }
             this.body = customerList;
         }catch(err){
