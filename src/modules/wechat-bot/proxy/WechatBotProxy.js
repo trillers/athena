@@ -25,7 +25,7 @@ var events = {
      *   nickname:
      *   headimgid:
      *   place:
-     *   sex: 1: male, 0: female -1: unknown
+     *   sex: 1: male, 2: female 0: unknown
      * }
      */
     'profile': true,
