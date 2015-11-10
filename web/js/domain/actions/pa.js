@@ -64,4 +64,16 @@ domain.action('sendMsgToCustomer').onExecute(function(data){
 domain.action('assistantMass').onExecute(function(data){
     apiFactory.post('/assistant/mass').drive(this).send(data);
 });
+
+domain.action('loadAdmins').onExecute(function(){
+    apiFactory.get('/sys_user/loadAll').drive(this).send();
+});
+
+domain.action('addAdmin').onExecute(function(data){
+    apiFactory.post('/sys_user/add').drive(this).send(data);
+});
+
+domain.action('updateAdmin').onExecute(function(data){
+    apiFactory.post('/sys_user/update').drive(this).send(data);
+});
 module.exports = null;

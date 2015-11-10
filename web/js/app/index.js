@@ -141,6 +141,18 @@ app.routeView('assistant/operation/_:id', nest.viewable({
   }
 }));
 
+app.routeView('admin/list', nest.viewable({
+  name: 'admin/list',
+  mount: function(ctx){
+    var tags = riot.mount('admin-list', {filter: ctx.req.query, app: this.parent});
+    this.tag = tags[0];
+  },
+  route: function(ctx){
+    this.context = ctx;
+    this.tag.trigger('open', ctx.req.query);
+  }
+}));
+
 app.on('init', function(){
   var attentionUrl = util.getCookie('attentionUrl');
   var hash = attentionUrl || window.location.hash;

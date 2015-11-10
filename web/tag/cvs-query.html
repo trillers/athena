@@ -120,14 +120,6 @@
             //_refresh();
         });
 
-        this.on('show', function(cmd){
-            if(cmd){
-                __page.holder().setTitle('会话');
-            }
-            $(window).scrollTop(__page.holder().getTop());
-
-        });
-
         preDay(e){
             date = util.getAddedDaysTime(date, -1);
             params.conditions.createTime['$gt'] = util.getDateStartTime(date);

@@ -1,4 +1,5 @@
-var adminService = require('../../modules/bossAdmin/services/AdminService');
+var systemUserService = require('../../modules/system_user/services/SystemUserService');
+var util = require('../../app/util');
 
 module.exports = function(router){
     require('../../app/routes-spa')(router);
@@ -16,11 +17,12 @@ module.exports = function(router){
     router.post('/login', function *(){
         var username = this.request.body.username;
         var password = this.request.body.password;
+        var token = util.generateToken(password);
         var res = {};
         try{
-            var user = yield adminService.findOneAsync({username: username, password: password});
+            var user = yield systemUserService.findOneAsync({username: username, token: token, lFlg: 'a'});
             if(user){
-                this.session.user = username;
+                this.session.user = user;
                 res.success = true;
             }else{
                 res.success = false;

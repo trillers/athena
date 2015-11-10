@@ -1,0 +1,234 @@
+<admin-list>
+    <div if="{!hidden}">
+        <div class="container">
+            <div class="row-fluid">
+                <div class="col-md-3 col-xs-3 col-sm-3" >
+                    <div class="well sidebar-nav" style="height: 38em">
+                        <ul class="nav nav-list" style="margin-top: 1em">
+                            <li class="leftlist" style="background: #e7e7e7"><a href="#admin/list" style="background: #e7e7e7">信息查询</a></li>
+                        </ul>
+                    </div><!--/.well -->
+                </div><!--/span-->
+
+                <div class="col-md-9 col-xs-9 col-sm-9">
+                    <div class="jumbotron" style="height: auto;padding-top: 1em; padding-left: 2em;padding-right: 4em;">
+                        <ul>
+                            <li style="list-style-type: none; margin-left: 5px; margin-bottom: 5px"><button type="button" style="width: 6em" class="btn btn-primary" data-toggle="modal"  data-target="#add_admin" >添     加</button>
+                            </li>
+                            <li class="numberlist">
+                                <div class="panel " style="min-height: 30em;padding-top: 1em">
+                                    <ul class="numberlist" style="margin-bottom: 5em; padding-left: 0em">
+
+                                        <li>
+                                            <strong class="col-md-3">用户名</strong>
+                                            <strong class="col-md-3"> 状态</strong>
+                                            <strong class="col-md-3">创建时间</strong>
+                                            <strong class="col-md-3"> 操作</strong>
+                                        </li>
+
+
+                                        <li>  <hr width="100%" >  </li>
+                                        <admin-item each="{items}" curritem = "{this}"/>
+                                    </ul>
+
+                                </div><!-- panel-->
+                            </li>
+                        </ul>
+                    </div>
+                </div><!--/span-->
+            </div><!--/row-->
+
+
+        </div><!--/container-->
+
+        <!-------------------add admin 模态框（Modal）begin-------------------------->
+        <div class="modal fade" id="add_admin" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">
+                             添加管理员
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="inputUsername" class="col-sm-2 control-label">用户名</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="inputUsername" placeholder="用户名">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="inputPassword" class="col-sm-2 control-label">密码</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" id="inputPassword" placeholder="密码">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">关闭
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="{add}" data-dismiss="modal">
+                            提交
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-------------------add admin 模态框（Modal）end-------------------------->
+
+        <!-------------------reset password 模态框（Modal）begin-------------------------->
+        <div class="modal fade" id="reset_password" tabindex="-1" role="dialog"
+             aria-labelledby="resetPwModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h4 class="modal-title" id="resetPwModalLabel">
+                            重置密码
+                        </h4>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal">
+                            <div class="form-group">
+                                <label for="inputNewPassword" class="col-sm-2 control-label">新密码</label>
+                                <div class="col-sm-9">
+                                    <input type="password" class="form-control" id="inputNewPassword" placeholder="新密码">
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default"
+                                data-dismiss="modal">关闭
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="{resetPw}" data-dismiss="modal">
+                            提交
+                        </button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <!-------------------reset password 模态框（Modal）end-------------------------->
+        <style scoped>
+            .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
+            .numberlist{list-style-type: none ; text-align: center}
+        </style>
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV=="production")?"public":"web";
+            self.reset_id = '';
+            var loadAdmins = domain.action('loadAdmins');
+            var updateAdmin = domain.action('updateAdmin');
+            var addAdmin = domain.action('addAdmin');
+
+            var onLoadAdmins = function(items){
+                self.update({items: items});
+            }
+
+            var onAddAdmin = function(data){
+                if(data.success) {
+                    $('#inputUsername').val('');
+                    $('#inputPassword').val('');
+                    loadAdmins.execute();
+                }
+            }
+
+            var onUpdateAdmin = function(data){
+                if(data.success) {
+                    $('#inputNewPassword').val('');
+                }
+                loadAdmins.execute();
+            }
+
+            this.on('mount', function(){
+                console.info('tag admin list is mounted');
+                loadAdmins.onDone(onLoadAdmins);
+                addAdmin.onDone(onAddAdmin);
+                updateAdmin.onDone(onUpdateAdmin);
+            });
+            this.on('unmount', function(){
+                console.info('tag admin list is unmounted');
+                loadAdmins.offDone(onLoadAdmins);
+                addAdmin.offDone(onAddAdmin);
+                updateAdmin.offDone(onUpdateAdmin);
+            });
+            this.on('open', function(options){
+                console.info('tag admin list is opening');
+                self.trigger('ready', false);
+                self.trigger('view-route-to');
+                loadAdmins.execute();
+            });
+
+            this.on('leave', function(){
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function(){
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function(){
+                console.info('tag admin list is refreshing');
+                //_refresh();
+            });
+
+            self.lockUser = function(){
+                var data = {
+                    action: 'lockUser',
+                    id: self.reset_id,
+                }
+                updateAdmin.execute(data);
+            }
+
+            self.activeUser = function(){
+                var data = {
+                    action: 'activeUser',
+                    id: self.reset_id,
+                }
+                updateAdmin.execute(data);
+            }
+
+            add(e){
+                var username = $('#inputUsername').val().trim();
+                var password = $('#inputPassword').val().trim();
+                if(!username || !password){
+                    //TODO
+                }else{
+                    var data = {
+                        username: username,
+                        password: password
+                    }
+                    addAdmin.execute(data);
+                }
+            }
+
+            resetPw(e){
+                var password = $('#inputNewPassword').val().trim();
+                if(!password){
+                    //TODO
+                }else{
+                    var data = {
+                        action: 'modifyPassword',
+                        id: self.reset_id,
+                        password: password
+                    }
+                    updateAdmin.execute(data);
+                }
+            }
+        </script>
+    </div>
+</admin-list>

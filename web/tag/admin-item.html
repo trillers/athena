@@ -1,0 +1,40 @@
+<admin-item>
+    <li style="width: 100%">
+        <span class="col-md-3"> {username}</span>
+        <span class="col-md-3"> {lFlg}</span>
+        <span class="col-md-3"> {date}</span>
+        <span class="col-md-3">
+            <a onclick="{setResetId}" style="text-decoration: none; cursor: pointer; padding-right: 4px;" data-toggle="modal"  data-target="#reset_password" >重置密码</a>
+            <a onclick="{lockOrActive}" style="text-decoration: none; cursor: pointer; padding-right: 4px;" >{lockTitle}</a>
+        </span>
+    </li>
+    <br>
+    <br>
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        var crtOn = new Date(item.crtOn);
+        var year = crtOn.getFullYear();
+        var month = crtOn.getMonth() + 1;
+        var day = crtOn.getDate();
+        self.date = year + '-' + month + '-' + day;
+        if(item.lFlg === '已激活'){
+            self.lockTitle = '锁定用户';
+        } else if(item.lFlg === '已锁定'){
+            self.lockTitle = '激活用户';
+        }
+        lockOrActive(e){
+            e.preventUpdate = true;
+            self.parent.parent.reset_id = item._id;
+            if(item.lFlg === '已激活'){
+                self.parent.parent.lockUser();
+            } else if(item.lFlg === '已锁定'){
+                self.parent.parent.activeUser();
+            }
+        }
+        setResetId(e){
+            e.preventUpdate = true;
+            self.parent.parent.reset_id = item._id;
+        }
+    </script>
+</admin-item>
