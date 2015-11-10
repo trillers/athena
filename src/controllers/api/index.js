@@ -55,4 +55,10 @@ module.exports = function(app){
     require('./assistant')(assistant_router);
     app.use(assistant_router.routes());
 
+    //system user module
+    var sys_user_router = new router();
+    sys_user_router.prefix('/api/sys_user');
+    require('./sys_user')(sys_user_router);
+    app.use(sys_user_router.routes());
+
 }
