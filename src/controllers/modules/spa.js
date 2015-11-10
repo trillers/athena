@@ -20,7 +20,7 @@ module.exports = function(router){
         var token = util.generateToken(password);
         var res = {};
         try{
-            var user = yield systemUserService.findOneAsync({username: username, token: token});
+            var user = yield systemUserService.findOneAsync({username: username, token: token, lFlg: 'a'});
             if(user){
                 this.session.user = user;
                 res.success = true;
