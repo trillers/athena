@@ -2,7 +2,7 @@ var domain = require('../domain');
 var apiFactory = domain.restApi();
 
 domain.action('getCvsSnapshot').onExecute(function(filter){
-    apiFactory.get('/cvs/snapshot').drive(this).send({filter: filter});
+    apiFactory.get('/cvs/snapshot').drive(this).send();
 });
 
 domain.action('loadCvs').onExecute(function(filter){

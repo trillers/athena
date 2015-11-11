@@ -85,8 +85,6 @@ RestApi.prototype.send = function(data){
     var jqXHR = _ajax({
         type: this.o.method,
         url: this.o.url,
-        //processData : false,
-        //contentType : false,
         dataType: this.o.dataType,
         data: data || null
     });

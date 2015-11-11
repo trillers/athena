@@ -217,15 +217,7 @@
             var loadAssistantGroups = domain.action('loadAssistantGroups');
             var getBatchMsg = domain.action('getBatchMsg');
             var assistantMass = domain.action('assistantMass');
-            var uploadImg = domain.action('uploadImg');
             var asyncAssistant = domain.action('asyncAssistant');
-
-            var onUploadImg = function(data){
-                $('#group_img_prew').hide();
-                $('#single_img_prew').hide();
-                console.log(data);
-                //TODO
-            }
 
             var onLoadAssistantById = function(data){
                 var createTime = new Date(data.crtOn);
@@ -297,7 +289,6 @@
                 loadAssistantGroups.onDone(onLoadAssistantGroups);
                 assistantMass.onDone(onAssistantMass);
                 getBatchMsg.onDone(onGetBatchMsg);
-                uploadImg.onDone(onUploadImg);
                 asyncAssistant.onDone(onAsyncAssistant);
             });
             this.on('unmount', function(){
@@ -307,7 +298,6 @@
                 loadAssistantGroups.offDone(onLoadAssistantGroups);
                 assistantMass.offDone(onAssistantMass);
                 getBatchMsg.offDone(onGetBatchMsg);
-                uploadImg.offDone(onUploadImg);
                 asyncAssistant.offDone(onAsyncAssistant);
             });
             this.on('open', function(opts){
@@ -447,7 +437,20 @@
                 var formData = new FormData();
                 var files = $('#group_img_file')[0].files;
                 formData.append('file', files[0]);
-                uploadImg.execute(formData);
+                $.ajax({
+                    url : self.api + '/file/upload',
+                    type : 'POST',
+                    data : formData,
+                    processData : false,
+                    contentType : false,
+                    success : function(responseStr) {
+                        $('#group_img_prew').hide();
+                        console.log(responseStr);//TODO
+                    },
+                    error : function(responseStr) {
+                        console.error("失败:" + JSON.stringify(responseStr));
+                    }
+                });
             }
 
             handleSingleImg(e){
@@ -471,7 +474,20 @@
                 var formData = new FormData();
                 var files = $('#single_img_file')[0].files;
                 formData.append('file', files[0]);
-                uploadImg.execute(formData);
+                $.ajax({
+                    url : self.api + '/file/upload',
+                    type : 'POST',
+                    data : formData,
+                    processData : false,
+                    contentType : false,
+                    success : function(responseStr) {
+                        $('#single_img_prew').hide();
+                        console.log(responseStr);//TODO
+                    },
+                    error : function(responseStr) {
+                        console.error("失败:" + JSON.stringify(responseStr));
+                    }
+                });
             }
 
             async_contact(e){

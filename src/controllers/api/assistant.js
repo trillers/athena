@@ -135,6 +135,9 @@ module.exports = function(router) {
             conditions:{
                 from: botId,
                 batchType: batchType
+            },
+            sort: {
+                crtOn: -1
             }
         }
         try {
