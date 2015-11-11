@@ -82,7 +82,7 @@ domain.action('uploadImg').onExecute(function(data){
 });
 
 domain.action('asyncAssistant').onExecute(function(data){
-    apiFactory.get('/assistant/async').drive(this).send(data);
+    apiFactory.post('/assistant/async').drive(this).send(data);
 });
 
 module.exports = null;

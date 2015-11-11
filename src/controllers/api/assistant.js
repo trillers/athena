@@ -153,9 +153,9 @@ module.exports = function(router) {
      * @param bot_id
      * @param type single or group
      * **/
-    router.get('/async', function*(){
-        var bot_id = this.query.bot_id;
-        var type = this.query.type;
+    router.post('/async', function*(){
+        var bot_id = this.request.body.bot_id;
+        var type = this.request.body.type;
         if(type === 'single'){
             botManager.requestContactListRemark(bot_id);
         }
