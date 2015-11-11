@@ -48,6 +48,8 @@ var schema = DomainBuilder
         , bot_nickname: {type: String}
         , bot_headimgid: {type: String} //bot user headImg id of athena file system
         , bot_place: {type: String}
+        , bot_sex: {type: Number, default: 0}
+
     })
     .build();
 

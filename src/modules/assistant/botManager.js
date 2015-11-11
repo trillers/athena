@@ -64,7 +64,7 @@ botManager.on('login', function(msg){
     }, 10*1000); //schedule the job after 10 seconds of logging in
 
     /**
-     * Schedule group-listing-job for the bot
+     * Schedule contact-listing-remark job for the bot
      */
     if(bot.contactListRemarkingScheduleId){
         clearInterval(bot.contactListRemarkingScheduleId);

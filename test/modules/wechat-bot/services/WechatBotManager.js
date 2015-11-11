@@ -142,6 +142,47 @@ describe('WechatBotManager', function() {
         })
     })
 
+    describe.only('#requestContactListRemarking', function() {
+        var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
+        var openid = 'okvXqs1DXRfyOrUrJEOXU3RStkyY'; //酒剑仙的错题本openid
+        var nickname = '酒剑仙';
+        //var botManager = new WechatBotManager();
+        before(function(done){
+            botManager.on('register', function(bot){
+                console.info('wechat bot is registered successfully!');
+                console.info(bot);
+                console.info('\r\n');
+                done();
+            });
+            botManager.on('register-error', function(err){
+                console.info('wechat bot fails to be registered: ' + err);
+                done();
+            });
+
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: nickname
+            };
+            botManager.register(botInfo);
+        })
+
+        it('request remark all contacts of a bot', function (done) {
+            var botInfo = {
+                bucketid: siteId
+                , openid: openid
+                , nickname: nickname
+            };
+            botManager.requestContactListRemark(botInfo, function(err, bot){
+                assert.ok(bot);
+                assert.equal(bot.bucketid, siteId);
+                assert.equal(bot.openid, openid);
+                console.info(bot);
+                done();
+            });
+        })
+    })
+
     describe('#requestProfile', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqs_VftHruzwFV9rx4Pbd_fno'; //包三哥的错题本openid

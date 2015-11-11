@@ -77,7 +77,7 @@ describe('wechatBotGroupService', function() {
         })
     })
 
-    describe.only('#syncGroupList', function() {
+    describe('#syncGroupList', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'oO9zswwIYYtgOdugwQifYiLjtLN8'; //包三哥的错题本openid
         var wechatBot = null;

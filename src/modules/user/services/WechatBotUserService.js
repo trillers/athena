@@ -147,7 +147,7 @@ Service.createFromContact = function (contactInfo, callback) {
     userInfo.sourceType = UserSourceType.WechatBot.value();
     userInfo.siteUser = null;
     userInfo.nickname = contactInfo.nickname;
-    userInfo.headimgurl = null;
+    userInfo.headimgurl = null; //TODO
 
     userInfo.bot_id = contactInfo.botid;
     userInfo.bot_uid = contactInfo.bid;
@@ -213,7 +213,7 @@ Service.updateFromProfile = function (buid, profileInfo, callback) {
             if(user){
                 var toUpdate = {};
                 toUpdate.nickname = profileInfo.nickname;
-                toUpdate.headimgurl = null;//TODO
+                toUpdate.headimgurl = null; //TODO
 
                 toUpdate.bot_id = profileInfo.botid;
                 toUpdate.bot_uid = profileInfo.bid;
