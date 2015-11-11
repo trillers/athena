@@ -76,4 +76,13 @@ domain.action('addAdmin').onExecute(function(data){
 domain.action('updateAdmin').onExecute(function(data){
     apiFactory.post('/sys_user/update').drive(this).send(data);
 });
+
+domain.action('uploadImg').onExecute(function(data){
+    apiFactory.post('/file/upload').drive(this).send(data);
+});
+
+domain.action('asyncAssistant').onExecute(function(data){
+    apiFactory.get('/assistant/async').drive(this).send(data);
+});
+
 module.exports = null;

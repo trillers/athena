@@ -11,7 +11,8 @@
                     </div><!--/.well -->
                 </div><!--/span-->
                 <div class="col-md-9 col-xs-9 col-sm-9">
-                    <div class="jumbotron" style="min-height: 38em; overflow: hidden; padding-bottom: 0em">
+                    <div class="jumbotron" style="min-height: 38em; overflow: hidden; padding-bottom: 0em; padding-top: 18px">
+                        <a href="#" onclick="{returnPage}" style="font-size: 1.5em; margin-left: 14px; text-decoration: none; cursor: pointer">返回</a>
                         <div class="panel panel-default container-fluid" style="min-height: 29em; padding-left: 1.1em">
                             <div id="dialog" style="padding-top: 1.5em; min-height: 29em; margin-bottom: 0em">
                                 <div class="btn-group btn-group-justified topGroup" role="group" aria-label="...">
@@ -35,6 +36,11 @@
                                                 <li class="list-group-item">备注:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{bot_remark}</li>
                                             </ul>
                                         </div>
+                                        <div id="async_operation" style="margin: auto 0; clear: both">
+                                            <button type="button" onclick="{async_contact}" class="btn btn-primary" style="margin-right: 5em; width: 100px">同步联系人</button>
+                                            <button type="button" onclick="{async_group}" class="btn btn-primary" style="width: 100px">同步群</button>
+
+                                        </div>
                                     </div>
                                     <div class="operation" id="contacts" style="width: 100%; display: none;">
                                         <div class="btn-group btn-group-justified contactsGroup" role="group" aria-label="...">
@@ -46,12 +52,14 @@
                                             </div>
                                         </div>
                                         <div id="single" style="padding-top: 1em">
-                                            <ul class="list-group">
+                                            <a href="#" onclick="{refreshContact}" style="text-decoration: none; cursor: pointer; margin-left: 10px">刷新</a>
+                                            <ul class="list-group" style="padding-top: 1em">
                                                 <li each="{contacts}" class="list-group-item"><img src="{bot_headimgid && (parent.api + '/file?media_id=' + bot_headimgid) || '../images/default_avatar.jpg'}" style="max-width: 2em" alt=""/> <span>{bot_nickname || '匿名'}</span></li>
                                             </ul>
                                         </div>
                                         <div id="group" style="display: none; padding-top: 1em">
-                                            <ul class="list-group">
+                                            <a href="#" onclick="{refreshGroup}" style="text-decoration: none; cursor: pointer; margin-left: 10px">刷新</a>
+                                            <ul class="list-group" style="padding-top: 1em">
                                                 <ul class="list-group">
                                                     <li each="{groups}" class="list-group-item"><span>{name || '匿名'}</span>
                                                     </li>
@@ -76,14 +84,42 @@
                                             <div if="{singleBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
                                                 <ul class="list-group">
                                                     <li each="{singleBatchMsg}" class="list-group-item">
-                                                        <div style="height: 100%; width: 100%">
+                                                        <div if="{item.contentType == 'image'}">
+                                                            <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
+                                                        </div>
+                                                        <div if="{item.contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                                                             <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
                                                         </div>
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <textarea id="massToSingleMsg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
+                                            <div class="panel panel-default" id="single_img_prew" style="display:none; margin-bottom: 5px">
+                                                <table class="table table-bordered" style="text-align: center; vertical-align: middle;">
+                                                    <tbody>
+                                                    <tr>
+                                                        <td rowspan="3">
+                                                            <img src="{single_img_url}" alt="" style="height: 9em;"/></td>
+                                                        <td>文件名</td>
+                                                        <td>{single_img_name}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td>文件大小</td>
+                                                        <td>{single_img_size}</td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input class="btn btn-default" type="button"  style="margin-right: 50px" value="取消" onclick="{cancel_send_single_img}"/>
+                                                            <input class="btn btn-success" type="button" value="发送" onclick="{send_single_img}"/>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div id="single_choose_img" style="margin-left: 5px">
+                                                <span class='btn_addPic glyphicon glyphicon-picture' href="javascript:void(0);"><input id="single_img_file"  type="file"  class='filePrew' class="glyphicon glyphicon-picture" multiple="multiple" accept="image/bmp, image/jpg, image/jpeg, image/gif, image/png" onchange="{handleSingleImg}"/></span>
+                                            </div>
+                                            <textarea id="massToSingleMsg" style="margin-top: 1em;" class="form-control" rows="3"></textarea>
                                             <button type="button" onclick="{sendToSingle}" style="margin-left: 83%; margin-top: 1em; width: 7em; margin-right: 1em; margin-bottom: 1em;" class="btn btn-success">发送</button>
                                         </div>
                                         <div id="massToGroup" style="display: none; padding-top: 1em">
@@ -94,14 +130,43 @@
                                             <div if="{groupBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
                                                 <ul class="list-group">
                                                     <li each="{groupBatchMsg}" class="list-group-item">
-                                                        <div style="height: 100%; width: 100%">
+                                                        <div if="{item.contentType == 'image'}">
+                                                            <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
+                                                        </div>
+                                                        <div  if="{item.contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                                                             <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
                                                         </div>
                                                     </li>
                                                 </ul>
                                             </div>
-                                            <textarea id="massToGroupMsg" style="margin-top: 2em;" class="form-control" rows="3"></textarea>
+
+                                            <div class="panel panel-default" id="group_img_prew" style="display:none; margin-bottom: 5px">
+                                                <table class="table table-bordered" style="text-align: center; vertical-align: middle;">
+                                                    <tbody>
+                                                        <tr>
+                                                            <td rowspan="3">
+                                                                <img src="{group_img_url}" alt="" style="height: 9em;"/></td>
+                                                            <td>文件名</td>
+                                                            <td>{group_img_name}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>文件大小</td>
+                                                            <td>{group_img_size}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td colspan="2">
+                                                                <input class="btn btn-default" type="button"  style="margin-right: 50px" value="取消" onclick="{cancel_send_group_img}"/>
+                                                                <input class="btn btn-success" type="button" value="发送" onclick="{send_group_img}"/>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div id="group_choose_img" style="margin-left: 5px">
+                                                <span class='btn_addPic glyphicon glyphicon-picture' href="javascript:void(0);"><input id="group_img_file"  type="file"  class='filePrew' class="glyphicon glyphicon-picture" multiple="multiple" accept="image/bmp, image/jpg, image/jpeg, image/gif, image/png" onchange="{handleGroupImg}"/></span>
+                                            </div>
+                                            <textarea id="massToGroupMsg" style="margin-top: 5px;" class="form-control" rows="3"></textarea>
                                             <button type="button" onclick="{sendToGroup}" style="margin-left: 83%; margin-top: 1em; width: 7em; margin-right: 1em; margin-bottom: 1em;" class="btn btn-success">发送</button>
                                         </div>
                                     </div>
@@ -109,7 +174,6 @@
                             </div>
 
                             <hr width="110%" style="margin-bottom: 0em ">
-                            <input type="button" class="btn btn-primary" style="float: right; padding: 3px 12px; margin: 11px 0;" value="返回" onclick="{returnPage}"/>
                         </div>
                     </div>
                 </div><!--/span-->
@@ -119,6 +183,28 @@
         </div><!--/container-->
 
         <style scoped>
+            .btn_addPic{
+                display: block;
+                position: relative;
+                font-size: 35px;
+                width: 38px;
+                height: 38px;
+                overflow: hidden;
+                cursor: pointer;
+                text-align: center;
+            }
+            .filePrew {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 38px;
+                height: 38px;
+                cursor: pointer;
+                font-size: 100px; /* 增大不同浏览器的可点击区域 */
+                opacity: 0; /* 实现的关键点 */
+                filter:alpha(opacity=0);/* 兼容IE */
+            }
             .leftlist{list-style-type: none;text-align: center;font-size: 1.3em}
         </style>
         <script>
@@ -131,6 +217,15 @@
             var loadAssistantGroups = domain.action('loadAssistantGroups');
             var getBatchMsg = domain.action('getBatchMsg');
             var assistantMass = domain.action('assistantMass');
+            var uploadImg = domain.action('uploadImg');
+            var asyncAssistant = domain.action('asyncAssistant');
+
+            var onUploadImg = function(data){
+                $('#group_img_prew').hide();
+                $('#single_img_prew').hide();
+                console.log(data);
+                //TODO
+            }
 
             var onLoadAssistantById = function(data){
                 var createTime = new Date(data.crtOn);
@@ -169,6 +264,8 @@
                 if(data.success){
                     $('#massToSingleMsg').val('');
                     $('#massToGroupMsg').val('');
+                    getBatchMsg.execute(self.botId, 'single');
+                    getBatchMsg.execute(self.botId, 'group');
                 }else{
                     alert('发送失败')
                 }
@@ -185,6 +282,14 @@
                 }
             }
 
+            var onAsyncAssistant = function(data){
+                if(data.type === 'single'){
+                    loadAssistantContacts.execute(self.bot_id);
+                }else{
+                    loadAssistantGroups.execute(self.botId);
+                }
+            }
+
             this.on('mount', function(){
                 console.info('tag assistant mass is mounted');
                 loadAssistantById.onDone(onLoadAssistantById);
@@ -192,6 +297,8 @@
                 loadAssistantGroups.onDone(onLoadAssistantGroups);
                 assistantMass.onDone(onAssistantMass);
                 getBatchMsg.onDone(onGetBatchMsg);
+                uploadImg.onDone(onUploadImg);
+                asyncAssistant.onDone(onAsyncAssistant);
             });
             this.on('unmount', function(){
                 console.info('tag assistant mass is unmounted');
@@ -200,6 +307,8 @@
                 loadAssistantGroups.offDone(onLoadAssistantGroups);
                 assistantMass.offDone(onAssistantMass);
                 getBatchMsg.offDone(onGetBatchMsg);
+                uploadImg.offDone(onUploadImg);
+                asyncAssistant.offDone(onAsyncAssistant);
             });
             this.on('open', function(opts){
                 console.info('tag cassistant mass is opening');
@@ -315,6 +424,69 @@
                 }else{
                     alert('发送内容不能为空');
                 }
+            }
+
+            handleGroupImg(e){
+                var file = e.target.files[0];
+                self.group_img_size = file.size/1000 + 'KB';
+                self.group_img_name = file.name;
+                var reader = new FileReader();
+                reader.onload = function(data){
+                    self.group_img_url = data.target.result;
+                    self.update();
+                    $('#group_img_prew').show();
+                }
+                reader.readAsDataURL(file);
+            }
+
+            cancel_send_group_img(e){
+                $('#group_img_prew').hide();
+            }
+
+            send_group_img(e){
+                var formData = new FormData();
+                var files = $('#group_img_file')[0].files;
+                formData.append('file', files[0]);
+                uploadImg.execute(formData);
+            }
+
+            handleSingleImg(e){
+                var file = e.target.files[0];
+                self.single_img_size = file.size/1000 + 'KB';
+                self.single_img_name = file.name;
+                var reader = new FileReader();
+                reader.onload = function(data){
+                    self.single_img_url = data.target.result;
+                    self.update();
+                    $('#single_img_prew').show();
+                }
+                reader.readAsDataURL(file);
+            }
+
+            cancel_send_single_img(e){
+                $('#single_img_prew').hide();
+            }
+
+            send_single_img(e){
+                var formData = new FormData();
+                var files = $('#single_img_file')[0].files;
+                formData.append('file', files[0]);
+                uploadImg.execute(formData);
+            }
+
+            async_contact(e){
+                asyncAssistant.execute({bot_id: self.bot_id, type: 'single'});
+            }
+
+            async_group(e){
+                asyncAssistant.execute({bot_id: self.bot_id, type: 'group'});
+            }
+
+            refreshContact(e){
+                loadAssistantContacts.execute(self.bot_id);
+            }
+            refreshGroup(e){
+                loadAssistantGroups.execute(self.botId);
             }
         </script>
     </div>

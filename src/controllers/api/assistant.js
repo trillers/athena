@@ -147,4 +147,21 @@ module.exports = function(router) {
         }
 
     });
+
+    /**
+     * async assistant contact or group
+     * @param bot_id
+     * @param type single or group
+     * **/
+    router.get('/async', function*(){
+        var bot_id = this.query.bot_id;
+        var type = this.query.type;
+        if(type === 'single'){
+            botManager.requestContactListRemark(bot_id);
+        }
+        if(type === 'group'){
+            botManager.requestGroupList(bot_id);
+        }
+        this.body = {success: true};
+    })
 }
