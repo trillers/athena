@@ -84,10 +84,10 @@
                                             <div if="{singleBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
                                                 <ul class="list-group">
                                                     <li each="{singleBatchMsg}" class="list-group-item">
-                                                        <div if="{item.contentType == 'image'}">
+                                                        <div if="{contentType == 'image'}">
                                                             <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
                                                         </div>
-                                                        <div if="{item.contentType == 'text'}" style="height: 100%; width: 100%">
+                                                        <div if="{contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                                                             <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
                                                         </div>
@@ -130,10 +130,10 @@
                                             <div if="{groupBatchMsg}" class="panel panel-default" style="overflow-y: scroll; max-height: 15em; margin-top: 1em">
                                                 <ul class="list-group">
                                                     <li each="{groupBatchMsg}" class="list-group-item">
-                                                        <div if="{item.contentType == 'image'}">
+                                                        <div if="{contentType == 'image'}">
                                                             <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
                                                         </div>
-                                                        <div  if="{item.contentType == 'text'}" style="height: 100%; width: 100%">
+                                                        <div  if="{contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                                                             <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}</div>
                                                         </div>
