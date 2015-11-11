@@ -250,12 +250,21 @@ WechatBotManager.prototype.requestAllGroupLists = function(){
 };
 
 /**
- * Request to remark all contacts which does not added and remarked after bot is registered.
+ * Request to remark all contacts which is not added and remarked after bot is registered.
  * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
  */
 WechatBotManager.prototype.requestContactListRemark = function(botInfo){
     var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
     this.proxy.requestContactListRemark(botid);
+};
+
+/**
+ * Request to get all contacts whatever if it is or not remarked after bot is registered.
+ * @param botInfo bot info {bucketid, openid} which is acted as bot id and identify a bot
+ */
+WechatBotManager.prototype.requestContactList = function(botInfo){
+    var botid = typeof botInfo == 'string' ? botInfo : this._encodeBotid(botInfo);
+    this.proxy.requestContactList(botid);
 };
 
 WechatBotManager.prototype.getBot = function(botid){

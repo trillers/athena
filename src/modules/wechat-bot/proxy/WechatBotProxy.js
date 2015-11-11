@@ -49,6 +49,18 @@ var events = {
      *   botid
      *   bid:
      *   nickname:
+     *   headimgid:
+     *   place
+     *   sex
+     * }
+     */
+    'contact-profile': true,
+
+    /*
+     * {
+     *   botid
+     *   bid:
+     *   nickname:
      * }
      */
     'contact-added': true,
@@ -135,11 +147,19 @@ var channels = {
      */
     contactListRemarkRequest: 'sbot:contact-list-remark-request',
 
+    /*
+     * {
+     *     botid: (String)
+     * }
+     */
+    contactListRequest: 'sbot:contact-list-request',
+
     profileResponse: 'sbot:profile',
     groupListResponse: 'sbot:group-list',
     messageReceived: 'sbot:message',
     contactAdded: 'sbot:contact-added',
     contactRemarked: 'sbot:contact-remarked',
+    contactProfile: 'sbot:contact-profile',
     needLogin: 'sbot:need-login',
     login: 'sbot:login',
     abort: 'sbot:abort'
@@ -167,6 +187,7 @@ WechatBotProxy.prototype.init = function(){
     this.subClient.subscribe(channels.groupListResponse);
     this.subClient.subscribe(channels.contactAdded);
     this.subClient.subscribe(channels.contactRemarked);
+    this.subClient.subscribe(channels.contactProfile);
     this.subClient.subscribe(channels.needLogin);
     this.subClient.subscribe(channels.login);
     this.subClient.subscribe(channels.abort);
@@ -196,6 +217,11 @@ WechatBotProxy.prototype.requestGroupList = function(botid){
 WechatBotProxy.prototype.requestContactListRemark = function(botid){
     this.pubClient.publish(channels.contactListRemarkRequest, JSON.stringify({botid: botid}));
 };
+
+WechatBotProxy.prototype.requestContactList = function(botid){
+    this.pubClient.publish(channels.contactListRequest, JSON.stringify({botid: botid}));
+};
+
 
 module.exports = WechatBotProxy;
 
