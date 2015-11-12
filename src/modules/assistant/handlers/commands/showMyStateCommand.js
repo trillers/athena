@@ -29,7 +29,7 @@ module.exports = function(context){
                         throw new Error('show my state error occur');
                     }
                     customer = yield userService.loadByIdAsync(cvs.initiator);
-                    reply += ', 与"' + customer.wx_nickname + '"会话中…';
+                    reply += ', 与"' + customer.nickname + '"会话中…';
                 }else{
                     reply += ', 无会话';
                 }
