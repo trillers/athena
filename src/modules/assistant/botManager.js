@@ -23,14 +23,24 @@ botManager.on('register', function(msg){
 });
 
 botManager.on('need-login', function(msg){
-    wechatApi.sendImage(msg.openid, msg.wx_media_id, function(err, result){
+    var settings = require('athena-settings');
+    var url = settings.api.url + '/file?media_id=' + msg.media_id;
+    wechatApi.sendText(msg.openid, url, function(err, result){
         if(err){
-            logger.error('Fail to send login qrcode for bot ' + msg.botid + ': ' + err);
+            logger.error('Fail to send login qrcode url for bot ' + msg.botid + ': ' + err);
         }
         else{
-            logger.info('Succeed to send login qrcode for bot ' + msg.botid);
+            logger.info('Succeed to send login qrcode url for bot ' + msg.botid);
         }
     });
+    //wechatApi.sendImage(msg.openid, msg.wx_media_id, function(err, result){
+    //    if(err){
+    //        logger.error('Fail to send login qrcode for bot ' + msg.botid + ': ' + err);
+    //    }
+    //    else{
+    //        logger.info('Succeed to send login qrcode for bot ' + msg.botid);
+    //    }
+    //});
 });
 
 botManager.on('login', function(msg){
@@ -71,15 +81,15 @@ botManager.on('login', function(msg){
         bot.contactListRemarkingScheduleId = null;
     }
 
-    setTimeout(function(){
-        //Schedule
-        bot.contactListRemarkingScheduleId = setInterval(function(){
-            botManager.requestContactListRemark(botid);
-        }, 12*60*60*1000); //Run job per hour
-
-        //Run it right now
-        botManager.requestContactListRemark(botid);
-    }, 20*1000); //schedule the job after 10 seconds of logging in
+    //setTimeout(function(){
+    //    //Schedule
+    //    bot.contactListRemarkingScheduleId = setInterval(function(){
+    //        botManager.requestContactListRemark(botid);
+    //    }, 12*60*60*1000); //Run job per hour
+    //
+    //    //Run it right now
+    //    botManager.requestContactListRemark(botid);
+    //}, 20*1000); //schedule the job after 10 seconds of logging in
 });
 
 botManager.on('abort', function(msg){
