@@ -135,6 +135,9 @@ module.exports = function(router) {
             conditions:{
                 from: botId,
                 batchType: batchType
+            },
+            sort: {
+                crtOn: -1
             }
         }
         try {
@@ -147,4 +150,21 @@ module.exports = function(router) {
         }
 
     });
+
+    /**
+     * async assistant contact or group
+     * @param bot_id
+     * @param type single or group
+     * **/
+    router.post('/async', function*(){
+        var bot_id = this.request.body.bot_id;
+        var type = this.request.body.type;
+        if(type === 'single'){
+            botManager.requestContactListRemark(bot_id);
+        }
+        if(type === 'group'){
+            botManager.requestGroupList(bot_id);
+        }
+        this.body = {success: true};
+    })
 }
