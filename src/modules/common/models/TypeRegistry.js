@@ -6,6 +6,13 @@ registry
     .addChild('Personal','p', '个人')
     .addChild('Organizational','o', '组织')
 
+    .up().item('TenantMemberRole', 'TenantMemberRole', '租户成员角色')
+    .addChild('TenantAdmin','ta', '租户管理员')
+    .addChild('TenantOperation','to', '租户运营')
+    .addChild('PlatformAdmin','pa', '平台管理员')
+    .addChild('PlatformOperation','po', '平台运营')
+
+
     .item('UserSourceType', 'UserSourceType', '用户来源')
     .addChild('WechatSite','site', '公众号')
     .addChild('WechatBot','bot', '助手号')

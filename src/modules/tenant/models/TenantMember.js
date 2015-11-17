@@ -1,16 +1,16 @@
 var mongoose = require('../../../app/mongoose');
 var DomainBuilder = require('../../../framework/model/DomainBuilder');
-var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
+var TenantMemberRole = require('../../common/models/TypeRegistry').item('TenantMemberRole');
 
 var schema = DomainBuilder
-    .i('Tenant')
+    .i('TenantMember')
     .withBasis()
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
         name:           {type: String, required: true}
-        , type:         {type: String, enum: TenantType.valueList(), default: TenantType.Personal.value(), required: true}
-        , administrative:      {type: Boolean, default: false}
+        , headimgurl:   {type: String}
+        , role:         {type: String, enum: TenantMemberRole.valueList(), default: TenantMemberRole.TenantAdmin.value(), required: true}
         , desc:         {type: String}
     })
     .build();
