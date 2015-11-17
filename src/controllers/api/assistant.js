@@ -151,42 +151,47 @@ module.exports = function(router) {
      * @body botId //sbot _id
      * @body media_id
      * */
-    router.post('/sendImageToContacts', function*(){
-        var bot_id = this.request.body.bot_id;
-        var botId = this.request.body.botId;//sbot _id
-        var media_id = this.request.body.media_id;
-        var batchMessage = {
-            from: botId,
-            contentType: MsgContentType.image.value(),
-            media_id: media_id,
-            batchType: BatchType.contacts.value()
-        }
-        var params = {
-            conditions: {
-                bot_id: bot_id,
-                role: UserRole.Customer.value()
+    router.post('/sendImageToContacts', function*() {
+        try {
+            var bot_id = this.request.body.bot_id;
+            var botId = this.request.body.botId;//sbot _id
+            var media_id = this.request.body.media_id;
+            var batchMessage = {
+                from: botId,
+                contentType: MsgContentType.image.value(),
+                media_id: media_id,
+                batchType: BatchType.contacts.value()
             }
-        }
-        var toUsers = [];
-        var sbotUsers = yield userService.findAsync(params);
-        var image = yield fileService.loadAsync(media_id);
-        for (var i = 0; i < sbotUsers.length; i++) {
-            var message = {
-                ToUserName: sbotUsers[i].bot_uid,
-                FromUserName: bot_id,
-                MsgType: 'image',
-                MediaId: media_id,
-                Url: image.path
+            var params = {
+                conditions: {
+                    bot_id: bot_id,
+                    role: UserRole.Customer.value()
+                }
             }
-            console.log('*************************');
-            console.log(message);
-            toUsers.push(sbotUsers[i]._id);
-            botManager.sendImage(bot_id, message);
+            var toUsers = [];
+            var sbotUsers = yield userService.findAsync(params);
+            var image = yield fileService.loadAsync(media_id);
+            for (var i = 0; i < sbotUsers.length; i++) {
+                var message = {
+                    ToUserName: sbotUsers[i].bot_uid,
+                    FromUserName: bot_id,
+                    MsgType: 'image',
+                    MediaId: media_id,
+                    Url: image.path
+                }
+                console.log('*************************');
+                console.log(message);
+                toUsers.push(sbotUsers[i]._id);
+                botManager.sendImage(bot_id, message);
+            }
+            batchMessage.toUsers = toUsers;
+            console.log(batchMessage);
+            yield batchMessageService.createAsync(batchMessage);
+            this.body = {success: true, err: null};
+        } catch (e) {
+            console.log('failed to sendImageToContacts err: ' + e);
+            this.body = {success: false, err: e};
         }
-        batchMessage.toUsers = toUsers;
-        console.log(batchMessage);
-        yield batchMessageService.createAsync(batchMessage);
-        this.body = {success: true, err: null};
     });
 
     /**
@@ -196,35 +201,41 @@ module.exports = function(router) {
      * @body media_id
      * */
     router.post('/sendImageToGroups', function*(){
-        var bot_id = this.request.body.bot_id;
-        var botId = this.request.body.botId;//sbot _id
-        var media_id = this.request.body.media_id;
-        var batchMessage = {
-            from: botId,
-            contentType: MsgContentType.image.value(),
-            media_id: media_id,
-            batchType: BatchType.group.value()
-        }
-        var toGroups = [];
-        var groups = yield wechatBotGroupService.getGroupListAsync(botId);
-        var image = yield fileService.loadAsync(media_id);
-        for (var i = 0; i < groups.length; i++) {
-            var message = {
-                ToUserName: groups[i].name,
-                FromUserName: bot_id,
-                MsgType: 'image',
-                MediaId: media_id,
-                Url: image.path
+        try{
+            var bot_id = this.request.body.bot_id;
+            var botId = this.request.body.botId;//sbot _id
+            var media_id = this.request.body.media_id;
+            var batchMessage = {
+                from: botId,
+                contentType: MsgContentType.image.value(),
+                media_id: media_id,
+                batchType: BatchType.group.value()
             }
-            console.log('*************************');
-            console.log(message);
-            toGroups.push(groups[i]._id);
-            botManager.sendImage(bot_id, message);
+            var toGroups = [];
+            var groups = yield wechatBotGroupService.getGroupListAsync(botId);
+            var image = yield fileService.loadAsync(media_id);
+            for (var i = 0; i < groups.length; i++) {
+                var message = {
+                    ToUserName: groups[i].name,
+                    FromUserName: bot_id,
+                    MsgType: 'image',
+                    MediaId: media_id,
+                    Url: image.path
+                }
+                console.log('*************************');
+                console.log(message);
+                toGroups.push(groups[i]._id);
+                botManager.sendImage(bot_id, message);
+            }
+            batchMessage.toGroups = toGroups;
+            console.log(batchMessage);
+            yield batchMessageService.createAsync(batchMessage);
+            this.body = {success: true, err: null};
+        } catch (e){
+            console.log('failed to sendImageToGroups err: ' + e);
+            this.body = {success: false, err: e};
         }
-        batchMessage.toGroups = toGroups;
-        console.log(batchMessage);
-        yield batchMessageService.createAsync(batchMessage);
-        this.body = {success: true, err: null};
+
     });
 
     router.get('/getBatchMsg', function*(){
