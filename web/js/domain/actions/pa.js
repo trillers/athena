@@ -65,8 +65,8 @@ domain.action('sendTextToGroups').onExecute(function(data){
     apiFactory.post('/assistant/sendTextToGroups').drive(this).send(data);
 });
 
-domain.action('sendTextToContact').onExecute(function(data){
-    apiFactory.post('/assistant/sendTextToContact').drive(this).send(data);
+domain.action('sendTextToContacts').onExecute(function(data){
+    apiFactory.post('/assistant/sendTextToContacts').drive(this).send(data);
 });
 
 domain.action('sendImageToContacts').onExecute(function(data){
