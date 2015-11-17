@@ -81,7 +81,7 @@ module.exports = function(router) {
             from: botId,
             contentType: MsgContentType.text.value(),
             content: msg,
-            batchType: BatchType.contact.value()
+            batchType: BatchType.contacts.value()
         }
         var params = {
             conditions: {
