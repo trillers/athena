@@ -236,7 +236,7 @@
                 self.botId = data._id;
                 loadAssistantContacts.execute(self.bot_id);
                 loadAssistantGroups.execute(data._id);
-                getBatchMsg.execute(self.botId, 'single');
+                getBatchMsg.execute(self.botId, 'contacts');
                 getBatchMsg.execute(self.botId, 'group');
                 self.update();
             }
@@ -259,7 +259,7 @@
                 if(data.success){
                     $('#massToSingleMsg').val('');
                     $('#massToGroupMsg').val('');
-                    getBatchMsg.execute(self.botId, 'single');
+                    getBatchMsg.execute(self.botId, 'contacts');
                     getBatchMsg.execute(self.botId, 'group');
                 }else{
                     alert('发送失败')
@@ -268,7 +268,7 @@
 
             var onGetBatchMsg = function(data){
                 if(data.batchMsg){
-                    if(data.type === 'single'){
+                    if(data.type === 'contacts'){
                         self.singleBatchMsg = data.batchMsg;
                     }else if(data.type === 'group'){
                         self.groupBatchMsg = data.batchMsg;
@@ -278,7 +278,7 @@
             }
 
             var onAsyncAssistant = function(data){
-                if(data.type === 'single'){
+                if(data.type === 'contacts'){
                     loadAssistantContacts.execute(self.bot_id);
                 }else{
                     loadAssistantGroups.execute(self.botId);
@@ -508,7 +508,7 @@
             }
 
             async_contact(e){
-                asyncAssistant.execute({bot_id: self.bot_id, type: 'single'});
+                asyncAssistant.execute({bot_id: self.bot_id, type: 'contacts'});
             }
 
             async_group(e){

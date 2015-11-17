@@ -258,12 +258,12 @@ module.exports = function(router) {
     router.post('/async', function*(){
         var bot_id = this.request.body.bot_id;
         var type = this.request.body.type;
-        if(type === 'single'){
+        if(type === 'contacts'){
             botManager.requestContactListRemark(bot_id);
         }
         if(type === 'group'){
             botManager.requestGroupList(bot_id);
         }
-        this.body = {success: true};
+        this.body = {success: true, type: type};
     })
 }
