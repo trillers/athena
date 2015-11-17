@@ -216,7 +216,10 @@
             var loadAssistantContacts = domain.action('loadAssistantContacts');
             var loadAssistantGroups = domain.action('loadAssistantGroups');
             var getBatchMsg = domain.action('getBatchMsg');
-            var assistantMass = domain.action('assistantMass');
+            var sendTextToContacts = domain.action('sendTextToContacts');
+            var sendTextToGroups = domain.action('sendTextToGroups');
+            var sendImageToContacts = domain.action('sendImageToContacts');
+            var sendImageToGroups = domain.action('sendImageToGroups');
             var asyncAssistant = domain.action('asyncAssistant');
 
             var onLoadAssistantById = function(data){
@@ -287,7 +290,10 @@
                 loadAssistantById.onDone(onLoadAssistantById);
                 loadAssistantContacts.onDone(onLoadAssistantContacts);
                 loadAssistantGroups.onDone(onLoadAssistantGroups);
-                assistantMass.onDone(onAssistantMass);
+                sendTextToContacts.onDone(onAssistantMass);
+                sendTextToGroups.onDone(onAssistantMass);
+                sendImageToContacts.onDone(onAssistantMass);
+                sendImageToGroups.onDone(onAssistantMass);
                 getBatchMsg.onDone(onGetBatchMsg);
                 asyncAssistant.onDone(onAsyncAssistant);
             });
@@ -296,7 +302,10 @@
                 loadAssistantById.offDone(onLoadAssistantById);
                 loadAssistantContacts.offDone(onLoadAssistantContacts);
                 loadAssistantGroups.offDone(onLoadAssistantGroups);
-                assistantMass.offDone(onAssistantMass);
+                sendTextToContacts.offDone(onAssistantMass);
+                sendTextToGroups.offDone(onAssistantMass);
+                sendImageToContacts.offDone(onAssistantMass);
+                sendImageToGroups.offDone(onAssistantMass);
                 getBatchMsg.offDone(onGetBatchMsg);
                 asyncAssistant.offDone(onAsyncAssistant);
             });
@@ -392,9 +401,8 @@
                         botId: self.botId,
                         bot_id: self.bot_id,
                         msg: msg,
-                        type: 'single'
                     }
-                    assistantMass.execute(data);
+                    sendTextToContacts.execute(data);
                 }else{
                     alert('发送内容不能为空');
                 }
@@ -408,9 +416,8 @@
                         botId: self.botId,
                         bot_id: self.bot_id,
                         msg: msg,
-                        type: 'group'
                     }
-                    assistantMass.execute(data);
+                    sendTextToGroups.execute(data);
                 }else{
                     alert('发送内容不能为空');
                 }
@@ -445,7 +452,12 @@
                     contentType : false,
                     success : function(responseStr) {
                         $('#group_img_prew').hide();
-                        console.log(responseStr);//TODO
+                        var data = {
+                            botId: self.botId,
+                            bot_id: self.bot_id,
+                            media_id: responseStr.media_id
+                        }
+                        sendImageToGroups.execute(data);
                     },
                     error : function(responseStr) {
                         console.error("失败:" + JSON.stringify(responseStr));
@@ -482,7 +494,12 @@
                     contentType : false,
                     success : function(responseStr) {
                         $('#single_img_prew').hide();
-                        console.log(responseStr);//TODO
+                        var data = {
+                            botId: self.botId,
+                            bot_id: self.bot_id,
+                            media_id: responseStr.media_id
+                        }
+                        sendImageToContacts.execute(data);
                     },
                     error : function(responseStr) {
                         console.error("失败:" + JSON.stringify(responseStr));

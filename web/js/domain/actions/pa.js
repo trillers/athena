@@ -61,8 +61,20 @@ domain.action('sendMsgToCustomer').onExecute(function(data){
     apiFactory.post('/customer/sendMsg').drive(this).send(data);
 });
 
-domain.action('assistantMass').onExecute(function(data){
-    apiFactory.post('/assistant/mass').drive(this).send(data);
+domain.action('sendTextToGroups').onExecute(function(data){
+    apiFactory.post('/assistant/sendTextToGroups').drive(this).send(data);
+});
+
+domain.action('sendTextToContact').onExecute(function(data){
+    apiFactory.post('/assistant/sendTextToContact').drive(this).send(data);
+});
+
+domain.action('sendImageToContacts').onExecute(function(data){
+    apiFactory.post('/assistant/sendImageToContacts').drive(this).send(data);
+});
+
+domain.action('sendImageToGroups').onExecute(function(data){
+    apiFactory.post('/assistant/sendImageToGroups').drive(this).send(data);
 });
 
 domain.action('loadAdmins').onExecute(function(){

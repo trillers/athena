@@ -6,7 +6,7 @@ registry
     .addChild('Personal','p', '个人')
     .addChild('Organizational','o', '组织')
 
-    .item('UserSourceType', 'UserSourceType', '用户来源')
+    .up().item('UserSourceType', 'UserSourceType', '用户来源')
     .addChild('WechatSite','site', '公众号')
     .addChild('WechatBot','bot', '助手号')
     .addChild('WebSite','web', '网站')
@@ -45,7 +45,7 @@ registry
     .addChild('shortvideo','shortvideo', '小视频')
 
     .up().item('BatchType', 'BatchType', '群发类型')
-    .addChild('single','contact', '个人')
+    .addChild('single','contacts', '个人')
     .addChild('group','group', '群组')
 
     .up().item('Party', 'Party', '方')
