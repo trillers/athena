@@ -8,7 +8,7 @@ var schema = DomainBuilder
     .withLifeFlag()
     .withCreatedOn()
     .withProperties({
-        tenant:       {type: String, ref: 'Tenant'}
+        tenant:       {type: String, ref: 'Tenant', required: true}
         , name:           {type: String, required: true}
         , headimgurl:   {type: String}
         , role:         {type: String, enum: TenantMemberRole.valueList(), default: TenantMemberRole.TenantAdmin.value(), required: true}

@@ -18,3 +18,7 @@ console.log(text + ' ' + (testEmoji(text) ? ' includes emoji' : ' does not inclu
 
 text = "包三哥";
 console.log(text + ' ' + (testEmoji(text) ? ' includes emoji' : ' does not include emoji') );
+
+text = "Aྀེ•然然韩妆总仓🇷 ";
+console.log(text + ' ' + (testEmoji(text) ? ' includes emoji' : ' does not include emoji') );
+

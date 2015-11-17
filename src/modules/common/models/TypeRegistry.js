@@ -12,8 +12,17 @@ registry
     .addChild('PlatformAdmin','pa', '平台管理员')
     .addChild('PlatformOperation','po', '平台运营')
 
+    .up().item('WechatMediumType', 'WechatMediumType', '微信媒介类型')
+    .addChild('WechatSite','ws', '微信公众号')
+    .addChild('WechatBot','wb', '微信助手号')
+    .addChild('WechatWeb','ww', '微信微站')
 
-    .item('UserSourceType', 'UserSourceType', '用户来源')
+    .up().item('WechatMediumUserType', 'WechatMediumUserType', '微信媒介用户类型')
+    .addChild('WechatSiteUser','wsu', '微信公众号粉丝')
+    .addChild('WechatBotContact','wbc', '微信助手号联系人')
+    .addChild('WechatWebUser','wwu', '微信微站用户')
+
+    .up().item('UserSourceType', 'UserSourceType', '用户来源')
     .addChild('WechatSite','site', '公众号')
     .addChild('WechatBot','bot', '助手号')
     .addChild('WebSite','web', '网站')
