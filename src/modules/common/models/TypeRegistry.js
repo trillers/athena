@@ -2,6 +2,10 @@ var TypeRegistry = require('../../../framework/model/TypeRegistry');
 var registry = new TypeRegistry('TypeRegistry', 'TypeRegistry', 'TypeRegistry');
 
 registry
+    .item('TenantType', 'TenantType', '租户类型')
+    .addChild('Personal','p', '个人')
+    .addChild('Organizational','o', '组织')
+
     .item('UserSourceType', 'UserSourceType', '用户来源')
     .addChild('WechatSite','site', '公众号')
     .addChild('WechatBot','bot', '助手号')
