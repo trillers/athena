@@ -172,7 +172,7 @@ module.exports = function(router) {
         var image = yield fileService.loadAsync(media_id);
         for (var i = 0; i < sbotUsers.length; i++) {
             var message = {
-                ToUserName: groups[i].name,
+                ToUserName: sbotUsers[i].bot_uid,
                 FromUserName: bot_id,
                 MsgType: 'image',
                 MediaId: media_id,

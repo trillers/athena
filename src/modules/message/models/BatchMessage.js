@@ -15,7 +15,7 @@ var schema = DomainBuilder
         contentType: {type: String, enum: MsgContentType.valueList(), default: MsgContentType.text.value()},
         content: {type: String},  //text content
         media_id: {type: String}, //media id
-        batchType:{type: String, enum: BatchType.valueList(), default: BatchType.single.value()}
+        batchType:{type: String, enum: BatchType.valueList(), default: BatchType.contacts.value()}
     })
     .build();
 module.exports.schema = schema;
