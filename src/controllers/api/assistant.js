@@ -1,6 +1,7 @@
 var wechatBotService = require('../../modules/wechat-bot/services/WechatBotService');
 var lifeFlagEnum = require('../../framework/model/enums').LifeFlag;
 var userService = require('../../modules/user/services/UserService');
+var fileService = require('../../modules/file/services/FileService');
 var batchMessageService = require('../../modules/message/services/BatchMessageService');
 var UserRole = require('../../modules/common/models/TypeRegistry').item('UserRole');
 var MsgContentType = require('../../modules/common/models/TypeRegistry').item('MsgContent');
@@ -66,66 +67,159 @@ module.exports = function(router) {
         }
     });
 
-    router.post('/mass', function*(){
-        try{
-            var bot_id = this.request.body.bot_id;
-            var botId = this.request.body.botId;//sbot _id
-            var type = this.request.body.type;
-            var msg = this.request.body.msg;
-            console.log(botId);
-            var batchMessage = {
-                from: botId,
-                contentType: MsgContentType.text.value(),
-                content: msg
-            }
-            if(type === 'single') {
-                var params = {
-                    conditions: {
-                        bot_id: bot_id,
-                        role: UserRole.Customer.value()
-                    }
-                }
-                batchMessage.batchType = BatchType.single.value();
-                var toUsers = [];
-                var sbotUsers = yield userService.findAsync(params);
-                for (var i = 0; i < sbotUsers.length; i++) {
-                    var message = {
-                        ToUserName: sbotUsers[i].bot_uid,
-                        FromUserName: bot_id,
-                        MsgType: 'text',
-                        Content: msg
-                    }
-                    console.log('*************************');
-                    console.log(message);
-                    toUsers.push(sbotUsers[i]._id);
-                    botManager.sendText(bot_id, message);
-                }
-                batchMessage.toUsers = toUsers;
-            }else if(type === 'group'){
-                batchMessage.batchType = BatchType.group.value();
-                var toGroups = [];
-                var groups = yield wechatBotGroupService.getGroupListAsync(botId);
-                for (var i = 0; i < groups.length; i++) {
-                    var message = {
-                        ToUserName: groups[i].name,
-                        FromUserName: bot_id,
-                        MsgType: 'text',
-                        Content: msg
-                    }
-                    console.log('*************************');
-                    console.log(message);
-                    toGroups.push(groups[i]._id);
-                    botManager.sendText(bot_id, message);
-                }
-                batchMessage.toGroups = toGroups;
-            }
-            console.log(batchMessage);
-            yield batchMessageService.createAsync(batchMessage);
-            this.body = {success: true, err: null};
-        }catch(err){
-            console.log('assistant router mass err:' + err);
-            this.body = {success: false, err: null};
+    /**
+     * send text to all contacts
+     * @body bot_id
+     * @body botId //sbot _id
+     * @body msg
+     * */
+    router.post('/sendTextToContacts', function*(){
+        var bot_id = this.request.body.bot_id;
+        var botId = this.request.body.botId;//sbot _id
+        var msg = this.request.body.msg;
+        var batchMessage = {
+            from: botId,
+            contentType: MsgContentType.text.value(),
+            content: msg,
+            batchType: BatchType.contact.value()
         }
+        var params = {
+            conditions: {
+                bot_id: bot_id,
+                role: UserRole.Customer.value()
+            }
+        }
+        var toUsers = [];
+        var sbotUsers = yield userService.findAsync(params);
+        for (var i = 0; i < sbotUsers.length; i++) {
+            var message = {
+                ToUserName: sbotUsers[i].bot_uid,
+                FromUserName: bot_id,
+                MsgType: 'text',
+                Content: msg
+            }
+            console.log('*************************');
+            console.log(message);
+            toUsers.push(sbotUsers[i]._id);
+        }
+        batchMessage.toUsers = toUsers;
+        console.log(batchMessage);
+        yield batchMessageService.createAsync(batchMessage);
+        this.body = {success: true, err: null};
+    });
+
+    /**
+     * send text to all groups
+     * @body bot_id
+     * @body botId //sbot _id
+     * @body msg
+     * */
+    router.post('/sendTextToContacts', function*(){
+        var bot_id = this.request.body.bot_id;
+        var botId = this.request.body.botId;//sbot _id
+        var msg = this.request.body.msg;
+        var batchMessage = {
+            from: botId,
+            contentType: MsgContentType.text.value(),
+            content: msg,
+            batchType: BatchType.group.value()
+        }
+        var toGroups = [];
+        var groups = yield wechatBotGroupService.getGroupListAsync(botId);
+        for (var i = 0; i < groups.length; i++) {
+            var message = {
+                ToUserName: groups[i].name,
+                FromUserName: bot_id,
+                MsgType: 'text',
+                Content: msg
+            }
+            console.log('*************************');
+            console.log(message);
+            toGroups.push(groups[i]._id);
+            botManager.sendText(bot_id, message);
+        }
+        batchMessage.toGroups = toGroups;
+        console.log(batchMessage);
+        yield batchMessageService.createAsync(batchMessage);
+        this.body = {success: true, err: null};
+    });
+
+    /**
+     * send text to all contacts
+     * @body bot_id
+     * @body botId //sbot _id
+     * @body msg
+     * */
+    router.post('/sendTextToContacts', function*(){
+        var bot_id = this.request.body.bot_id;
+        var botId = this.request.body.botId;//sbot _id
+        var msg = this.request.body.msg;
+        var batchMessage = {
+            from: botId,
+            contentType: MsgContentType.text.value(),
+            content: msg,
+            batchType: BatchType.contact.value()
+        }
+        var params = {
+            conditions: {
+                bot_id: bot_id,
+                role: UserRole.Customer.value()
+            }
+        }
+        var toUsers = [];
+        var sbotUsers = yield userService.findAsync(params);
+        for (var i = 0; i < sbotUsers.length; i++) {
+            var message = {
+                ToUserName: sbotUsers[i].bot_uid,
+                FromUserName: bot_id,
+                MsgType: 'text',
+                Content: msg
+            }
+            console.log('*************************');
+            console.log(message);
+            toUsers.push(sbotUsers[i]._id);
+        }
+        batchMessage.toUsers = toUsers;
+        console.log(batchMessage);
+        yield batchMessageService.createAsync(batchMessage);
+        this.body = {success: true, err: null};
+    });
+
+    /**
+     * send image to all groups
+     * @body bot_id
+     * @body botId //sbot _id
+     * @body media_id
+     * */
+    router.post('/sendTextToContacts', function*(){
+        var bot_id = this.request.body.bot_id;
+        var botId = this.request.body.botId;//sbot _id
+        var media_id = this.request.body.media_id;
+        var batchMessage = {
+            from: botId,
+            contentType: MsgContentType.image.value(),
+            media_id: media_id,
+            batchType: BatchType.group.value()
+        }
+        var toGroups = [];
+        var groups = yield wechatBotGroupService.getGroupListAsync(botId);
+        var image = yield
+        for (var i = 0; i < groups.length; i++) {
+            var message = {
+                ToUserName: groups[i].name,
+                FromUserName: bot_id,
+                MsgType: 'image',
+                Content: msg
+            }
+            console.log('*************************');
+            console.log(message);
+            toGroups.push(groups[i]._id);
+            botManager.sendImage(bot_id, message);
+        }
+        batchMessage.toGroups = toGroups;
+        console.log(batchMessage);
+        yield batchMessageService.createAsync(batchMessage);
+        this.body = {success: true, err: null};
     });
 
     router.get('/getBatchMsg', function*(){

@@ -45,7 +45,7 @@ registry
     .addChild('shortvideo','shortvideo', '小视频')
 
     .up().item('BatchType', 'BatchType', '群发类型')
-    .addChild('single','single', '个人')
+    .addChild('single','contact', '个人')
     .addChild('group','group', '群组')
 
     .up().item('Party', 'Party', '方')
