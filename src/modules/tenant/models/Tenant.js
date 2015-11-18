@@ -1,8 +1,7 @@
-var DomainBuilder = require('../../../framework/model/DomainBuilder');
 var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
 
-var Model = function(mongoose){
-    var schema = DomainBuilder
+var Model = function(domainBuilder){
+    var schema = domainBuilder
         .i('Tenant')
         .withBasis()
         .withLifeFlag()
