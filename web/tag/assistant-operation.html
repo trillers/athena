@@ -273,8 +273,11 @@
                     }else if(data.type === 'group'){
                         self.groupBatchMsg = data.batchMsg;
                     }
-                    self.update();
+                }else{
+                    self.singleBatchMsg = null;
+                    self.groupBatchMsg = null;
                 }
+                self.update();
             }
 
             var onAsyncAssistant = function(data){
