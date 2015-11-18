@@ -1,6 +1,6 @@
 var EventEmitter = require('events').EventEmitter;
 var wechatApi = require('../../wechat/common/api').api;
-var Promise = require('bluebird');
+
 function OperatorEmitter(){
     this.emitter = new EventEmitter();
 }
