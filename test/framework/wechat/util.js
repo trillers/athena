@@ -1,5 +1,4 @@
 var Wechat = require('../../../src/framework/wechat/index');
-var wxutil = require('./util');
 
 var _ids = {};
 var nextSeq = function(key){
