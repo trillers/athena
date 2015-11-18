@@ -2,6 +2,7 @@ var context = {
     settings: {}
     , redis: {}
     , mongoose: {}
+    , domainBuilder: {}
     , logger: {}
     , helpers: {}
     , models: {}

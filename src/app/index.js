@@ -3,6 +3,7 @@ var settings = require('athena-settings');
 var logger = require('./logging').logger;
 var system = require('./system');
 var application = require('./application');
+var context = require('../.');
 var redisClient = require('./redis-client');
 redisClient('default');
 redisClient('sub');
