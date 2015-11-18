@@ -10,7 +10,7 @@ var registry = new CommandRegistry();
 registry.addCommand('账户邀请二维码', require('./commands/sendTenantQrCodeCommand'));
 
 module.exports = function(emitter){
-    emitter.operator(function(event, context){
+    emitter.po(function(event, context){
         console.log('emit operator handler');
         co(function*(){
             var handler = null;

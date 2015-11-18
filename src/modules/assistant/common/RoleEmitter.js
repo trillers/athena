@@ -56,4 +56,5 @@ RoleEmitter.prototype.cs = function(handler){ this.emitter.on('cs', handler); };
  */
 RoleEmitter.prototype.admin = function(handler){ this.emitter.on('admin', handler); };
 
+
 module.exports = RoleEmitter;
