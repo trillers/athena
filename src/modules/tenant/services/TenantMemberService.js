@@ -5,10 +5,10 @@ var Service = function(context){
     this.context = context;
 };
 
-Service.prototype.create = function(tenantJson, callback){
-    var Tenant = this.context.models.Tenant;
-    var tenant = new Tenant(tenantJson);
-    tenant.save(function (err, result, affected) {
+Service.prototype.create = function(tenantMemberJson, callback){
+    var TenantMember = this.context.models.TenantMember;
+    var tenantMember = new Tenant(tenantMemberJson);
+    tenantMember.save(function (err, result, affected) {
         //TODO: need logging
         cbUtil.handleAffected(callback, err, result, affected);
     });
