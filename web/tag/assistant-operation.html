@@ -85,7 +85,7 @@
                                                 <ul class="list-group">
                                                     <li each="{singleBatchMsg}" class="list-group-item">
                                                         <div if="{contentType == 'image'}">
-                                                            <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
+                                                            <img style="height: 7em" riot-src="{contentType == 'image' && media_id && parent.api + '/file/?media_id=' + media_id}" alt=""/>
                                                         </div>
                                                         <div if="{contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
@@ -131,7 +131,7 @@
                                                 <ul class="list-group">
                                                     <li each="{groupBatchMsg}" class="list-group-item">
                                                         <div if="{contentType == 'image'}">
-                                                            <img style="height: 7em" riot-src="{item.contentType == 'image' && item.media_id && parent.api + '/file/?media_id=' + item.media_id}" alt=""/>
+                                                            <img style="height: 7em" riot-src="{contentType == 'image' && media_id && parent.api + '/file/?media_id=' + media_id}" alt=""/>
                                                         </div>
                                                         <div  if="{contentType == 'text'}" style="height: 100%; width: 100%">
                                                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
