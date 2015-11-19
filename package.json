@@ -6,7 +6,7 @@
   "dependencies": {
     "athena-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/athena-settings.git",
     "log4js": "0.6.26",
-    "mongoose": "4.1.2",
+    "mongoose": "4.2.6",
     "redis": "0.12.1",
     "redis-sentinel": "0.3.3",
     "koa": "0.2.0",
