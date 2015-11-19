@@ -1,4 +1,4 @@
-var tenantRoleEmitter = require('../tenantRoleEmitter');
+var roleEmitter = require('../roleEmitter');
 var CommandRegistry = require('../../../framework/wechat/command-registry');
 var registry = new CommandRegistry();
 
@@ -10,7 +10,7 @@ module.exports = function(emitter){
             handler();
         }
         else{
-            tenantRoleEmitter.emit(context);
+            roleEmitter.emit(context);
         }
     });
 };

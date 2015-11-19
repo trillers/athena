@@ -3,6 +3,8 @@ var co = require('co');
 var logger = require('../../../app/logging').logger;
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
 var wechatApi = require('../../wechat/common/api').api;
+var tenantService = require('../../../../src').services.tenantService;
+
 
 module.exports = function (emitter) {
     emitter.qr(function (event, context) {
@@ -18,16 +20,14 @@ module.exports = function (emitter) {
                         case 'ta':
                             console.log('tenant admin handler');
                             reply = '[系统]: 注册成功！';
-                            //user = yield tenantHandler.registryTenant(userOpenid);
+                            yield tenantService.registerTenant(userOpenid);
                             break;
                         //TODO another qr type
                     }
-                    if (user) {
-                        wechatApi.sendText(userOpenid, reply, function (err) {
-                            console.log(err);
-                            //TODO
-                        });
-                    }
+                    wechatApi.sendText(userOpenid, reply, function (err) {
+                        console.log(err);
+                        //TODO
+                    });
                 }
                 else {
                     reply = '[系统]: 该二维码已失效';
