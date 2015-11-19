@@ -20,12 +20,13 @@ module.exports = function() {
     frankon.use(require('../../modules/wechat/middlewares/user-heartbeat'));
     frankon.use(function* (next) {
         oldEmitter.relay(this);
+        //emitter.relay(this);
         this.body = '';
     });
-    frankon.use(function* (next) {
-        emitter.relay(this);
-        this.body = '';
-    });
+    //frankon.use(function* (next) {
+    //    emitter.relay(this);
+    //    this.body = '';
+    //});
     var wechatMiddleware = wechat(tokenConfig).middleware(frankon.generateHandler());
     router.all('/wechat', wechatMiddleware);
 
