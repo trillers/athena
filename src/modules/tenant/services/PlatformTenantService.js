@@ -2,13 +2,14 @@ var util = require('util');
 var platformSettings = require('athena-settings').platform;
 var cbUtil = require('../../../framework/callback');
 var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
+var TenantService = require('./TenantService');
 
 var Service = function(context){
     //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
     this.context = context;
 };
 
-util.inherits(Service, require('./TenantService'));
+util.inherits(Service, TenantService);
 
 Service.prototype.createPlatform = function(callback){
     /**
@@ -26,6 +27,8 @@ Service.prototype.createPlatform = function(callback){
     , desc:         {type: String}
   },
      */
+    var logger = this.context.logger;
+    var platformKv = this.context.kvs.platform;
     var platform = {
         name: platformSettings.name,
         desc: platformSettings.desc
@@ -35,12 +38,20 @@ Service.prototype.createPlatform = function(callback){
 
     this.create(platform, function(err, platform){
         if(err) {
+            logger.info('Fail to create platform: ' + err);
             if(callback) callback(err);
         }
         else{
-            var id = platform.id;
-            //TODO link platform tenant
-            if(callback) callback(null, platform);
+            platformKv.linkPlatformId(platform.id, function(err){
+                if(err) {
+                    logger.info('Fail to create platform: ' + err);
+                    if(callback) callback(err);
+                }
+                else{
+                    logger.info('Succeed to create platform');
+                    if(callback) callback(null, platform);
+                }
+            });
         }
     });
 };

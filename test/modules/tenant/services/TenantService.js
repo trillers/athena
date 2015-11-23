@@ -14,7 +14,7 @@ describe('TenantService', function(){
                 name: '包三哥'
             };
             service.create(tenant, function(err, tenant){
-                logger.debug(tenant)
+                logger.debug(tenant);
                 done();
             });
         });
