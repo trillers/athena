@@ -17,6 +17,11 @@ Kv.prototype.loadById = function(id, callback){
             err,
             'Fail to get tenant by id ' + id + ': ' + err,
             'Succeed to get tenant by id ' + id);
+
+        if(result){
+            result.administrative = result.administrative === 'true' ? true : false;
+            //TODO: convert Date string
+        }
         cbUtil.handleSingleValue(callback, err, result);
     });
 };

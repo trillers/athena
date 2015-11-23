@@ -23,4 +23,17 @@ describe('PlatformTenantService', function(){
 
     });
 
+    describe('loadPlatform', function(){
+        it('Succeed to load the platfrom tenant', function(done){
+            var service = context.services.platformTenantService;
+            service.loadPlatform(function(err, platform){
+                logger.debug(platform);
+                assert.equal(platform.type, TenantType.Organizational.value());
+                assert.equal(platform.administrative, true);
+                done();
+            });
+        });
+
+    });
+
 });

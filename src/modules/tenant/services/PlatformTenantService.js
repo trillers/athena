@@ -11,22 +11,29 @@ var Service = function(context){
 
 util.inherits(Service, TenantService);
 
-Service.prototype.createPlatform = function(callback){
-    /**
-     *   wechat: {
-    appKey: 'wx23f1709f7727051f',
-    appSecret: '977f6080e128d465b673deb79e3d31b8',
-    token: 'trillers',
-    encodingAESKey: '9zYRktc6N1WPyqH6hXq38tJC2CVDaLjHIkxRpihzmx3',
-    siteId: 'gh_afc333104d2a',
-    siteName: '错题本'
+Service.prototype.loadPlatform = function(callback){
+    var logger = this.context.logger;
+    var platformKv = this.context.kvs.platform;
 
-    name:           {type: String, required: true}
-    , type:         {type: String, enum: TenantType.valueList(), default: TenantType.Personal.value(), required: true}
-    , administrative:      {type: Boolean, default: false}
-    , desc:         {type: String}
-  },
-     */
+    platformKv.getPlatformId(function(err, result){
+        if(err){
+            logger.error('Fail to load platform: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        if(result){
+            logger.info('Succeed to load platform');
+            platformKv.loadById(result, callback);
+        }
+        else{
+            logger.warn('Have no platform data to load');
+            if(callback) callback();
+        }
+    });
+};
+
+Service.prototype.createPlatform = function(callback){
     var logger = this.context.logger;
     var platformKv = this.context.kvs.platform;
     var platform = {
