@@ -1,0 +1,153 @@
+<case>
+    <div if="{!hidden}">
+        <div class="container" style="background-color: #eee; border-radius: 4px">
+            <div style="margin-top: 1em; margin-bottom: 1em; padding-left: 3em"><span onclick="{returnPage}"
+                                                                                      style="cursor: pointer; font-size: 1.5em; color:#337ab7">返回</span>
+            </div>
+            <div class="col-md-6 col-xs-6 col-sm-6">
+                <div class="panel" style="min-height: 35em">
+                    <ul style="padding-left: 1em; margin-top: 1em; overflow-y: scroll; max-height: 35em; list-style-type: none">
+                        <li each="{messages}">
+                            <div>{from.nickname}:</div>
+                            <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
+                            <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}
+                                &nbsp;<input checked="{done}" onclick="{parent.append}" type="checkbox"/>
+                            </div>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+            <div class="col-md-6 col-xs-6 col-sm-6">
+                <div class="panel" style="min-height: 35em">
+                    <div class="panel panel-default"
+                         style="width: 36em; margin-left: 1em; padding-top: 1em; margin-top: 1em; overflow-y: scroll; max-height: 20em">
+                        <span style="margin-left: 1em;">Case list:</span>
+                        <ul style="list-style-type: none; margin-top: 1em; margin-bottom: 2em; text-align: center; padding-left: 0">
+                            <li style="width: 100%;">
+                                <strong class="col-md-1"></strong>
+                                <strong class="col-md-6">内容</strong>
+                                <strong class="col-md-4">时间</strong>
+                                <strong class="col-md-1"></strong>
+                            </li>
+                            <li>
+                                <hr width="100%" style="margin-bottom: 10px">
+                            </li>
+                            <case-item each="{caseList}" curritem = "{this}"/>
+
+                        </ul>
+                    </div>
+                    <div style="margin-top: 2em">
+                        <textarea id="caseContent" class="form-control" rows="3"
+                                  style="margin-left: 1em; width: 36em"></textarea>
+                        <button class="btn btn-success" style="margin-top: 1em; float: right; margin-right: 2em;" onclick="{submit}">提交
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/container-->
+
+        <script>
+            this.app = this.opts.app; //keep spa object
+            var self = nest.presentable(this);
+            self.env = (__app.settings.env.NODE_ENV == "production") ? "public" : "web";
+            self.api = __app.settings.api.url;
+            self.caseTime = '';
+
+            var loadCaseMsg = domain.action('loadCaseMsg');
+            var loadCase = domain.action('loadCase');
+            var addCase = domain.action('addCase');
+
+            onLoadCaseMsg = function (data) {
+                self.update({messages: data});
+            }
+
+            onLoadCase = function (data) {
+                self.update({caseList: data});
+            }
+
+            onAddCase = function (data) {
+                $('#caseContent').val('');
+                if(self.caseList){
+                    self.caseList.unshift(data);
+                }else{
+                    self.caseList = [data];
+                }
+                self.update();
+                //TODO
+            }
+
+            this.on('mount', function () {
+                console.info('tag case is mounted');
+                loadCaseMsg.onDone(onLoadCaseMsg);
+                addCase.onDone(onAddCase);
+                loadCase.onDone(onLoadCase);
+            });
+            this.on('unmount', function () {
+                console.info('tag case is unmounted');
+                loadCaseMsg.offDone(onLoadCaseMsg);
+                addCase.offDone(onAddCase);
+                loadCase.offDone(onLoadCase);
+            });
+            this.on('open', function (opts) {
+                console.info('tag case is opening');
+                self.trigger('ready', true);
+                self.trigger('view-route-to');
+                loadCaseMsg.execute(opts._id);
+                loadCase.execute();
+            });
+
+            this.on('leave', function () {
+                self.mask = true;
+                self.update();
+            });
+
+            this.on('reenter', function () {
+                self.mask = false;
+                self.update();
+            });
+
+            this.on('refresh', function () {
+                console.info('tag case is refreshing');
+                //_refresh();
+            });
+
+            self.formatDate = function (date) {
+                var dateStr = new Date(date).toLocaleDateString();
+                return dateStr.replace(/\//g, '-');
+            }
+
+            returnPage(e){
+                e.preventUpdate = true;
+                window.history.go(-1);
+            }
+
+            append(e){
+                e.item.done = !e.item.done
+                if (e.item.done) {
+                    self.caseTime = e.item.crtOn;
+                    content = $('#caseContent').val() + e.item.content + '  ';
+                } else {
+                    var reg = new RegExp(e.item.content);
+                    content = content.replace(reg, '');
+                }
+                $('#caseContent').val(content);
+                return true;
+            }
+
+            submit(e){
+                if(self.caseTime && $('#caseContent').val().trim().length !==0) {
+                    var data = {
+                        caseTime: self.caseTime,
+                        content: $('#caseContent').val()
+                    }
+                    self.messages.forEach(function(item){
+                        item.done = false;
+                    });
+                    addCase.execute(data);
+                }
+            }
+        </script>
+    </div>
+</case>

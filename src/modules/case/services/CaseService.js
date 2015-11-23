@@ -1,71 +1,77 @@
-var Case = require('../models/Case').model;
-var caseCarService = require('./CaseCarService');
-var caseCoffeeService = require('./CaseCoffeeService');
-var CaseEnum = require('../../common/models/TypeRegistry').item('Case');
-var CaseStatus = require('../../common/models/TypeRegistry').item('CaseStatus');
-var settings = require('athena-settings');
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var wechat = require('../../wechat/common/api');
-var co = require('co');
-var subcaseServiceMap = {
-    'Car': caseCarService,
-    'Coffee': caseCoffeeService
-}
+var Case = require('../models/Case').model;
+var Promise = require('bluebird');
+
 var Service = {};
 
-Service.load = function* (id) {
-    try {
-        var doc = yield Case.findById(id).lean(true).exec();
-        var subcaseService = subcaseServiceMap[CaseStatus.name(doc.type)];
-        var subcase = yield subcaseService.loadByCaseIdAysnc(doc._id);
-        doc.subcase = subcase;
+Service.load = function (id, callback) {
+    Case.findById(id).lean(true).exec(function (err, doc) {
+        if (err) {
+            logger.error('Fail to load Case [id=' + id + ']: ' + err);
+            if (callback) callback(err);
+            return;
+        }
+
         logger.debug('Succeed to load  Case [id=' + id + ']');
-        return doc;
-    }catch(e){
-        logger.error('Fail to load Case [id=' + id + ']: ' + e);
-    }
+        if (callback) callback(null, doc);
+    })
 };
 
-Service.create = function* (json) {
-    try{
-        var subcaseService = subcaseServiceMap[CaseEnum.valueNames(json.type)];
-        var abscase = new Case(json);
-        var result = yield abscase.save();
-        result = result.toObject();
-        json.case = result._id;
-        var subcase = yield subcaseService.createAsync(json);
-        result.subcase = subcase.toObject();
-        logger.debug('Succeed to create Case: ' + require('util').inspect(result) + '\r\n');
-        return result;
-    }catch(e){
-        logger.error('Fail to create Case');
-    }
+Service.create = function (json, callback) {
+    var myCase = new Case(json);
+    myCase.save(function (err, doc, numberAffected) {
+        if (err) {
+            if (callback) callback(err, null);
+            return;
+        }
+        if (numberAffected) {
+            logger.debug('Succeed to create Case: ' + require('util').inspect(doc) + '\r\n');
+            if (callback) callback(null, doc);
+        }
+        else {
+            logger.error('Fail to create Case: ' + require('util').inspect(doc) + '\r\n');
+            if (callback) callback(new Error('Fail to create Case'));
+        }
+    });
 };
 
-Service.delete = function* (id) {
-    try{
-        var doc = yield Case.findByIdAndRemove(id).exec();
+Service.delete = function (id, callback) {
+    Case.findByIdAndRemove(id, function (err, doc) {
+        if (err) {
+            logger.error('Fail to delete Case [id=' + id + ']: ' + err);
+            if (callback) callback(err);
+            return;
+        }
+
         logger.debug('Succeed to delete Case [id=' + id + ']');
-        return doc;
-    }catch(e){
-        logger.error('Fail to delete Case [id=' + id + ']: ' + e);
-    }
+        if (callback) callback(null, doc);
+    });
 };
 
-Service.update = function* (id, update) {
-    var doc = Case.findByIdAndUpdate(id, update, {new: true}).exec();
-    logger.debug('Succeed to update Conversation [id=' + id + ']');
-    return doc;
+Service.update = function (id, update, callback) {
+    Case.findByIdAndUpdate(id, update, {new: true}, function (err, result){
+        if(err) {
+            callback(err);
+        } else {
+            logger.debug('Succeed to update Case [id=' + id + ']');
+            callback(null, result);
+        }
+    });
 };
 
-Service.updateByCondition = function* (condition, update) {
-    var doc = Case.findOneAndUpdate(condition, update, {new: true});
-    logger.debug('Succeed to update Conversation [id=' + doc._id + ']');
-    return doc;
+Service.updateByCondition = function (condition, update, callback) {
+    Case.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
+        if(err) {
+            callback(err);
+        } else {
+            logger.debug('Succeed to update Case [id=' + doc._id + ']');
+            callback(null, doc);
+        }
+    });
 };
 
-Service.find = function* (params) {
+Service.find = function (params, callback) {
     var query = Case.find();
 
     if (params.options) {
@@ -90,11 +96,17 @@ Service.find = function* (params) {
 
     //TODO: specify select list, exclude comments in list view
     query.lean(true);
-    var docs = yield query.exec();
-    return docs;
+    query.exec(function (err, docs) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (callback) callback(null, docs);
+    });
 };
 
-Service.filter = function* (params) {
+Service.filter = function (params, callback) {
     var query = Case.find();
 
     if (params.options) {
@@ -116,8 +128,17 @@ Service.filter = function* (params) {
         query.find(params.conditions);
     }
     query.lean(true);
-    var docs = yield query.exec();
-    return docs;
+    query.exec(function (err, docs) {
+        if (err) {
+            callback(err);
+            return;
+        }
+
+        if (callback) callback(null, docs);
+    });
 };
+
+
+Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

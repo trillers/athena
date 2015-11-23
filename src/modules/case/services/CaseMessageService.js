@@ -1,78 +1,78 @@
 var logger = require('../../../app/logging').logger;
 var u = require('../../../app/util');
-var CaseCar = require('../models/CaseCar').model;
+var CaseMessage = require('../models/CaseMessage').model;
 var Promise = require('bluebird');
 
 var Service = {};
 
-Service.loadByCaseId = function (caseId, callback) {
-    CaseCar.find({case: caseId}).lean(true).exec(function (err, doc) {
+Service.load = function (id, callback) {
+    CaseMessage.findById(id).lean(true).exec(function (err, doc) {
         if (err) {
-            logger.error('Fail to load CaseCar [caseId=' + caseId + ']: ' + err);
+            logger.error('Fail to load CaseMessage [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to load  CaseCar [caseId=' + caseId + ']');
+        logger.debug('Succeed to load  CaseMessage [id=' + id + ']');
         if (callback) callback(null, doc);
     })
 };
 
 Service.create = function (json, callback) {
-    var caseCar = new CaseCar(json);
-    caseCar.save(function (err, doc, numberAffected) {
+    var caseMessage = new CaseMessage(json);
+    caseMessage.save(function (err, doc, numberAffected) {
         if (err) {
-            if (callback) callback(err);
+            if (callback) callback(err, null);
             return;
         }
         if (numberAffected) {
-            logger.debug('Succeed to create CaseCar: ' + require('util').inspect(doc) + '\r\n');
+            logger.debug('Succeed to create CaseMessage: ' + require('util').inspect(doc) + '\r\n');
             if (callback) callback(null, doc);
         }
         else {
-            logger.error('Fail to create CaseCar: ' + require('util').inspect(doc) + '\r\n');
-            if (callback) callback(new Error('Fail to create CaseCar'));
+            logger.error('Fail to create CaseMessage: ' + require('util').inspect(doc) + '\r\n');
+            if (callback) callback(new Error('Fail to create CaseMessage'));
         }
     });
 };
 
 Service.delete = function (id, callback) {
-    CaseCar.findByIdAndRemove(id, function (err, doc) {
+    CaseMessage.findByIdAndRemove(id, function (err, doc) {
         if (err) {
-            logger.error('Fail to delete CaseCar [id=' + id + ']: ' + err);
+            logger.error('Fail to delete CaseMessage [id=' + id + ']: ' + err);
             if (callback) callback(err);
             return;
         }
 
-        logger.debug('Succeed to delete CaseCar [id=' + id + ']');
+        logger.debug('Succeed to delete CaseMessage [id=' + id + ']');
         if (callback) callback(null, doc);
     });
 };
 
 Service.update = function (id, update, callback) {
-    CaseCar.findByIdAndUpdate(id, update, {new: true}, function (err, result){
+    CaseMessage.findByIdAndUpdate(id, update, {new: true}, function (err, result){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseCar [id=' + id + ']');
+            logger.debug('Succeed to update CaseMessage [id=' + id + ']');
             callback(null, result);
         }
     });
 };
 
 Service.updateByCondition = function (condition, update, callback) {
-    CaseCar.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
+    CaseMessage.findOneAndUpdate(condition, update, {new: true}, function (err, doc){
         if(err) {
             callback(err);
         } else {
-            logger.debug('Succeed to update CaseCar [id=' + doc._id + ']');
+            logger.debug('Succeed to update CaseMessage [id=' + doc._id + ']');
             callback(null, doc);
         }
     });
 };
 
 Service.find = function (params, callback) {
-    var query = CaseCar.find();
+    var query = CaseMessage.find();
 
     if (params.options) {
         query.setOptions(params.options);
@@ -93,7 +93,11 @@ Service.find = function (params, callback) {
         query.find(params.conditions);
     }
 
-
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
+    }
     //TODO: specify select list, exclude comments in list view
     query.lean(true);
     query.exec(function (err, docs) {
@@ -107,7 +111,7 @@ Service.find = function (params, callback) {
 };
 
 Service.filter = function (params, callback) {
-    var query = CaseCar.find();
+    var query = CaseMessage.find();
 
     if (params.options) {
         query.setOptions(params.options);
@@ -127,6 +131,13 @@ Service.filter = function (params, callback) {
     if (params.conditions) {
         query.find(params.conditions);
     }
+
+    if (params.populate) {
+        params.populate.forEach(function(item){
+            query.populate(item);
+        })
+    }
+
     query.lean(true);
     query.exec(function (err, docs) {
         if (err) {
@@ -142,5 +153,3 @@ Service.filter = function (params, callback) {
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;
-
-

@@ -97,4 +97,15 @@ domain.action('asyncAssistant').onExecute(function(data){
     apiFactory.post('/assistant/async').drive(this).send(data);
 });
 
+domain.action('loadCaseMsg').onExecute(function(id){
+    apiFactory.get('/case/loadCaseMsg?id=' + id).drive(this).send();
+});
+
+domain.action('loadCase').onExecute(function(){
+    apiFactory.get('/case/loadCase').drive(this).send();
+});
+
+domain.action('addCase').onExecute(function(data){
+    apiFactory.post('/case/add').drive(this).send(data);
+});
 module.exports = null;

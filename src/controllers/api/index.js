@@ -61,4 +61,10 @@ module.exports = function(app){
     require('./sys_user')(sys_user_router);
     app.use(sys_user_router.routes());
 
+    //case module
+    var case_router = new router();
+    case_router.prefix('/api/case');
+    require('./case')(case_router);
+    app.use(case_router.routes());
+
 }

@@ -13,6 +13,7 @@
 var co = require('co');
 var conversationService = require('../../conversation/services/ConversationService');
 var messageService = require('../../message/services/MessageService')
+var caseMessageService = require('../../message/services/MessageService')
 var ConversationKv = require('../../conversation/kvs/Conversation');
 var mediaFileService = require('../../file/services/MediaFileService');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
@@ -53,12 +54,32 @@ var handler = function(msg){
                     an_media_id: an_media_id,
                     recognition: msg.Recognition || null
                 });
+                yield caseMessageService.createAsync({
+                    from: user.id,
+                    to: null,
+                    channel: cvsId,
+                    contentType: msg.MsgType,
+                    content: msg.Content || null,
+                    wx_media_id: msg.MediaId || null,
+                    an_media_id: an_media_id,
+                    recognition: msg.Recognition || null
+                });
                 customerEmitter.emit('message', cvs, msg);
                 customerEmitter.emit('conversation', cvs, msg);
             }
             else{
                 cvs = yield ConversationKv.loadByIdAsync(cvsId);
                 yield messageService.createAsync({
+                    from: user.id,
+                    to: null,
+                    channel: cvsId,
+                    contentType: msg.MsgType,
+                    content: msg.Content || null,
+                    wx_media_id: msg.MediaId || null,
+                    an_media_id: an_media_id,
+                    recognition: msg.Recognition || null
+                });
+                yield caseMessageService.createAsync({
                     from: user.id,
                     to: null,
                     channel: cvsId,

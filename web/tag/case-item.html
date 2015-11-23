@@ -1,0 +1,19 @@
+<case-item>
+    <li style="width: 100%;" >
+        <span class="col-md-1" style="height: 3em;"></span>
+        <span class="col-md-6" style="height: 3em; overflow-y: scroll">{content}</span>
+        <span class="col-md-4" style="height: 3em;">{date}</span>
+        <span class="col-md-1" style="height: 3em;"></span>
+    </li>
+    <br/>
+    <br/>
+    <script>
+        var self = this;
+        var item = self.opts.curritem;
+        var caseTime = new Date(item.caseTime);
+        var year = caseTime.getFullYear();
+        var month = caseTime.getMonth() + 1;
+        var day = caseTime.getDate();
+        self.date = year + '-' + month + '-' + day;
+    </script>
+</case-item>

@@ -141,6 +141,18 @@ app.routeView('assistant/operation/_:id', nest.viewable({
   }
 }));
 
+app.routeView('case/_:id', nest.viewable({
+  name: 'case/_:id',
+  mount: function(ctx){
+    var tags = riot.mount('case', {_id: ctx.req.params.id, app: this.parent});
+    this.tag = tags[0];
+  },
+  route: function(ctx) {
+    this.context = ctx;
+    this.tag.trigger('open', {_id: ctx.req.params.id, share: ctx.req.query.share, guest: ctx.req.query.guest});
+  }
+}));
+
 app.routeView('admin/list', nest.viewable({
   name: 'admin/list',
   mount: function(ctx){
