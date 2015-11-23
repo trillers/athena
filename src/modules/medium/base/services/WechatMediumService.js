@@ -1,4 +1,4 @@
-var cbUtil = require('../../../framework/callback');
+var cbUtil = require('../../../../framework/callback');
 
 var Service = function(context){
     //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');

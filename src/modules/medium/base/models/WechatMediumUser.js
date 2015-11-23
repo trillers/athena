@@ -1,7 +1,7 @@
 var WechatMediumUserType = require('../../../common/models/TypeRegistry').item('WechatMediumUserType');
 
 var Model = function(domainBuilder){
-    var schema = DomainBuilder
+    var schema = domainBuilder
         .i('WechatMediumUser')
         .withBasis()
         .withLifeFlag()
@@ -28,6 +28,7 @@ var Model = function(domainBuilder){
     return schema.model(true);
 };
 
+module.exports = Model;
 /**
  服务号粉丝
  id

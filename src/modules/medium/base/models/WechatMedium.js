@@ -1,7 +1,7 @@
 var WechatMediumType = require('../../../common/models/TypeRegistry').item('WechatMediumType');
 
 var Model = function(domainBuilder){
-    var schema = DomainBuilder
+    var schema = domainBuilder
         .i('WechatMedium')
         .withBasis()
         .withLifeFlag()
@@ -22,6 +22,7 @@ var Model = function(domainBuilder){
     return schema.model(true);
 };
 
+module.exports = Model;
 /**
  * 服务号：
  id
