@@ -20,7 +20,7 @@ Kv.prototype.loadById = function(id, callback){
 
         if(result){
             result.administrative = result.administrative === 'true' ? true : false;
-            //TODO: convert Date string
+            result.crtOn = result.crtOn && result.crtOn !== 'null' ? new Date(result.crtOn) : null;
         }
         cbUtil.handleSingleValue(callback, err, result);
     });
