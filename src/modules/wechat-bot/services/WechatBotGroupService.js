@@ -116,6 +116,20 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
     return ret;
 };
 
+/**
+ * get webchat bot group by group name
+ * @param name
+ ***/
+Service.getGroupByName = function(name, callback){
+    WechatBotGroup.findOne({name: name}).lean().exec(function(err, data){
+        if(err){
+            return callback(err, null);
+        }else {
+            return callback(null, data);
+        }
+    })
+}
+
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

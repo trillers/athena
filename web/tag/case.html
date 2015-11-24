@@ -8,7 +8,7 @@
                 <div class="panel" style="min-height: 35em">
                     <ul style="padding-left: 1em; margin-top: 1em; overflow-y: scroll; max-height: 35em; list-style-type: none">
                         <li each="{messages}">
-                            <div>{from.nickname}:</div>
+                            <div>{ from && from.nickname || '群消息'}:</div>
                             <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                             <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}
                                 &nbsp;<input checked="{done}" onclick="{parent.append}" type="checkbox"/>

@@ -17,6 +17,7 @@ var caseMessageService = require('../../message/services/MessageService')
 var ConversationKv = require('../../conversation/kvs/Conversation');
 var mediaFileService = require('../../file/services/MediaFileService');
 var MsgContentType = require('../../common/models/TypeRegistry').item('MsgContent');
+var wechatBotGroupService = require('../../wechat-bot/services/WechatBotGroupService');
 var customerEmitter = require('../CustomerEmitter');
 var wechatBotUserService = require('../../user/services/WechatBotUserService');
 var handler = function(msg){
@@ -28,7 +29,21 @@ var handler = function(msg){
             }
             var user = yield wechatBotUserService.loadByBuid(msg.FromUserName);
             if(!user){
-                console.warn('current user is not in db, FromUserName is ' + msg.FromUserName + ' ignore it');
+                //console.warn('current user is not in db, FromUserName is ' + msg.FromUserName + ' ignore it');
+                console.log('this maybe a group message');
+                var group = wechatBotGroupService.getGroupByNameAsync(msg.FromUserName);
+                if(group && group._id) {
+                    yield caseMessageService.createAsync({
+                        from: group._id,
+                        to: null,
+                        channel: '',
+                        contentType: msg.MsgType,
+                        content: msg.Content || null,
+                        wx_media_id: msg.MediaId || null,
+                        an_media_id: msg.FsMediaId || '',
+                        recognition: msg.Recognition || null
+                    });
+                }
                 return;
             }
             var cvs = null;
