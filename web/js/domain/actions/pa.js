@@ -105,6 +105,10 @@ domain.action('loadCase').onExecute(function(){
     apiFactory.get('/case/loadCase').drive(this).send();
 });
 
+domain.action('exportExcel').onExecute(function(){
+    apiFactory.get('/case/excel').drive(this).send();
+});
+
 domain.action('addCase').onExecute(function(data){
     apiFactory.post('/case/add').drive(this).send(data);
 });

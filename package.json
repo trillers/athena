@@ -9,6 +9,7 @@
     "co": "*",
     "co-views": "~0.1.0",
     "co-wechat": "*",
+    "excel-export": "0.4.1",
     "koa": "~0.2.0",
     "koa-body": "^1.2.1",
     "koa-generic-session": "^1.9.0",
