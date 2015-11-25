@@ -120,8 +120,11 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
  * get webchat bot group by group name
  * @param name
  ***/
-Service.getGroupByName = function(name, callback){
-    WechatBotGroup.findOne({name: name}).lean().exec(function(err, data){
+Service.getGroupByName = function(name, botId, callback){
+    WechatBotGroup.findOne({name: name, bot: botId, lFlg: lifeFlagEnum.Active}).lean().exec(function(err, data){
+        console.log('***********************');
+        console.log(err);
+        console.log(data);
         if(err){
             return callback(err, null);
         }else {

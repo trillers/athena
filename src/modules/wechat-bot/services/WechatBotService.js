@@ -26,6 +26,27 @@ Service.loadById = function(id, callback){
 };
 
 /**
+ * Load wechat bots by bot_id.
+ * @param callback
+ * @param id
+ */
+Service.loadByOpenid = function(openid, callback){
+    WechatBot
+        .findOne({openid: openid, lFlg: 'a'}, null, {lean: true, sort: {bucketid: -1, crtOn: -1}})
+        .exec(function(err, result){
+            if(err){
+                logger.error('Fail to load wechat bots by openid: ' + openid + ' err: ' + err);
+                callback(err);
+            }
+            else{
+                logger.info('Succeed to load wechat bots by openid:' + openid);
+                callback(null, result);
+            }
+        });
+};
+
+
+/**
  * Load all wechat bots.
  * @param callback
  */

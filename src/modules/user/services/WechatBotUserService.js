@@ -270,6 +270,24 @@ Service.matchTheSameBotUsers = function (userInfo, callback) {
         });
 };
 
+/**
+ * Load User by bot user nickname
+ * @param buid
+ * @param callback
+ */
+Service.loadByNickname = function (nickname, bot_id, callback) {
+    User.findOne({nickname: nickname, bot_id: bot_id}).exec(function (err, doc) {
+        if (err) {
+            logger.error('Fail to load user [nickname=' + nickname + ']: ' + err);
+            if (callback) callback(err);
+        }
+        else {
+            logger.debug('Succeed to load user [nickname=' + nickname + ']');
+            if (callback) callback(null, doc);
+        }
+    });
+};
+
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

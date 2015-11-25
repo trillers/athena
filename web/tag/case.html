@@ -9,10 +9,14 @@
                     <ul style="padding-left: 1em; margin-top: 1em; overflow-y: scroll; max-height: 35em; list-style-type: none">
                         <li each="{messages}">
                             <div>{ from && from.nickname || '群消息'}:</div>
-                            <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
-                            <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}
-                                &nbsp;<input checked="{done}" onclick="{parent.append}" type="checkbox"/>
+                            <div if="{contentType=='text'}">
+                                <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
+                                <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}
+                                    &nbsp;<input checked="{done}" onclick="{parent.append}" type="checkbox"/>
+                                </div>
                             </div>
+                            <div if="{contentType=='image'}">
+                                <img style="height: 7em" riot-src="{contentType == 'image' && an_media_id && parent.api + '/file/?media_id=' + an_media_id}" alt=""/>                            </div>
                         </li>
 
                     </ul>

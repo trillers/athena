@@ -73,23 +73,23 @@ botManager.on('login', function(msg){
         botManager.requestGroupList(botid);
     }, 10*1000); //schedule the job after 10 seconds of logging in
 
-    /**
-     * Schedule contact-listing-remark job for the bot
-     */
-    if(bot.contactListRemarkingScheduleId){
-        clearInterval(bot.contactListRemarkingScheduleId);
-        bot.contactListRemarkingScheduleId = null;
-    }
-
-    setTimeout(function(){
-        //Schedule
-        bot.contactListRemarkingScheduleId = setInterval(function(){
-            botManager.requestContactListRemark(botid);
-        }, 12*60*60*1000); //Run job per hour
-
-        //Run it right now
-        botManager.requestContactListRemark(botid);
-    }, 20*1000); //schedule the job after 10 seconds of logging in
+    ///**
+    // * Schedule contact-listing-remark job for the bot
+    // */
+    //if(bot.contactListRemarkingScheduleId){
+    //    clearInterval(bot.contactListRemarkingScheduleId);
+    //    bot.contactListRemarkingScheduleId = null;
+    //}
+    //
+    //setTimeout(function(){
+    //    //Schedule
+    //    bot.contactListRemarkingScheduleId = setInterval(function(){
+    //        botManager.requestContactListRemark(botid);
+    //    }, 12*60*60*1000); //Run job per hour
+    //
+    //    //Run it right now
+    //    botManager.requestContactListRemark(botid);
+    //}, 20*1000); //schedule the job after 10 seconds of logging in
 });
 
 botManager.on('abort', function(msg){
