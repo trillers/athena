@@ -1,13 +1,12 @@
 var assert = require('assert');
-var common = require('../../../common');
 var context = require('../../../context');
-var _exports = {services: {}};
 var TenantService = require('./TenantService');
+var PlatformTenantService = require('./PlatformTenantService');
 var TenantMemberService = require('./TenantMemberService');
+var _exports = {services: {}};
 
-//assert.ok(this.redis = context.redis.main, 'no redis main client');
+_exports.tenantService         = new TenantService(context);
+_exports.platformTenantService = new PlatformTenantService(context);
+_exports.tenantMemberService   = new TenantMemberService(context);
 
-context.services.tenantService       = _exports.services.tenantService        = new TenantService(context);
-context.services.tenantMemberService       = _exports.services.tenantMemberService        = new TenantMemberService(context);
-
-module.exports = _exports;
+module.exports = context.services = _exports;

@@ -15,4 +15,5 @@ var Model = function(domainBuilder){
         .build();
     return schema.model(true);
 };
+
 module.exports = Model;

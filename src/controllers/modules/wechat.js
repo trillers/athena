@@ -14,10 +14,12 @@ var frankon = new Frankon();
 
 module.exports = function() {
     var router = new Router();
-    var emitter = require('../../modules/assistant/site-emitter');
+    var oldEmitter = require('../../modules/assistant/site-emitter');
+    var emitter = require('../../modules/system/wechatsite/wechatEmitter');
 
     frankon.use(require('../../modules/wechat/middlewares/user-heartbeat'));
     frankon.use(function* (next) {
+        oldEmitter.relay(this);
         emitter.relay(this);
         this.body = '';
     });

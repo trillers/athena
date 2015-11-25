@@ -18,17 +18,14 @@ var seq = new SequenceGenerator(
         keyPrefix: 'seq:id:',
         redisClient: redisClient
     },
-    [{
-        key: 'ComingRequest',
-        initialValue: 0,
-        step: 100000,
-        bookStep: 50000
-    },{
-        key: 'TravelTarget',
-        initialValue: 1,
-        step: 1000,
-        bookStep: 500
-    }]
+    [
+        //{
+        //key: 'ComingRequest',
+        //initialValue: 0,
+        //step: 100000,
+        //bookStep: 50000
+        //}
+    ]
 );
 seq.setup();
 setTimeout(function(){
