@@ -32,15 +32,17 @@ var handler = function(msg){
                 //console.warn('current user is not in db, FromUserName is ' + msg.FromUserName + ' ignore it');
                 console.log('this maybe a group message');
                 var group = wechatBotGroupService.getGroupByNameAsync(msg.FromUserName);
+                console.log('================group====================');
+                console.log(group);
                 if(group && group._id) {
                     yield caseMessageService.createAsync({
                         from: group._id,
                         to: null,
-                        channel: '',
+                        channel: null,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
                         wx_media_id: msg.MediaId || null,
-                        an_media_id: msg.FsMediaId || '',
+                        an_media_id: msg.FsMediaId || null,
                         recognition: msg.Recognition || null
                     });
                 }
@@ -97,11 +99,11 @@ var handler = function(msg){
                 yield caseMessageService.createAsync({
                     from: user.id,
                     to: null,
-                    channel: cvsId,
+                    channel: null,
                     contentType: msg.MsgType,
                     content: msg.Content || null,
                     wx_media_id: msg.MediaId || null,
-                    an_media_id: msg.FsMediaId || '',
+                    an_media_id: msg.FsMediaId || null,
                     recognition: msg.Recognition || null
                 });
                 //customerEmitter.emit('message', cvs, msg);
