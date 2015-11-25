@@ -16,5 +16,9 @@ Service.prototype.create = function(tenantMemberJson, callback){
 
 };
 
+Service.prototype.createTenantAdmin = function(openid, callback){
+    //TODO
+}
+
 Service.prototype = Promise.promisifyAll(Service.prototype);
 module.exports = Service;

@@ -20,7 +20,7 @@ module.exports = function (emitter) {
                         case 'ta':
                             console.log('tenant admin handler');
                             reply = '[系统]: 注册成功！';
-                            yield tenantService.registerTenant(userOpenid);
+                            yield tenantService.registerTenantAsync(userOpenid);
                             break;
                         //TODO another qr type
                     }
