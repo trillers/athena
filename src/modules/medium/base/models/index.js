@@ -1,5 +1,3 @@
-var assert = require('assert');
-var common = require('../../../../common');
 var context = require('../../../../context');
 var _exports = {models: {}};
 var WechatMedium = require('./WechatMedium');

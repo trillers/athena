@@ -1,9 +1,9 @@
-var context = require('../../../../src');
+var context = require('../../../../../src');
 
 before(function(done){
     setTimeout(function () {
         done();
-    }, 4000);
+    }, 2000);
 })
 describe('WechatMediumService', function(){
     describe('create', function(){
@@ -12,7 +12,7 @@ describe('WechatMediumService', function(){
             var wechatSite = {
                 name: '包三哥'
             };
-            service.create(tenant, function(err, tenant){
+            service.create(wechatSite, function(err, tenant){
                 context.logger.debug(tenant);
                 done();
             });
