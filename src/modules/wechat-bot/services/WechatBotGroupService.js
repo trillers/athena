@@ -38,19 +38,25 @@ Service.syncGroupList = function(botId, list, callback){
                 var change = Service.diffGroupList(storedGroups, list, botId);
                 //logger.warn(change);
 
-                var result = {removes:0, adds:0, updates:0};
+                var result = {disables:0, enables:0, adds:0, updates:0, stays: 0};
                 co(function*(){
                     try{
-                        if(change.toRemoveIds.length>0){
-                            yield WechatBotGroup.update({_id: {$in: change.toRemoveIds}}, {lFlg: lifeFlagEnum.Inactive}, {multi: true}).exec();
+                        //if(change.toDisableIds.length>0){
+                        //    yield WechatBotGroup.update({_id: {$in: change.toDisableIds}}, {lFlg: lifeFlagEnum.Inactive}, {multi: true}).exec();
+                        //}
+                        result.disables = change.toDisableIds.length;
+
+                        if(change.toEnableIds.length>0){
+                            yield WechatBotGroup.update({_id: {$in: change.toEnableIds}}, {lFlg: lifeFlagEnum.Active}, {multi: true}).exec();
                         }
-                        result.removes = change.toRemoveIds.length;
+                        result.enables = change.toEnableIds.length;
 
                         if(change.toAdd.length>0){
                             yield WechatBotGroup.create(change.toAdd);
                         }
                         result.adds = change.toAdd.length;
 
+                        //TODO: update other properties but name
                         //if(change.toUpdate.length>0){
                         //    for(var i=0; i<change.toUpdate.length; i++){
                         //        var update = change.toUpdate[i];
@@ -58,6 +64,8 @@ Service.syncGroupList = function(botId, list, callback){
                         //    }
                         //}
                         result.updates = change.toUpdate.length;
+
+                        result.stays = change.toStay.length;
                         callback(null, result);
                     }
                     catch(e){
@@ -87,9 +95,13 @@ Service.emptyGroupList = function(botId, callback){
 Service.diffGroupList = function(oldGroupList, newGroupList, botId){
     var ret = {
         toAdd: [],
+        toEnable: [],
+        toEnableIds: [],
         toUpdate: [],
-        toRemove: [],
-        toRemoveIds: []
+        toDisable: [],
+        toDisableIds: [],
+        toStay: [],
+
     };
     var newLen = oldGroupList.length;
     var oldGroupMap = {};
@@ -106,6 +118,14 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
 
         var theSameGroup = oldGroupMap[group.name];
         if(theSameGroup) {
+            if(theSameGroup.lFlg === lifeFlagEnum.Active){
+                ret.toStay.push(theSameGroup);
+            }
+            else{
+                ret.toEnable.push(theSameGroup);
+                ret.toEnableIds.push(theSameGroup._id);
+
+            }
             oldLeftGroupMap[group.name] && (delete oldLeftGroupMap[group.name]);
         }
         else{
@@ -115,8 +135,10 @@ Service.diffGroupList = function(oldGroupList, newGroupList, botId){
     }
 
     for(var p in oldLeftGroupMap){
-        ret.toRemove.push(oldLeftGroupMap[p]);
-        ret.toRemoveIds.push(oldLeftGroupMap[p]._id);
+        if(oldLeftGroupMap[p].lFlg === lifeFlagEnum.Active){
+            ret.toDisable.push(oldLeftGroupMap[p]);
+            ret.toDisableIds.push(oldLeftGroupMap[p]._id);
+        }
     }
 
     return ret;
