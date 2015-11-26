@@ -26,7 +26,7 @@ var handler = function (msg) {
         try {
             var bot_id = msg.bucketid + ':' + msg.openid;
             var bot = yield wechatBotService.loadByOpenidAsync(msg.openid);
-            var user = yield wechatBotUserService.loadByNicknameAsync(msg.FromUserName, bot_id);
+            var user = yield wechatBotUserService.loadByNicknameOrBuidAsync(msg.FromUserName, bot_id);
             console.log("=====bot=====");
             console.log(bot);
             if (!user) {
