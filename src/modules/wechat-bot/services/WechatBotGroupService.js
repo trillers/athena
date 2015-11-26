@@ -31,7 +31,13 @@ Service.syncGroupList = function(botId, list, callback){
                 callback(err);
             }
             else{
+                //logger.warn(storedGroups);
+                //logger.warn('=====================');
+                //logger.warn(list);
+                //logger.warn('=====================');
                 var change = Service.diffGroupList(storedGroups, list, botId);
+                //logger.warn(change);
+
                 var result = {removes:0, adds:0, updates:0};
                 co(function*(){
                     try{
@@ -45,12 +51,12 @@ Service.syncGroupList = function(botId, list, callback){
                         }
                         result.adds = change.toAdd.length;
 
-                        if(change.toUpdate.length>0){
-                            for(var i=0; i<change.toUpdate.length; i++){
-                                var update = change.toUpdate[i];
-                                yield WechatBotGroup.update({_id: update._id}, {name: update.name}).exec();
-                            }
-                        }
+                        //if(change.toUpdate.length>0){
+                        //    for(var i=0; i<change.toUpdate.length; i++){
+                        //        var update = change.toUpdate[i];
+                        //        yield WechatBotGroup.update({_id: update._id}, {name: update.name}).exec();
+                        //    }
+                        //}
                         result.updates = change.toUpdate.length;
                         callback(null, result);
                     }

@@ -9,7 +9,7 @@ describe('wechatBotGroupService', function() {
     before(function(done){
         setTimeout(function(){
             done();
-        },2000);
+        },20);
     })
 
     describe('#getGroupList', function() {
@@ -42,32 +42,32 @@ describe('wechatBotGroupService', function() {
         })
     })
 
-    describe('#diffGroupList', function() {
+    describe.only('#diffGroupList', function() {
         it('some to-update groups, some to-add groups and some to-remove groups', function (done) {
             var oldGroupList = [
-                { username: 'group1', name: '群1'},
-                { username: 'group2', name: '群2'},
-                { username: 'group3', name: '群3'},
-                { username: 'group4', name: '群4'},
-                { username: 'group5', name: '群5'},
-                { username: 'group6', name: '群6'},
-                { username: 'group7', name: '群7'},
-                { username: 'group8', name: '群8'},
-                { username: 'group9', name: '群9'},
-                { username: 'group10', name: '群10'}
+                { name: '群1'},
+                { name: '群2'},
+                { name: '群3'},
+                { name: '群4'},
+                { name: '群5'},
+                { name: '群6'},
+                { name: '群7'},
+                { name: '群8'},
+                { name: '群9'},
+                { name: '群10'}
             ];
 
             var newGroupList = [
-                { username: 'group3', name: '群3'},
-                { username: 'group4', name: '群4'},
-                { username: 'group5', name: '群5'},
-                { username: 'group6', name: '群6'},
-                { username: 'group7', name: '群7'},
-                { username: 'group8', name: '群8'},
-                { username: 'group9-updated', name: '群9-updated'},
-                { username: 'group10-updated', name: '群10-updated'},
-                { username: 'group11', name: '群11'},
-                { username: 'group12', name: '群12'}
+                { name: '群3'},
+                { name: '群4'},
+                { name: '群5'},
+                { name: '群6'},
+                { name: '群7'},
+                { name: '群8'},
+                { name: '群9-updated'},
+                { name: '群10-updated'},
+                { name: '群11'},
+                { name: '群12'}
             ];
             var ret = wechatBotGroupService.diffGroupList(oldGroupList, newGroupList);
             console.info(ret.toRemove);
@@ -75,6 +75,40 @@ describe('wechatBotGroupService', function() {
             console.info(ret.toAdd);
             done();
         })
+
+        it('0 to-update groups, 0 to-add groups and 0 to-remove groups', function (done) {
+            var oldGroupList = [
+                { name: '群1'},
+                { name: '群2'},
+                { name: '群3'},
+                { name: '群4'},
+                { name: '群5'},
+                { name: '群6'},
+                { name: '群7'},
+                { name: '群8'},
+                { name: '群9'},
+                { name: '群10'}
+            ];
+
+            var newGroupList = [
+                { name: '群1'},
+                { name: '群2'},
+                { name: '群3'},
+                { name: '群4'},
+                { name: '群5'},
+                { name: '群6'},
+                { name: '群7'},
+                { name: '群8'},
+                { name: '群9'},
+                { name: '群10'}
+            ];
+            var ret = wechatBotGroupService.diffGroupList(oldGroupList, newGroupList);
+            console.info(ret.toRemove);
+            console.info(ret.toUpdate);
+            console.info(ret.toAdd);
+            done();
+        })
+
     })
 
     describe('#syncGroupList', function() {
