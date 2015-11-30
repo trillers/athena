@@ -142,7 +142,7 @@ describe('WechatBotManager', function() {
         })
     })
 
-    describe.only('#requestContactListRemarking', function() {
+    describe('#requestContactListRemarking', function() {
         var siteId = 'gh_afc333104d2a'; //错题本服务号的原始ID
         var openid = 'okvXqs1DXRfyOrUrJEOXU3RStkyY'; //酒剑仙的错题本openid
         var nickname = '酒剑仙';
