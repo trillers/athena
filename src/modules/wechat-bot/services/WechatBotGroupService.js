@@ -133,6 +133,20 @@ Service.getGroupByName = function(name, botId, callback){
     })
 }
 
+/**
+ * get webchat bot group by group id
+ * @param name
+ ***/
+Service.loadById = function(id, callback){
+    WechatBotGroup.findOne({_id: id, lFlg: lifeFlagEnum.Active}).populate({path: bot}).lean().exec(function(err, data){
+        if(err){
+            return callback(err, null);
+        }else {
+            return callback(null, data);
+        }
+    })
+}
+
 Service = Promise.promisifyAll(Service);
 
 module.exports = Service;

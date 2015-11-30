@@ -8,7 +8,7 @@
                 <div class="panel" style="min-height: 35em">
                     <ul style="padding-left: 1em; margin-top: 1em; overflow-y: scroll; max-height: 35em; list-style-type: none">
                         <li each="{messages}">
-                            <div>{ from && from.nickname || '群消息'}:</div>
+                            <div data-toggle="modal"  data-target="#reply" >{ from && from.nickname || member || '群消息'}:</div>
                             <div if="{contentType=='text'}">
                                 <div style="height: 3em;overflow: hidden; float: left; width: 70%;">{content}</div>
                                 <div style="height: 3em; line-height: 3em; text-align: center">{parent.formatDate(crtOn)}
@@ -24,16 +24,20 @@
             </div>
             <div class="col-md-6 col-xs-6 col-sm-6">
                 <div class="panel" style="min-height: 35em">
-                    <a class="btn btn-default" href="{api + '/case/excel'}" target="_blank" style="margin-left: 1em; margin-top: 5px;">导出</a>
+                    <div>
+                        <a class="btn btn-default" href="{api + '/case/excel'}" target="_blank" style="margin-left: 1em;">导出Case</a>
+                        <input type="date" style="margin-left: 1em; border-radius: 4px; margin-top: 5px;height: 2.4em; border: 1px solid transparent; border-color: #ccc;" onchange="{dateChange}"/>
+                        <a class="btn btn-default" href="{exportUrl || api + '/case/exportAllMsg'}" target="_blank" style="margin-left: 1em;" >导出@消息</a>
+                    </div>
+
                     <div class="panel panel-default"
                          style="width: 36em; margin-left: 1em; padding-top: 1em; margin-top: 1em; overflow-y: scroll; max-height: 20em">
                         <span style="margin-left: 1em;">Case list:</span>
                         <ul style="list-style-type: none; margin-top: 1em; margin-bottom: 2em; text-align: center; padding-left: 0">
                             <li style="width: 100%;">
-                                <strong class="col-md-1"></strong>
+                                <strong class="col-md-2">发送人</strong>
                                 <strong class="col-md-6">内容</strong>
                                 <strong class="col-md-4">时间</strong>
-                                <strong class="col-md-1"></strong>
                             </li>
                             <li>
                                 <hr width="100%" style="margin-bottom: 10px">
@@ -50,6 +54,36 @@
                     </div>
                 </div>
             </div>
+
+            <!-----------reply（Modal）begin--------->
+            <div class="modal fade" id="reply" tabindex="-1" role="dialog"
+                 aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close"
+                                    data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">
+                                回复：
+                            </h4>
+                        </div>
+                        <div class="modal-body">
+                                <textarea id="replyCon" class="form-control" rows="3" style="margin-left: 1em; width: 38.5em"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default"
+                                    data-dismiss="modal">关闭
+                            </button>
+                            <button type="button" class="btn btn-success" onclick="{add}" data-dismiss="modal">
+                                发送
+                            </button>
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+                <!-----------reply（Modal）begin--------->
+            </div>
         </div>
         <!--/container-->
 
@@ -58,7 +92,9 @@
             var self = nest.presentable(this);
             self.env = (__app.settings.env.NODE_ENV == "production") ? "public" : "web";
             self.api = __app.settings.api.url;
+            self.id = '';
             self.caseTime = '';
+            self.sender = '';
 
             var loadCaseMsg = domain.action('loadCaseMsg');
             var loadCase = domain.action('loadCase');
@@ -99,6 +135,7 @@
                 console.info('tag case is opening');
                 self.trigger('ready', true);
                 self.trigger('view-route-to');
+                self.id = opts._id;
                 loadCaseMsg.execute(opts._id);
                 loadCase.execute();
             });
@@ -132,6 +169,7 @@
                 e.item.done = !e.item.done
                 if (e.item.done) {
                     self.caseTime = e.item.crtOn;
+                    self.sender = e.item.from && e.item.from.nickname || e.item.member || '匿名';
                     content = $('#caseContent').val() + e.item.content + '  ';
                 } else {
                     var reg = new RegExp(e.item.content);
@@ -144,6 +182,7 @@
             submit(e){
                 if(self.caseTime && $('#caseContent').val().trim().length !==0) {
                     var data = {
+                        sender: self.sender,
                         caseTime: self.caseTime,
                         content: $('#caseContent').val()
                     }
@@ -152,6 +191,11 @@
                     });
                     addCase.execute(data);
                 }
+            }
+
+            dateChange(e){
+                var url = self.api + '/case/exportAllMsg?date=' + $(e.target).val();
+                self.update({exportUrl: url});
             }
         </script>
     </div>

@@ -54,14 +54,14 @@
                                         <div id="single" style="padding-top: 1em">
                                             <a href="#" onclick="{refreshContact}" style="text-decoration: none; cursor: pointer; margin-left: 10px">刷新</a>
                                             <ul class="list-group" style="padding-top: 1em">
-                                                <li each="{contacts}" class="list-group-item"><img src="{bot_headimgid && (parent.api + '/file?media_id=' + bot_headimgid) || '../images/default_avatar.jpg'}" style="max-width: 2em" alt=""/> <span>{bot_nickname || '匿名'}</span><span class="btn btn-default" style="float: right; margin-top: -4px; margin-right: 1em; cursor: pointer" onclick="{parent.bot_cvs}" >消息</span></li>
+                                                <li each="{contacts}" class="list-group-item"><img src="{bot_headimgid && (parent.api + '/file?media_id=' + bot_headimgid) || '../images/default_avatar.jpg'}" style="max-width: 2em" alt=""/> <a style="cursor: pointer"  onclick="{parent.bot_cvs}">{bot_nickname || '匿名'}</a></span></li>
                                             </ul>
                                         </div>
                                         <div id="group" style="display: none; padding-top: 1em">
                                             <a href="#" onclick="{refreshGroup}" style="text-decoration: none; cursor: pointer; margin-left: 10px">刷新</a>
                                             <ul class="list-group" style="padding-top: 1em">
                                                 <ul class="list-group">
-                                                    <li each="{groups}" class="list-group-item"><span>{name || '匿名'}<span class="btn btn-default" style="float: right; margin-top: -7px; margin-right: 1em; cursor: pointer" onclick="{parent.bot_cvs}" >消息</span></span>
+                                                    <li each="{groups}" class="list-group-item"><a style="cursor: pointer" onclick="{parent.bot_cvs}">{name || '匿名'}</a>
                                                     </li>
                                                 </ul>
                                             </ul>

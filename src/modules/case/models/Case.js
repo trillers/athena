@@ -6,6 +6,7 @@ var schema = DomainBuilder
     .withBasis()
     .withCreatedOn()
     .withProperties({
+        sender: {type: String},
         content: {type: String},
         caseTime: {type: String}
     })

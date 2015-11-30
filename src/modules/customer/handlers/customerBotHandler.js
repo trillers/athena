@@ -40,6 +40,7 @@ var handler = function (msg) {
                         from: group._id,
                         to: null,
                         channel: null,
+                        member: msg.member,
                         contentType: msg.MsgType,
                         content: msg.Content || null,
                         wx_media_id: msg.MediaId || null,
