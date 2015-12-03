@@ -3,7 +3,7 @@ var Promise = require('bluebird');
 var cbUtil = require('../../../framework/callback');
 var TenantKv = require('./Tenant');
 var platformKey = function(){
-    return 'plf:id';
+    return 'plf:tnt:id';
 };
 
 var Kv = function(context){

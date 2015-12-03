@@ -1,10 +1,10 @@
 var util = require('util');
 var cbUtil = require('../../../../framework/callback');
-var WechatMediumType = require('../../../common/models/TypeRegistry').item('WechatMediumType');
 var settings = require('athena-settings');
+var WechatMediumType = require('../../../common/models/TypeRegistry').item('WechatMediumType');
 var WechatMediumService = require('../../base/services/WechatMediumService');
+
 var Service = function(context){
-    //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
     this.context = context;
 };
 

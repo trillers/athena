@@ -1,8 +1,8 @@
-var assert = require('assert');
+var u = require('../../../../app/util');
 var context = require('../../../../context');
+
 var WechatMedium = require('./WechatMedium');
-var _exports = {};
 
-_exports.wechatMedium        = new WechatMedium(context);
+module.exports.wechatMedium        = new WechatMedium(context);
 
-module.exports = context.kvs = _exports;
+u.extend(context.kvs, module.exports);

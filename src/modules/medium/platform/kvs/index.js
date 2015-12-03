@@ -1,8 +1,8 @@
-var assert = require('assert');
+var u = require('../../../../app/util');
 var context = require('../../../../context');
-var Platform = require('./Platform');
-var _exports = {};
 
-_exports.platform        = new Platform(context);
+var PlatformWechatSite = require('./PlatformWechatSite');
 
-module.exports = context.kvs = _exports;
+module.exports.platformWechatSite        = new PlatformWechatSite(context);
+
+u.extend(context.kvs, module.exports);

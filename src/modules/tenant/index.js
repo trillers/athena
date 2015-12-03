@@ -1,6 +1,3 @@
-var _exports = {};
-_exports.models = require('./models');
-_exports.kvs = require('./kvs');
-_exports.services = require('./services');
-
-module.exports = _exports;
+module.exports.models = require('./models');
+module.exports.kvs = require('./kvs');
+module.exports.services = require('./services');
