@@ -12,7 +12,6 @@ util.inherits(Service, WechatMediumService);
 
 Service.prototype.ensurePlatformWechatSite = function(callback){
     var logger = this.context.logger;
-    var platformWechatSiteKv = this.context.kvs.platformWechatSite;
     var me = this;
     this.loadPlatformWechatSite(function(err, wechatSite){
         if(err){
