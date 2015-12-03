@@ -49,7 +49,7 @@ Service.prototype.createPlatform = function(callback){
             if(callback) callback(err);
         }
         else{
-            platformKv.linkPlatformId(platform.id, function(err){
+            platformKv.setPlatformId(platform.id, function(err){
                 if(err) {
                     logger.info('Fail to create platform: ' + err);
                     if(callback) callback(err);

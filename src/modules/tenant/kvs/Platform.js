@@ -12,31 +12,6 @@ var Kv = function(context){
 
 util.inherits(Kv, TenantKv);
 
-//Kv.prototype.getPlatformById = function(callback){
-//    var redis = context.redis.main;
-//    var key = platformKey();
-//    var kv = this;
-//    redis.get(key, function(err, result){
-//        cbUtil.logCallback(
-//            err,
-//            'Fail to get platform id: ' + err,
-//            'Succeed to get platform id: ' + result);
-//        cbUtil.handleSingleValue(callback, err, result);
-//
-//        if(err){
-//            if(callback) callback(err);
-//            return;
-//        }
-//
-//        if(result){
-//            kv.loadById(result, callback);
-//        }
-//        else{
-//            if(callback) callback();
-//        }
-//    });
-//};
-
 Kv.prototype.getPlatformId = function(callback){
     var redis = this.context.redis.main;
     var key = platformKey();
@@ -49,7 +24,7 @@ Kv.prototype.getPlatformId = function(callback){
     });
 };
 
-Kv.prototype.linkPlatformId = function(id, callback){
+Kv.prototype.setPlatformId = function(id, callback){
     var redis = this.context.redis.main;
     var key = platformKey();
     redis.set(key, id, function(err, result){
