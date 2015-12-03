@@ -10,6 +10,27 @@ var Service = function(context){
 
 util.inherits(Service, WechatMediumService);
 
+Service.prototype.ensurePlatformWechatSite = function(callback){
+    var logger = this.context.logger;
+    var platformWechatSiteKv = this.context.kvs.platformWechatSite;
+    var me = this;
+    this.loadPlatformWechatSite(function(err, wechatSite){
+        if(err){
+            logger.error('Fail to ensure platform wechat site: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        if(wechatSite){
+            if(callback) callback(null, wechatSite);
+        }
+        else{
+            logger.warn('Have no platform wechat site to load, so create it now.');
+            me.createPlatformWechatSite(callback);
+        }
+    });
+};
+
 Service.prototype.loadPlatformWechatSite = function(callback){
     var logger = this.context.logger;
     var platformWechatSiteKv = this.context.kvs.platformWechatSite;
@@ -29,26 +50,11 @@ Service.prototype.loadPlatformWechatSite = function(callback){
             if(callback) callback();
         }
     });
-    //var platformWechatSite = {
-    //    _id: '001'
-    //    , lFlg: 'a'
-    //    , crtOn: new Date()
-    //    , tenant: '001' //TODO
-    //    , type: WechatMediumType.WechatSite.value()
-    //    , originalId: settings.wechat.siteId
-    //    , customId: ''
-    //    , name: settings.wechat.siteName
-    //    , headimgurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
-    //    , qrcodeurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
-    //    , appId:        settings.wechat.appKey
-    //    , appSecret:    settings.wechat.appSecret
-    //
-    //};
-    //if(callback) callback(null, platformWechatSite);
 };
 
 Service.prototype.createPlatformWechatSite = function(callback){
     var me = this;
+    var logger = this.context.logger;
     var platformTenantService = this.context.services.platformTenantService;
     var platformWechatSiteKv = this.context.kvs.platformWechatSite;
 
@@ -62,34 +68,34 @@ Service.prototype.createPlatformWechatSite = function(callback){
         , appSecret:    settings.wechat.appSecret
     };
 
-    platformTenantService.loadPlatform(function(err, platform){
+    platformTenantService.ensurePlatform(function(err, platform){
         if(err){
-            //TODO
+            logger.error('Fail to create platform wechat site: ' + err);
             if(callback) callback(err);
             return;
         }
         else if(!platform){
-            //TODO
+            logger.error('Fail to create platform wechat site since no platform loaded');
             if(callback) callback(err);
             return;
         }
         platformWechatSite.tenant = platform.id;
         me.create(platformWechatSite, function(err, wechatSite){
             if(err){
-                //TODO
+                logger.error('Fail to create platform wechat site: ' + err);
                 if(callback) callback(err);
                 return;
             }
+
             platformWechatSiteKv.setPlatformWechatSiteId(wechatSite.id, function(err){
                 if(err){
-                    //TODO
+                    logger.error('Fail to create platform wechat site: ' + err);
                     if(callback) callback(err);
                 }
                 else{
                     if(callback) callback(null, wechatSite);
                 }
             });
-
         });
     });
 
