@@ -31,7 +31,10 @@ Service.prototype.loadPlatformWechatSite = function(callback){
 };
 
 Service.prototype.createPlatformWechatSite = function(callback){
+    var me = this;
     var platformTenantService = this.context.services.platformTenantService;
+    var platformWechatSiteKv = this.context.kvs.platformWechatSite;
+
     var platformWechatSite = {
         type: WechatMediumType.WechatSite.value()
         , originalId: settings.wechat.siteId
@@ -54,7 +57,23 @@ Service.prototype.createPlatformWechatSite = function(callback){
             return;
         }
         platformWechatSite.tenant = platform.id;
-        this.create(platformWechatSite, callback);
+        me.create(platformWechatSite, function(err, wechatSite){
+            if(err){
+                //TODO
+                if(callback) callback(err);
+                return;
+            }
+            platformWechatSiteKv.setPlatformWechatSiteId(wechatSite.id, function(err){
+                if(err){
+                    //TODO
+                    if(callback) callback(err);
+                }
+                else{
+                    if(callback) callback(null, wechatSite);
+                }
+            });
+
+        });
     });
 
 };

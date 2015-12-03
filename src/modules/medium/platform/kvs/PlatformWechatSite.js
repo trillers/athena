@@ -13,7 +13,7 @@ var Kv = function(context){
 
 util.inherits(Kv, WechatMediumKv);
 
-Kv.prototype.getPlatformId = function(callback){
+Kv.prototype.getPlatformWechatSiteId = function(callback){
     var redis = this.context.redis.main;
     var key = platformKey();
     redis.get(key, function(err, result){
@@ -25,14 +25,14 @@ Kv.prototype.getPlatformId = function(callback){
     });
 };
 
-Kv.prototype.linkPlatformId = function(id, callback){
+Kv.prototype.setPlatformWechatSiteId = function(id, callback){
     var redis = this.context.redis.main;
     var key = platformKey();
     redis.set(key, id, function(err, result){
         cbUtil.logCallback(
             err,
-            'Fail to link platform wechat siteid ' + id + ': ' + err,
-            'Succeed to link platform wechat site id ' + id);
+            'Fail to set platform wechat siteid ' + id + ': ' + err,
+            'Succeed to set platform wechat site id ' + id);
         cbUtil.handleOk(callback, err, result);
     });
 };
