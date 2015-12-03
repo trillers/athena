@@ -7,18 +7,20 @@ before(function(done){
 })
 describe('PlatformWechatSiteService', function(){
     describe('createPlatformWechatSite', function(){
-        //var platformId = null;
-        //before(function(done){
-        //    var service = context.services.platformTenantService;
-        //    service.loadPlatform(function(err, platform){
-        //        platformId = platform.id;
-        //        done();
-        //    })
-        //});
-
         it('create a platform wechat site', function(done){
             var service = context.services.platformWechatSiteService;
             service.createPlatformWechatSite(function(err, wechatSite){
+                context.logger.debug(wechatSite);
+                done();
+            });
+        });
+
+    });
+
+    describe('loadPlatformWechatSite', function(){
+        it('load the platform wechat site', function(done){
+            var service = context.services.platformWechatSiteService;
+            service.loadPlatformWechatSite(function(err, wechatSite){
                 context.logger.debug(wechatSite);
                 done();
             });

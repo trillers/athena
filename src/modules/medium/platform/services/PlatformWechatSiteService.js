@@ -10,24 +10,41 @@ var Service = function(context){
 
 util.inherits(Service, WechatMediumService);
 
-//TODO:  mock implementation
 Service.prototype.loadPlatformWechatSite = function(callback){
-    var platformWechatSite = {
-        _id: '001'
-        , lFlg: 'a'
-        , crtOn: new Date()
-        , tenant: '001' //TODO
-        , type: WechatMediumType.WechatSite.value()
-        , originalId: settings.wechat.siteId
-        , customId: ''
-        , name: settings.wechat.siteName
-        , headimgurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
-        , qrcodeurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
-        , appId:        settings.wechat.appKey
-        , appSecret:    settings.wechat.appSecret
+    var logger = this.context.logger;
+    var platformWechatSiteKv = this.context.kvs.platformWechatSite;
+    platformWechatSiteKv.getPlatformWechatSiteId(function(err, result){
+        if(err){
+            logger.error('Fail to load platform wechat site: ' + err);
+            if(callback) callback(err);
+            return;
+        }
 
-    };
-    if(callback) callback(null, platformWechatSite);
+        if(result){
+            logger.info('Succeed to load platform wechat site');
+            platformWechatSiteKv.loadById(result, callback);
+        }
+        else{
+            logger.warn('Have no platform data to load');
+            if(callback) callback();
+        }
+    });
+    //var platformWechatSite = {
+    //    _id: '001'
+    //    , lFlg: 'a'
+    //    , crtOn: new Date()
+    //    , tenant: '001' //TODO
+    //    , type: WechatMediumType.WechatSite.value()
+    //    , originalId: settings.wechat.siteId
+    //    , customId: ''
+    //    , name: settings.wechat.siteName
+    //    , headimgurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
+    //    , qrcodeurl: 'http://mp.weixin.qq.com/mp/qrcode?scene=10000005&size=102&__biz=MzAxNDAwNTUyMg=='
+    //    , appId:        settings.wechat.appKey
+    //    , appSecret:    settings.wechat.appSecret
+    //
+    //};
+    //if(callback) callback(null, platformWechatSite);
 };
 
 Service.prototype.createPlatformWechatSite = function(callback){
