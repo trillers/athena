@@ -11,6 +11,26 @@ var Service = function(context){
 
 util.inherits(Service, TenantService);
 
+Service.prototype.ensurePlatform = function(callback){
+    var logger = this.context.logger;
+    var me = this;
+    this.loadPlatform(function(err, platform){
+        if(err){
+            logger.error('Fail to ensure platform: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        if(platform){
+            if(callback) callback(null, platform);
+        }
+        else{
+            logger.warn('No platform data to load, so create it now.');
+            me.createPlatform(callback);
+        }
+    });
+};
+
 Service.prototype.loadPlatform = function(callback){
     var logger = this.context.logger;
     var platformKv = this.context.kvs.platform;
