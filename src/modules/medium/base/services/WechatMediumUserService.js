@@ -1,7 +1,15 @@
 var cbUtil = require('../../../../framework/callback');
+var WechatMediumUserType = require('../../../common/models/TypeRegistry').item('WechatMediumUserType');
+
 
 var Service = function(context){
     this.context = context;
+};
+
+//TODO
+Service.prototype.createWechatSiteUser = function(wechatUserJson, callback) {
+    wechatUserJson.type = WechatMediumUserType.WechatSiteUser.value();
+    this.create(wechatUserJson, callback);
 };
 
 Service.prototype.create = function(mediumUserJson, callback){
