@@ -1,22 +1,23 @@
 var cbUtil = require('../../../../framework/callback');
-//var WechatMediumUserType = require('../../../common/models/TypeRegistry').item('WechatMediumUserType');
+var WechatMediumUserType = require('../../../common/models/TypeRegistry').item('WechatMediumUserType');
 var wechat = require('../../../wechat/common/api');
+var helper = require('../../../wechat/common/helper');
 
 var Service = function(context){
     this.context = context;
 };
 
-var getUserFromWechat = function (openid, callback) {
-    var input = {openid: openid, lang: 'zh_CN'}
-    wechat.api.getUser(input, function (err, userInfo) {
-        if (err) {
-            if (callback) callback(err);
-        }
-        else {
-            if (callback) callback(null, userInfo);
-        }
-    });
-};
+//var getUserFromWechat = function (openid, callback) {
+//    var input = {openid: openid, lang: 'zh_CN'}
+//    wechat.api.getUser(input, function (err, userInfo) {
+//        if (err) {
+//            if (callback) callback(err);
+//        }
+//        else {
+//            if (callback) callback(null, userInfo);
+//        }
+//    });
+//};
 
 Service.prototype.createPlatformUser = function(openid, callback) {
     /*
@@ -54,7 +55,7 @@ Service.prototype.createPlatformUser = function(openid, callback) {
             kv.loadById(id, callback);
         }
         else{
-            getUserFromWechat(openid, function(err, wechatSiteUserInfo){
+            helper.getUserInfo(wechat.api, openid, 'zh_CN', function(err, wechatSiteUserInfo){
                 if(err){
                     //TODO logging
                     logger.error(err);
@@ -63,28 +64,8 @@ Service.prototype.createPlatformUser = function(openid, callback) {
                     return;
                 }
 
-                var userJson = {
-                    posts: []
-                    , openid:       openid
-                    , nickname:     wechatSiteUserInfo.nickname
-                    , headimgurl:   wechatSiteUserInfo.headimgurl
-                    , sex:          wechatSiteUserInfo.sex
-                };
-
-                var  directCities = {
-                    '北京': true,
-                    '天津': true,
-                    '上海': true,
-                    '重庆': true
-                };
-
-                //TODO
-                if(directCities){
-                    userJson.country = wechatSiteUserInfo.country;
-                    userJson.province = wechatSiteUserInfo.province;
-                    userJson.city = wechatSiteUserInfo.city;
-                    userJson.district = wechatSiteUserInfo.district;
-                }
+                var userJson = {posts: []};
+                helper.copyUserInfo(userJson, wechatSiteUserInfo);
 
                 me.create(userJson, function(err, user){
                     if(err){
@@ -104,27 +85,13 @@ Service.prototype.createPlatformUser = function(openid, callback) {
                             return;
                         }
 
-                        var wechatSiteUserJson = {
-                            openid:       openid
-                            , nickname:     wechatSiteUserInfo.nickname
-                            , headimgurl:   wechatSiteUserInfo.headimgurl
-                            , sex:          wechatSiteUserInfo.sex
-
-                            , language:          wechatSiteUserInfo.language
-                            , remark:          wechatSiteUserInfo.remark
-                        };
+                        var wechatSiteUserJson = {};
                         wechatSiteUserJson.host = wechatSite.id;
                         wechatSiteUserJson.type = WechatMediumUserType.WechatSiteUser.value();
+                        wechatSiteUserJson.user = userId;
+                        helper.copyUserInfo(wechatSiteUserJson, wechatSiteUserInfo);
 
-                        //TODO
-                        if(directCities){
-                            wechatSiteUserJson.country = wechatSiteUserInfo.country;
-                            wechatSiteUserJson.province = wechatSiteUserInfo.province;
-                            wechatSiteUserJson.city = wechatSiteUserInfo.city;
-                            wechatSiteUserJson.district = wechatSiteUserInfo.district;
-                        }
-
-                        platformWechatSiteUserService.createPlatformWechatSiteUser(wechatSiteUserJson, userId, function(err, wechatSiteUser){
+                        platformWechatSiteUserService.createPlatformWechatSiteUser(wechatSiteUserJson, function(err, wechatSiteUser){
                             if(err){
                                 //TODO logging
                                 logger.error(err);

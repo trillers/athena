@@ -1,4 +1,3 @@
-var Promise = require('bluebird');
 var cbUtil = require('../../../../framework/callback');
 
 var idToObjKey = function(id){
@@ -93,7 +92,5 @@ Kv.prototype.unlinkOpenid = function(openid, callback){
         cbUtil.handleSingleValue(callback, err, result);
     });
 };
-
-Kv = Promise.promisifyAll(Kv);
 
 module.exports = Kv;
