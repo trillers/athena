@@ -1,8 +1,8 @@
 var util = require('util');
 var platformSettings = require('athena-settings').platform;
-var cbUtil = require('../../../framework/callback');
-var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
-var TenantService = require('./TenantService');
+var cbUtil = require('../../../../framework/callback');
+var TenantType = require('../../../common/models/TypeRegistry').item('TenantType');
+var TenantService = require('./../../../tenant/services/TenantService');
 
 var Service = function(context){
     //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
@@ -10,6 +10,26 @@ var Service = function(context){
 };
 
 util.inherits(Service, TenantService);
+
+Service.prototype.ensurePlatform = function(callback){
+    var logger = this.context.logger;
+    var me = this;
+    this.loadPlatform(function(err, platform){
+        if(err){
+            logger.error('Fail to ensure platform: ' + err);
+            if(callback) callback(err);
+            return;
+        }
+
+        if(platform){
+            if(callback) callback(null, platform);
+        }
+        else{
+            logger.warn('No platform data to load, so create it now.');
+            me.createPlatform(callback);
+        }
+    });
+};
 
 Service.prototype.loadPlatform = function(callback){
     var logger = this.context.logger;
@@ -49,7 +69,7 @@ Service.prototype.createPlatform = function(callback){
             if(callback) callback(err);
         }
         else{
-            platformKv.linkPlatformId(platform.id, function(err){
+            platformKv.setPlatformId(platform.id, function(err){
                 if(err) {
                     logger.info('Fail to create platform: ' + err);
                     if(callback) callback(err);

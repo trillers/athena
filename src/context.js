@@ -6,6 +6,7 @@ var context = {
     , logger: {}
     , helpers: {}
     , models: {}
+    , kvs: {}
     , services: {}
 };
 

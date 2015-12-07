@@ -6,6 +6,10 @@ registry
     .addChild('Personal','p', '个人')
     .addChild('Organizational','o', '组织')
 
+    .up().item('IntegrationType', 'IntegrationType', '租户集成类型')
+    .addChild('Internal','i', '内部')
+    .addChild('External','e', '外部')
+
     .up().item('TenantMemberRole', 'TenantMemberRole', '租户成员角色')
     .addChild('TenantAdmin','ta', '租户管理员')
     .addChild('TenantOperation','to', '租户运营')

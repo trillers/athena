@@ -1,13 +1,10 @@
-var assert = require('assert');
-var common = require('../../../../common');
+var u = require('../../../../app/util');
 var context = require('../../../../context');
-var _exports = {services: {}};
+
 var WechatMediumService = require('./WechatMediumService');
-//var WechatMediumUserService = require('./WechatMediumUserService');
+var WechatMediumUserService = require('./WechatMediumUserService');
 
-//assert.ok(this.redis = context.redis.main, 'no redis main client');
+module.exports.wechatMediumService        = new WechatMediumService(context);
+module.exports.wechatMediumUserService        = new WechatMediumUserService(context);
 
-context.services.wechatMediumService       = _exports.services.wechatMediumService        = new WechatMediumService(context);
-//context.services.tenantMemberService       = _exports.services.tenantMemberService        = new TenantMemberService(context);
-
-module.exports = _exports;
+u.extend(context.services, module.exports);

@@ -6,10 +6,11 @@ var Model = function(domainBuilder){
         .withLifeFlag()
         .withCreatedOn()
         .withProperties({
-            tenant:       {type: String, ref: 'Tenant', required: true}
-            , name:           {type: String, required: true}
+            tenant:         {type: String, ref: 'Tenant', required: true}
+            , nickname:     {type: String, required: true}
             , headimgurl:   {type: String}
             , role:         {type: String, enum: TenantMemberRole.valueList(), default: TenantMemberRole.TenantAdmin.value(), required: true}
+            , remark:       {type: String}
             , desc:         {type: String}
         })
         .build();

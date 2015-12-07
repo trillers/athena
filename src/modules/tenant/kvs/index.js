@@ -1,10 +1,8 @@
-var assert = require('assert');
+var u = require('../../../app/util');
 var context = require('../../../context');
+
 var Tenant = require('./Tenant');
-var Platform = require('./Platform');
-var _exports = {};
 
-_exports.tenant        = new Tenant(context);
-_exports.platform        = new Platform(context);
+module.exports.tenant        = new Tenant(context);
 
-module.exports = context.kvs = _exports;
+u.extend(context.kvs, module.exports);

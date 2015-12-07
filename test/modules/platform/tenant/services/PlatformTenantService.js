@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
-var context = require('../../../../src');
+var context = require('../../../../../src/index');
 var logger = context.logger;
-var TenantType = require('../../../../src/modules/common/models/TypeRegistry').item('TenantType');
+var TenantType = require('../../../../../src/modules/common/models/TypeRegistry').item('TenantType');
 
 before(function(done){
     setTimeout(function () {
@@ -9,6 +9,18 @@ before(function(done){
     }, 2000);
 });
 describe('PlatformTenantService', function(){
+    describe('ensurePlatform', function(){
+        it('Succeed to ensure the platfrom tenant', function(done){
+            var service = context.services.platformTenantService;
+            service.ensurePlatform(function(err, platform){
+                logger.debug(platform);
+                assert.equal(platform.type, TenantType.Organizational.value());
+                assert.equal(platform.administrative, true);
+                done();
+            });
+        });
+    });
+
     describe('createPlatform', function(){
         it('Succeed to create a platfrom tenant', function(done){
             var service = context.services.platformTenantService;
@@ -20,7 +32,6 @@ describe('PlatformTenantService', function(){
                 done();
             });
         });
-
     });
 
     describe('loadPlatform', function(){
@@ -33,7 +44,6 @@ describe('PlatformTenantService', function(){
                 done();
             });
         });
-
     });
 
 });
