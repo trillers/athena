@@ -12,6 +12,7 @@ Service.prototype.registerPlatformOperation = function(openid, callback) {
     if(user){
         var hasOperationRole = if user.posts has TenantMemberRole.PlatformOperation.value() or TenantMemberRole.PlatformAdmin.value
         if( !hasOperationRole ){
+            add platform member
             add user an operation role
 
         }
