@@ -6,14 +6,19 @@ before(function(done){
     }, 2000);
 })
 describe('PlatformWechatSiteUserService', function(){
-    //describe('createPlatformWechatSiteUser', function(){
-    //    it('create a platform wechat site user', function(done){
-    //        var service = context.services.platformWechatSiteService;
-    //        service.createPlatformWechatSiteUser(function(err, wechatSite){
-    //            context.logger.debug(wechatSite);
-    //            done();
-    //        });
-    //    });
-    //});
+    describe('createPlatformWechatSiteUser', function(){
+        it('create a platform wechat site user', function(done){
+            var service = context.services.platformWechatSiteUserService;
+            var wechatSiteUser = {
+                nickname: '包三哥',
+                openid: 'xxx'
+            };
+
+            service.createPlatformWechatSiteUser(wechatSiteUser, function(err, result){
+                context.logger.debug(result);
+                done();
+            });
+        });
+    });
 
 });
