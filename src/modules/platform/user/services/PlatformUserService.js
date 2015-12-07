@@ -57,7 +57,14 @@ Service.prototype.create = function(userJson, callback){
         cbUtil.handleAffected(function(err, doc){
             var obj = doc.toObject({virtuals: true});
             kv.saveById(obj, function(err, obj){
-                if(callback) callback(err, obj);
+                if(err){
+                    //TODO
+                    if(callback) callback(err);
+                    return;
+                }
+                kv.linkOpenid(obj.openid, obj.id, function(err){
+                    if(callback) callback(err, obj);
+                });
             });
         }, err, result, affected);
     });

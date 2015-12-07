@@ -23,14 +23,14 @@ Kv.prototype.loadById = function(id, callback){
             'Succeed to get platform user by id ' + id);
 
         if(result){
-            if(json.posts && typeof json.posts == 'string'){
-                var posts = json.posts;
+            if(result.posts && typeof result.posts == 'string'){
+                var posts = result.posts;
                 try{
-                    json.posts = JSON.parse(json.posts);
+                    result.posts = JSON.parse(result.posts);
                 }
                 catch(e){
                     logger.error('Fail to parse posts: ' + posts);
-                    json.posts = [];
+                    result.posts = [];
                 }
             }
             result.crtOn = result.crtOn && result.crtOn !== 'null' ? new Date(result.crtOn) : null;
