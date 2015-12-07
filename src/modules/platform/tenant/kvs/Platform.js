@@ -1,38 +1,37 @@
 var util = require('util');
 var Promise = require('bluebird');
 var cbUtil = require('../../../../framework/callback');
-var WechatMediumKv = require('../../base/kvs/WechatMedium');
-
+var TenantKv = require('./../../../tenant/kvs/Tenant');
 var platformKey = function(){
-    return 'plf:mdm:id';
+    return 'plf:tnt:id';
 };
 
 var Kv = function(context){
     this.context = context;
 };
 
-util.inherits(Kv, WechatMediumKv);
+util.inherits(Kv, TenantKv);
 
-Kv.prototype.getPlatformWechatSiteId = function(callback){
+Kv.prototype.getPlatformId = function(callback){
     var redis = this.context.redis.main;
     var key = platformKey();
     redis.get(key, function(err, result){
         cbUtil.logCallback(
             err,
-            'Fail to get platform wechat siteid: ' + err,
-            'Succeed to get platform wechat site id ' + result);
+            'Fail to get platform id: ' + err,
+            'Succeed to get platform id ' + result);
         cbUtil.handleSingleValue(callback, err, result);
     });
 };
 
-Kv.prototype.setPlatformWechatSiteId = function(id, callback){
+Kv.prototype.setPlatformId = function(id, callback){
     var redis = this.context.redis.main;
     var key = platformKey();
     redis.set(key, id, function(err, result){
         cbUtil.logCallback(
             err,
-            'Fail to set platform wechat siteid ' + id + ': ' + err,
-            'Succeed to set platform wechat site id ' + id);
+            'Fail to link platform id ' + id + ': ' + err,
+            'Succeed to link platform id ' + id);
         cbUtil.handleOk(callback, err, result);
     });
 };

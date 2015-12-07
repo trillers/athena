@@ -12,6 +12,29 @@ var Service = function(context){
 //    this.create(wechatUserJson, callback);
 //};
 
+Service.prototype.createPlatformUser = function(openid, callback) {
+    /*
+
+    user = kv.loadByOpenid(openid);
+    if(user){
+        return user;
+    }
+    else{
+        var userInfo = wechatApi.getUser(openid);
+        var userJson <-- userInfo;
+        var user = this.create(userJson);
+        var platformWechatSite = getPlatformWechatSite();
+
+        userInfo.user = user.id;
+        var wechatSiteUser = PlatformWechatSiteService.addUser(platformWechatSite.id, userInfo);
+        return user;
+    }
+
+    */
+
+};
+
+
 Service.prototype.create = function(userJson, callback){
     var logger = this.context.logger;
     var kv = this.context.kvs.platformUser;

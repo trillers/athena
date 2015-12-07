@@ -1,7 +1,7 @@
 var assert = require('chai').assert;
-var context = require('../../../../src');
+var context = require('../../../../../src/index');
 var logger = context.logger;
-var TenantType = require('../../../../src/modules/common/models/TypeRegistry').item('TenantType');
+var TenantType = require('../../../../../src/modules/common/models/TypeRegistry').item('TenantType');
 
 before(function(done){
     setTimeout(function () {

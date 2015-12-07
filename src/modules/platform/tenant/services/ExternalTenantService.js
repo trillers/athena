@@ -1,8 +1,8 @@
 var util = require('util');
-var cbUtil = require('../../../framework/callback');
-var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
-var IntegrationType = require('../../common/models/TypeRegistry').item('IntegrationType');
-var TenantService = require('./TenantService');
+var cbUtil = require('../../../../framework/callback');
+var TenantType = require('../../../common/models/TypeRegistry').item('TenantType');
+var IntegrationType = require('../../../common/models/TypeRegistry').item('IntegrationType');
+var TenantService = require('./../../../tenant/services/TenantService');
 
 var Service = function(context){
     //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');

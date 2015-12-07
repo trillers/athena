@@ -2,7 +2,7 @@ var util = require('util');
 var cbUtil = require('../../../../framework/callback');
 var settings = require('athena-settings');
 var WechatMediumType = require('../../../common/models/TypeRegistry').item('WechatMediumType');
-var WechatMediumService = require('../../base/services/WechatMediumService');
+var WechatMediumService = require('../../../medium/base/services/WechatMediumService');
 
 var Service = function(context){
     this.context = context;

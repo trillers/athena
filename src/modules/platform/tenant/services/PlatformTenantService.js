@@ -1,8 +1,8 @@
 var util = require('util');
 var platformSettings = require('athena-settings').platform;
-var cbUtil = require('../../../framework/callback');
-var TenantType = require('../../common/models/TypeRegistry').item('TenantType');
-var TenantService = require('./TenantService');
+var cbUtil = require('../../../../framework/callback');
+var TenantType = require('../../../common/models/TypeRegistry').item('TenantType');
+var TenantService = require('./../../../tenant/services/TenantService');
 
 var Service = function(context){
     //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
