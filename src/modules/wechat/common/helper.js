@@ -1,4 +1,4 @@
-var open
+var Promise = require('bluebird');
 
 var helper = {};
 
@@ -47,4 +47,6 @@ helper.getUserInfo = function (api, openid, language, callback) {
         }
     });
 };
+helper.getUserInfoAsync = Promise.promisify(helper.getUserInfo);
+
 module.exports = helper;
