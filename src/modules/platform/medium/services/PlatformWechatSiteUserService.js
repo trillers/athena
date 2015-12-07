@@ -18,7 +18,7 @@ Service.prototype.createPlatformWechatSiteUser = function(mediumUserJson, userId
             if(callback) callback(err);
             return;
         }
-        mediumUserJson.medium = wechatSite.id;
+        mediumUserJson.host = wechatSite.id;
         userId && (mediumUserJson.user = userId);
         me.create(mediumUserJson, callback);
     });

@@ -5,6 +5,10 @@ var idToObjKey = function(id){
     return 'plf:usr:o:id:' + id;
 };
 
+var openidToIdKey = function(openid){
+    return 'plf:usr:id:oid:' + openid;
+};
+
 var Kv = function(context){
     this.context = context;
 };
@@ -51,6 +55,42 @@ Kv.prototype.saveById = function(json, callback){
             'Fail to save platform user by id ' + id + ': ' + err,
             'Succeed to save platform user by id ' + id);
         cbUtil.handleOk(callback, err, result, json);
+    });
+};
+
+Kv.prototype.loadIdByOpenid = function(openid, callback){
+    var redis = this.context.redis.main;
+    var key = openidToIdKey(openid);
+    redis.get(key, function(err, result){
+        cbUtil.logCallback(
+            err,
+            'Fail to get platform user id by openid ' + openid + ': ' + err,
+            'Succeed to get platform user id ' + result + ' by openid ' + openid);
+        cbUtil.handleSingleValue(callback, err, result);
+    });
+};
+
+Kv.prototype.linkOpenid = function(openid, id, callback){
+    var redis = this.context.redis.main;
+    var key = openidToIdKey(openid);
+    redis.set(key, id, function(err, result){
+        cbUtil.logCallback(
+            err,
+            'Fail to link openid ' + openid + ' to id ' + id + ': ' + err,
+            'Succeed to link openid ' + openid + ' to id ' + id);
+        cbUtil.handleOk(callback, err, result);
+    });
+};
+
+Kv.prototype.unlinkOpenid = function(openid, callback){
+    var redis = this.context.redis.main;
+    var key = openidToIdKey(openid);
+    redis.del(key, function(err, result){
+        cbUtil.logCallback(
+            err,
+            'Fail to unlink platform user id by openid ' + openid + ': ' + err,
+            'Succeed to unlink platform user id by openid ' + openid);
+        cbUtil.handleSingleValue(callback, err, result);
     });
 };
 

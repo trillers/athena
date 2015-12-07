@@ -1,20 +1,25 @@
 var cbUtil = require('../../../../framework/callback');
 //var WechatMediumUserType = require('../../../common/models/TypeRegistry').item('WechatMediumUserType');
-
+var wechat = require('../../../wechat/common/api');
 
 var Service = function(context){
     this.context = context;
 };
 
-//TODO
-//Service.prototype.createWechatSiteUser = function(wechatUserJson, callback) {
-//    wechatUserJson.type = WechatMediumUserType.WechatSiteUser.value();
-//    this.create(wechatUserJson, callback);
-//};
+var getUserFromWechat = function (openid, callback) {
+    var input = {openid: openid, lang: 'zh_CN'}
+    wechat.api.getUser(input, function (err, userInfo) {
+        if (err) {
+            if (callback) callback(err);
+        }
+        else {
+            if (callback) callback(null, userInfo);
+        }
+    });
+};
 
 Service.prototype.createPlatformUser = function(openid, callback) {
     /*
-
     user = kv.loadByOpenid(openid);
     if(user){
         return user;
@@ -29,9 +34,117 @@ Service.prototype.createPlatformUser = function(openid, callback) {
         var wechatSiteUser = PlatformWechatSiteService.addUser(platformWechatSite.id, userInfo);
         return user;
     }
-
     */
+    var logger = this.context.logger;
+    var kv = this.context.kvs.platformUser;
+    var platformWechatSiteService = this.context.services.platformWechatSiteService;
+    var platformWechatSiteUserService = this.context.services.platformWechatSiteUserService;
 
+    var me = this;
+    kv.loadIdByOpenid(openid, function(err, id){
+        if(err){
+            //TODO logging
+            logger.error(err);
+            logger.error(err.stack);
+            if(callback) callback(err);
+            return;
+        }
+
+        if(id){
+            kv.loadById(id, callback);
+        }
+        else{
+            getUserFromWechat(openid, function(err, wechatSiteUserInfo){
+                if(err){
+                    //TODO logging
+                    logger.error(err);
+                    logger.error(err.stack);
+                    if(callback) callback(err);
+                    return;
+                }
+
+                var userJson = {
+                    posts: []
+                    , openid:       openid
+                    , nickname:     wechatSiteUserInfo.nickname
+                    , headimgurl:   wechatSiteUserInfo.headimgurl
+                    , sex:          wechatSiteUserInfo.sex
+                };
+
+                var  directCities = {
+                    '北京': true,
+                    '天津': true,
+                    '上海': true,
+                    '重庆': true
+                };
+
+                //TODO
+                if(directCities){
+                    userJson.country = wechatSiteUserInfo.country;
+                    userJson.province = wechatSiteUserInfo.province;
+                    userJson.city = wechatSiteUserInfo.city;
+                    userJson.district = wechatSiteUserInfo.district;
+                }
+
+                me.create(userJson, function(err, user){
+                    if(err){
+                        //TODO logging
+                        logger.error(err);
+                        logger.error(err.stack);
+                        if(callback) callback(err);
+                        return;
+                    }
+                    var userId = user.id;
+                    platformWechatSiteService.ensurePlatformWechatSite(function(err, wechatSite){
+                        if(err){
+                            //TODO logging
+                            logger.error(err);
+                            logger.error(err.stack);
+                            if(callback) callback(err);
+                            return;
+                        }
+
+                        var wechatSiteUserJson = {
+                            openid:       openid
+                            , nickname:     wechatSiteUserInfo.nickname
+                            , headimgurl:   wechatSiteUserInfo.headimgurl
+                            , sex:          wechatSiteUserInfo.sex
+
+                            , language:          wechatSiteUserInfo.language
+                            , remark:          wechatSiteUserInfo.remark
+                        };
+                        wechatSiteUserJson.host = wechatSite.id;
+                        wechatSiteUserJson.type = WechatMediumUserType.WechatSiteUser.value();
+
+                        //TODO
+                        if(directCities){
+                            wechatSiteUserJson.country = wechatSiteUserInfo.country;
+                            wechatSiteUserJson.province = wechatSiteUserInfo.province;
+                            wechatSiteUserJson.city = wechatSiteUserInfo.city;
+                            wechatSiteUserJson.district = wechatSiteUserInfo.district;
+                        }
+
+                        platformWechatSiteUserService.createPlatformWechatSiteUser(wechatSiteUserJson, userId, function(err, wechatSiteUser){
+                            if(err){
+                                //TODO logging
+                                logger.error(err);
+                                logger.error(err.stack);
+                                if(callback) callback(err);
+                                return;
+                            }
+                            if(callback) callback(null, user);
+
+                        });
+                    })
+
+                });
+
+
+            });
+
+
+        }
+    });
 };
 
 
