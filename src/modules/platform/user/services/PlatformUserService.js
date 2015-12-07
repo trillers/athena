@@ -169,4 +169,16 @@ Service.prototype.create = function(userJson, callback){
 
 };
 
+Service.prototype.update = function(conditions, update, callback){
+    var PlatformUser = this.context.models.PlatformUser;
+    PlatformUser.findOneAndUpdate(conditions, update, {new: true}, function(err, doc){
+        cbUtil.logCallback(
+            err,
+            'Fail to update platform user: ' + err,
+            'Succeed to update platform user');
+
+        cbUtil.handleSingleValue(callback, err, doc);
+    })
+}
+
 module.exports = Service;
