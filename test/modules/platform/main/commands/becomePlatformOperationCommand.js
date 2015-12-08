@@ -2,7 +2,6 @@ var assert = require('chai').assert;
 var wxutil = require('../../../../framework/wechat/util');
 var Wechat = require('../../../../../src/framework/wechat/index');
 var context = require('../../../../../src/');
-//var siteEmitter = require('../../../../src/modules/assistant/site-emitter');
 var wechatemitter = require('../../../../../src/modules/system/wechatsite/wechatemitter');
 
 var mongoose = require('../../../../../src/app/mongoose');
@@ -15,20 +14,7 @@ before(function(done){
 })
 
 describe('platform operation handler', function() {
-    var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';//独自等待的错题本openid
-    //before(function(done){
-    //    adminService.createFromOpenid(openid, function(err, user){
-    //        assert.ok(user);
-    //        assert(user.role, userRole.Admin.value());
-    //        done();
-    //    });
-    //})
-    //after(function(done){
-    //    wechatUserService.deleteByOpenid(openid, function(err, user){
-    //        assert.ok(user);
-    //        done();
-    //    });
-    //});
+    var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';//包三哥的错题本openid
     it('success send tenant registry qr code', function (done) {
         var platform = new Wechat.Platform();
         var client = wxutil.newSignedInClient(platform);
