@@ -4,11 +4,12 @@ var path = require('path');
 var wechatApi = require('../../../wechat/common/api').api;
 var request = require('request');
 var fs = require('fs');
-
+var os = require('os');
 module.exports = function (context) {
     var openid = context.weixin.FromUserName;
     handler.autoCreate(null, function (err, qr) {
         var url = wechatApi.showQRCodeURL(qr.ticket);
+        //os.tmpdir()
         var qrCodePath = '../../../../../public/qrCode/' + openid + '.png';
         request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
             wechatApi.uploadMedia(path.join(__dirname, qrCodePath), 'image', function (err, data) {
