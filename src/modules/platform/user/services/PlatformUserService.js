@@ -36,12 +36,11 @@ Service.prototype.createPlatformUser = function(openid, callback) {
         platformWechatSiteUserService.createPlatformWechatSiteUser(wechatSiteUserJson);
         if(callback) callback(null, user);
     }).catch(Error, function(err){
-        logger.error('Fail to create platform user: ' + err);
+        logger.error('Fail to create platform user linked to wechat site user: ' + err);
         logger.error(err.stack);
         if(callback) callback(err);
     });
 };
-
 
 Service.prototype.create = function(userJson, callback){
     var logger = this.context.logger;
@@ -58,7 +57,8 @@ Service.prototype.create = function(userJson, callback){
             var obj = doc.toObject({virtuals: true});
             kv.saveById(obj, function(err, obj){
                 if(err){
-                    //TODO
+                    logger.error('Fail to create platform user: ' + err);
+                    logger.error(err.stack);
                     if(callback) callback(err);
                     return;
                 }
