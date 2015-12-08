@@ -21,4 +21,15 @@ describe('TenantService', function(){
 
     });
 
+    describe('registerTenant by openid', function(){
+        it('registry a personal tenant by openid', function(done){
+            var service = context.services.tenantService;
+            var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';//独自等待的错题本openid
+            service.registerTenant(openid, function(err, tenant){
+                context.logger.debug(tenant);
+                done();
+            });
+        });
+
+    });
 });

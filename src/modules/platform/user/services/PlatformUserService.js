@@ -71,4 +71,29 @@ Service.prototype.create = function(userJson, callback){
 
 };
 
+Service.prototype.update = function(conditions, update, callback){
+    var PlatformUser = this.context.models.PlatformUser;
+    var kv = this.context.kvs.platformUser;
+    PlatformUser.findOneAndUpdate(conditions, update, {new: true}, function(err, doc){
+        cbUtil.logCallback(
+            err,
+            'Fail to update platform user: ' + err,
+            'Succeed to update platform user');
+
+        cbUtil.handleSingleValue(function(err, doc){
+            var obj = doc.toObject({virtuals: true});
+            kv.saveById(obj, function(err, obj){
+                if(err){
+                    //TODO
+                    if(callback) callback(err);
+                    return;
+                }
+                obj.posts = JSON.parse(obj.posts);
+                if(callback) callback(err, obj);
+                return ;
+            });
+        }, err, doc);
+    })
+}
+
 module.exports = Service;

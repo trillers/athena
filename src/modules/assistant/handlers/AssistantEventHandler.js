@@ -44,20 +44,17 @@ module.exports = function (emitter) {
                         case 'cs':
                             console.log('cs handler');
                             reply = '[系统]: 欢迎成为客服人员！';
-                            try {
-                                user = yield csService.setRoleByOpenidAsync(userOpenid);
-                            } catch (err) {
-                                console.log(err);
-                            }
+                            user = yield csService.setRoleByOpenidAsync(userOpenid);
                             break;
                         case 'ad':
                             console.log('admin handler');
                             reply = '[系统]: 欢迎成为管理员！';
-                            try {
-                                user = yield adminService.setRoleByOpenidAsync(userOpenid);
-                            } catch (err) {
-                                console.log(err);
-                            }
+                            user = yield adminService.setRoleByOpenidAsync(userOpenid);
+                            break;
+                        case 'ta':
+                            console.log('tenant admin handler');
+                            reply = '[系统]: 注册成功！';
+                            //user = yield tenantHandler.registryTenant(userOpenid);
                             break;
                         //TODO another qr type
                     }

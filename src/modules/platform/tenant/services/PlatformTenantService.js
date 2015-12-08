@@ -3,6 +3,7 @@ var platformSettings = require('athena-settings').platform;
 var cbUtil = require('../../../../framework/callback');
 var TenantType = require('../../../common/models/TypeRegistry').item('TenantType');
 var TenantService = require('./../../../tenant/services/TenantService');
+var Promise = require('bluebird');
 
 var Service = function(context){
     this.context = context;
