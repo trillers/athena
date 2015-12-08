@@ -5,6 +5,10 @@
   "version": "0.0.1",
   "dependencies": {
     "athena-settings": "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/athena-settings.git",
+    "base-settings":  "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/base-settings.git",
+    "vk":
+    "git+https://henryleu:c148960791ab761064ecfbb07b7fdf582ff008df@github.com/trillers/vk.git",
+    "amqplib": "0.4.0",
     "log4js": "0.6.26",
     "mongoose": "4.2.6",
     "redis": "0.12.1",
