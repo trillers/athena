@@ -92,7 +92,7 @@ Service.prototype.setPlatformUserPosts = function(user, role, updateOrAdd, callb
                 , nickname: user.nickname
                 , headimgurl: user.headimgurl
                 , role: role
-                , remark: 'platform operation'
+                , remark: user.nickname
             }
             var tenantMember = yield tenantMemberService.createAsync(tenantMemberJson);
             var postJson = {
