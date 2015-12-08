@@ -7,8 +7,20 @@ before(function(done){
     }, 2000);
 });
 describe('PlatformUserService', function(){
-    describe('create', function(){
+    describe.only('createPlatformUser', function(){
         it('Succeed to create a platform user', function(done){
+            var service = context.services.platformUserService;
+            var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
+            service.createPlatformUser(openid, function(err, user){
+                logger.debug(user);
+                done();
+            });
+        });
+
+    });
+
+    describe('create', function(){
+        it('Succeed to create a user', function(done){
             var service = context.services.platformUserService;
             var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
             var user = {

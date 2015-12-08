@@ -1,4 +1,4 @@
-var roleEmitter = require('../roleEmitter');
+var roleEmitter = require('./roleEmitter');
 var CommandRegistry = require('../../../framework/wechat/command-registry');
 var registry = new CommandRegistry();
 

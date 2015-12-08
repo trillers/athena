@@ -2,8 +2,6 @@ var Promise = require('bluebird');
 var co = require('co');
 var logger = require('../../../app/logging').logger;
 var QrChannelService = require('../../qrchannel/services/QrChannelService');
-var TenantHandler = require('../../tenant/handlers/TenantHandler');
-var tenantHandler = new TenantHandler();
 var wechatApi = require('../../wechat/common/api').api;
 var csService = require('../../cs/services/CsService');
 var adminService = require('../../admin/services/AdminService');
@@ -56,7 +54,7 @@ module.exports = function (emitter) {
                         case 'ta':
                             console.log('tenant admin handler');
                             reply = '[系统]: 注册成功！';
-                            user = yield tenantHandler.registryTenant(userOpenid);
+                            //user = yield tenantHandler.registryTenant(userOpenid);
                             break;
                         //TODO another qr type
                     }

@@ -1,5 +1,4 @@
 var util = require('util');
-var Promise = require('bluebird');
 var cbUtil = require('../../../../framework/callback');
 var WechatMediumKv = require('../../../medium/base/kvs/WechatMedium');
 
@@ -36,8 +35,5 @@ Kv.prototype.setPlatformWechatSiteId = function(id, callback){
         cbUtil.handleOk(callback, err, result);
     });
 };
-
-
-Kv = Promise.promisifyAll(Kv);
 
 module.exports = Kv;

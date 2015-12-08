@@ -1,7 +1,7 @@
 var util = require('util');
-var Promise = require('bluebird');
 var cbUtil = require('../../../../framework/callback');
 var TenantKv = require('./../../../tenant/kvs/Tenant');
+
 var platformKey = function(){
     return 'plf:tnt:id';
 };
@@ -35,8 +35,5 @@ Kv.prototype.setPlatformId = function(id, callback){
         cbUtil.handleOk(callback, err, result);
     });
 };
-
-
-Kv = Promise.promisifyAll(Kv);
 
 module.exports = Kv;

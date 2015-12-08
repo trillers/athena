@@ -1,10 +1,7 @@
 var cbUtil = require('../../../../framework/callback');
 var kv = require('../../../../context').kvs.platformUser;
 var TenantMemberRole = require('../../../common/models/TypeRegistry').item('TenantMemberRole');
-var platformTenantService = require('../../../../context').services
-.platformTenantService;
-var tenantMemberService = require('../../../../context').services.tenantMemberService;
-var platformUserService = require('../../../../context').services.platformUserService;
+
 var co = require('co');
 
 
@@ -12,66 +9,119 @@ var Service = function(context){
     this.context = context;
 };
 
-Service.prototype.registerPlatformOperation = function(openid, callback) {
+/**
+ * register platform user post
+ * @param openid
+ * @param role
+ * @param callback
+ */
+Service.prototype.registerPlatformPost = function(openid, role, callback) {
+    var self = this;
+    var platformTenantService = this.context.services.platformTenantService;
+    var platformUserService = this.context.services.platformUserService;
     co(function*(){
-        var self = this;
-        var id = yield kv.loadIdByOpenidAsync(openid);
-        var user = yield kv.loadByIdAsync(id);
-        if(user){
-            if(user.posts && user.posts.length > 0){
-                var hasOperationRole = false;
-                user.posts.forEach(function(item){
-                    if(item.role === TenantMemberRole.PlatformOperation.value() || item.role === TenantMemberRole.PlatformAdmin.value()){
+        try {
+            var id = yield kv.loadIdByOpenidAsync(openid);
+            var user = yield kv.loadByIdAsync(id);
+            var updateOrAdd = 'add';
+            var platform = yield platformTenantService.ensurePlatformAsync();
+            if (user) {
+                if (user.posts && user.posts.length > 0) {
+                    var hasOperationRole = false;
+                    var platformPost = null;
+                    user.posts.forEach(function (item) {
+                        if(item.tenant == platform.id){
+                            platformPost = item;
+                            return;
+                        }
+                    })
+                    if(platformPost){
+                        if(platformPost.role == role) {
+                            hasOperationRole = true;
+                        }
+                        else if(platformPost.role == TenantMemberRole.PlatformOperation.value() && role == TenantMemberRole.PlatformAdmin.value()){
+                            hasOperationRole = false;
+                            updateOrAdd = 'update';
+                        }
+                        else{
+                            hasOperationRole = true;
+                        }
+                    }
+                    else {
                         hasOperationRole = true;
                     }
-                })
-                if(hasOperationRole){
-                    if(callback) callback(err, user);
-                    return ;
+                    if (hasOperationRole) {
+                        if (callback) callback(null, user);
+                        return;
+                    }
                 }
+                var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+                if (callback) callback(null, user);
+                return;
+            } else {
+                var user = yield platformUserService.createPlatformUserAsync(openid);
+                var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+                if (callback) callback(null, user);
+                return;
             }
-            var user = self.setPlatfromUserPostsAsync(user);
-            if(callback) callback(err, user);
-            return ;
-        } else{
-            var user = yield platformUserService.createPlatformUserAsync(openid);
-            var user = self.setPlatfromUserPostsAsync(user);
-            if(callback) callback(err, user);
-            return ;
+        }catch(e){
+            console.log('registerPlatformOperation err:' + e + '; openid: ' + openid);
         }
     })
 };
 
-Service.prototype.setPlatfromUserPosts = function(user, callback){
-    co(function*(){
+/**
+ * set platform user posts
+ * @param user
+ * @param role
+ * @param updateOrAdd update existed post or add a new post value: 'update' or 'add'
+ * @param callback
+ */
+Service.prototype.setPlatformUserPosts = function(user, role, updateOrAdd, callback){
+    var platformTenantService = this.context.services.platformTenantService;
+    var tenantMemberService = this.context.services.tenantMemberService;
+    var platformUserService = this.context.services.platformUserService;
+
+    co(function*(user){
         var platform = yield platformTenantService.ensurePlatformAsync();
-        var tenantMemberJson = {
-            tenant: platform.id
-            , nickname: user.nickname
-            , headimgurl: user.headimgurl
-            , role: TenantMemberRole.PlatformOperation.value()
-            , remark: 'platform operation'
-        }
-        var tenantMember = yield tenantMemberService.createAsync(tenantMemberJson);
-        var postJson = {
-            tenant: platform.id
-            , member: tenantMember._id
-            , role: TenantMemberRole.PlatformOperation.value()
-        }
-        var conditions = {
-            _id: user._id
-        }
-        var update = {
-            $push: {
-                posts: postJson
+        var update = {};
+        var conditions = {}
+        if(updateOrAdd === 'add'){
+            var tenantMemberJson = {
+                tenant: platform.id
+                , nickname: user.nickname
+                , headimgurl: user.headimgurl
+                , role: role
+                , remark: 'platform operation'
+            }
+            var tenantMember = yield tenantMemberService.createAsync(tenantMemberJson);
+            var postJson = {
+                tenant: platform.id
+                , member: tenantMember._id
+                , role: role
+            }
+            conditions = {
+                _id: user._id
+            }
+            update = {
+                $push: {
+                    posts: postJson
+                }
+            }
+        } else if(updateOrAdd === 'update'){
+            conditions = {
+                _id: user._id,
+                "posts.tenant": platform.id
+            }
+            update = {
+                $set: { "posts.$.role" : role }
             }
         }
-        var user = yield platformUserService.updateAsync(conditions, update);
-        if(callback) callback(err, user);
-        return ;
-    })
-}
 
-Service.prototype = Promise.promisifyAll(Service.prototype);
+        var user = yield platformUserService.updateAsync(conditions, update);
+        if(callback) callback(null, user);
+        return ;
+    }, user)
+}
 
 module.exports = Service;

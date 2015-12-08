@@ -1,4 +1,3 @@
-var Promise = require('bluebird');
 var cbUtil = require('../../../../framework/callback');
 
 var idToObjKey = function(id){
@@ -37,7 +36,5 @@ Kv.prototype.saveById = function(json, callback){
         cbUtil.handleOk(callback, err, result, json);
     });
 };
-
-Kv = Promise.promisifyAll(Kv);
 
 module.exports = Kv;

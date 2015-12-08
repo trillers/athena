@@ -2,7 +2,6 @@ var cbUtil = require('../../../framework/callback');
 var Promise = require('bluebird');
 
 var Service = function(context){
-    //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
     this.context = context;
 };
 

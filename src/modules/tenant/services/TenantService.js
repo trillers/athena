@@ -4,7 +4,6 @@ var Promise = require('bluebird');
 var co = require('co');
 
 var Service = function(context){
-    //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
     this.context = context;
 };
 

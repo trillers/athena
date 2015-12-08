@@ -6,7 +6,6 @@ var TenantService = require('./../../../tenant/services/TenantService');
 var Promise = require('bluebird');
 
 var Service = function(context){
-    //assert.ok(this.Tenant = context.models.Tenant, 'no Model Tenant');
     this.context = context;
 };
 
