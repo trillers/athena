@@ -1,3 +1,4 @@
+var assert = require('chai').assert;
 var context = require('../../../../../src');
 var logger = context.logger;
 
@@ -7,7 +8,19 @@ before(function(done){
     }, 2000);
 });
 describe('PlatformUserService', function(){
-    describe.only('createPlatformUser', function(){
+    describe.only('loadPlatformUserByOpenid', function(){
+        it('Succeed to load a platform user', function(done){
+            var service = context.services.platformUserService;
+            var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
+            service.loadPlatformUserByOpenid(openid, function(err, user){
+                logger.debug(user);
+                assert.equal(user.openid, openid);
+                done();
+            });
+        });
+
+    });
+    describe('createPlatformUser', function(){
         it('Succeed to create a platform user', function(done){
             var service = context.services.platformUserService;
             var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
@@ -16,7 +29,6 @@ describe('PlatformUserService', function(){
                 done();
             });
         });
-
     });
 
     describe('create', function(){

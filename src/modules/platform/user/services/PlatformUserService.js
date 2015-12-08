@@ -8,6 +8,21 @@ var Service = function(context){
     this.context = context;
 };
 
+Service.prototype.loadPlatformUserByOpenid = function(openid, callback) {
+    var logger = this.context.logger;
+    var kv = this.context.kvs.platformUser;
+
+    co(function* (){
+        var userId = yield kv.loadIdByOpenidAsync(openid);
+        var user = yield kv.loadByIdAsync(userId);
+        if(callback) callback(null, user);
+    }).catch(Error, function(err){
+        logger.error('Fail to load platform user by wechat site user\'s openid '+openid+' : ' + err);
+        logger.error(err.stack);
+        if(callback) callback(err);
+    });
+};
+
 Service.prototype.createPlatformUser = function(openid, callback) {
     var logger = this.context.logger;
     var kv = this.context.kvs.platformUser;
