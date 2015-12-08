@@ -4,6 +4,7 @@ var CommandRegistry = require('../../../framework/wechat/command-registry');
 var registry = new CommandRegistry();
 //registry.addCommand('账户邀请二维码', require('../../platform/main/commands/sendTenantQrCodeCommand'));
 registry.addCommand('成为平台运营专员', require('../../platform/main/commands/becomePlatformOperationCommand'));
+registry.addCommand('成为平台管理员', require('../../platform/main/commands/becomePlatformAdminCommand'));
 
 
 module.exports = function(emitter){

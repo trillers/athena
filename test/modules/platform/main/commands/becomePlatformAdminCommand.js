@@ -13,9 +13,9 @@ before(function(done){
     },2000);
 })
 
-describe('becomePlatformAdminCommand', function() {
+describe.only('becomePlatformAdminCommand', function() {
     var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';//包三哥的错题本openid
-    it('to become a platform operation', function (done) {
+    it('success to become a platform admin', function (done) {
         var platform = new Wechat.Platform();
         var client = wxutil.newSignedInClient(platform);
         var site = wxutil.newRegisteredSite(platform);
@@ -23,7 +23,7 @@ describe('becomePlatformAdminCommand', function() {
         var siteClient = client.subscribeSite(site.getId(), openid);
 
         siteClient.sendText({
-            Content: '成为平台运营专员'
+            Content: '成为平台管理员'
         });
 
         setTimeout(function(){

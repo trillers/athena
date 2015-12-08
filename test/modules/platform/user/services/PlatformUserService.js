@@ -8,7 +8,7 @@ before(function(done){
     }, 2000);
 });
 describe('PlatformUserService', function(){
-    describe.only('loadPlatformUserByOpenid', function(){
+    describe('loadPlatformUserByOpenid', function(){
         it('Succeed to load a platform user', function(done){
             var service = context.services.platformUserService;
             var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
@@ -23,7 +23,7 @@ describe('PlatformUserService', function(){
     describe('createPlatformUser', function(){
         it('Succeed to create a platform user', function(done){
             var service = context.services.platformUserService;
-            var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';
+            var openid = 'okvXqs_VftHruzwFV9rx4Pbd_fno';
             service.createPlatformUser(openid, function(err, user){
                 logger.debug(user);
                 done();
