@@ -11,8 +11,8 @@ module.exports = function (context) {
     handler.autoCreate(null, function (err, qr) {
         var url = wechatApi.showQRCodeURL(qr.ticket);
         var qrCodePath = os.tmpdir() + openid + '.png';
-        request(url).pipe(fs.createWriteStream(path.join(__dirname, qrCodePath))).on('close', function () {
-            wechatApi.uploadMedia(path.join(__dirname, qrCodePath), 'image', function (err, data) {
+        request(url).pipe(fs.createWriteStream(qrCodePath)).on('close', function () {
+            wechatApi.uploadMedia(qrCodePath, 'image', function (err, data) {
                 if (err) {
                     return console.error('uploadImage err: ' + err);
                 }

@@ -13,7 +13,7 @@ before(function(done){
     },2000);
 })
 
-describe.only('becomePlatformAdminCommand', function() {
+describe('becomePlatformAdminCommand', function() {
     var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';//包三哥的错题本openid
     it('success to become a platform admin', function (done) {
         var platform = new Wechat.Platform();

@@ -11,7 +11,6 @@ var Service = function(context){
 Service.prototype.loadPlatformUserByOpenid = function(openid, callback) {
     var logger = this.context.logger;
     var kv = this.context.kvs.platformUser;
-
     co(function* (){
         var userId = yield kv.loadIdByOpenidAsync(openid);
         var user = yield kv.loadByIdAsync(userId);
@@ -105,7 +104,6 @@ Service.prototype.update = function(conditions, update, callback){
                 }
                 obj.posts = JSON.parse(obj.posts);
                 if(callback) callback(err, obj);
-                return ;
             });
         }, err, doc);
     })
