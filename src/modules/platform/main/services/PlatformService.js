@@ -15,59 +15,57 @@ var Service = function(context){
  * @param role
  * @param callback
  */
-Service.prototype.registerPlatformPost = function(openid, role, callback) {
+Service.prototype.registerPlatformPost = function (openid, role, callback) {
     var self = this;
     var platformTenantService = this.context.services.platformTenantService;
     var platformUserService = this.context.services.platformUserService;
-    co(function*(){
-        try {
-            var id = yield kv.loadIdByOpenidAsync(openid);
-            var user = yield kv.loadByIdAsync(id);
-            var updateOrAdd = 'add';
-            var platform = yield platformTenantService.ensurePlatformAsync();
-            if (user) {
-                if (user.posts && user.posts.length > 0) {
-                    var hasOperationRole = false;
-                    var platformPost = null;
-                    user.posts.forEach(function (item) {
-                        if(item.tenant == platform.id){
-                            platformPost = item;
-                            return;
-                        }
-                    })
-                    if(platformPost){
-                        if(platformPost.role == role) {
-                            hasOperationRole = true;
-                        }
-                        else if(platformPost.role == TenantMemberRole.PlatformOperation.value() && role == TenantMemberRole.PlatformAdmin.value()){
-                            hasOperationRole = false;
-                            updateOrAdd = 'update';
-                        }
-                        else{
-                            hasOperationRole = true;
-                        }
+    co(function*() {
+        var id = yield kv.loadIdByOpenidAsync(openid);
+        var user = yield kv.loadByIdAsync(id);
+        var updateOrAdd = 'add';
+        var platform = yield platformTenantService.ensurePlatformAsync();
+        if (user) {
+            if (user.posts && user.posts.length > 0) {
+                var hasOperationRole = false;
+                var platformPost = null;
+                user.posts.forEach(function (item) {
+                    if (item.tenant == platform.id) {
+                        platformPost = item;
+                        return;
+                    }
+                })
+                if (platformPost) {
+                    if (platformPost.role == role) {
+                        hasOperationRole = true;
+                    }
+                    else if (platformPost.role == TenantMemberRole.PlatformOperation.value() && role == TenantMemberRole.PlatformAdmin.value()) {
+                        hasOperationRole = false;
+                        updateOrAdd = 'update';
                     }
                     else {
                         hasOperationRole = true;
                     }
-                    if (hasOperationRole) {
-                        if (callback) callback(null, user);
-                        return;
-                    }
                 }
-                var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
-                if (callback) callback(null, user);
-                return;
-            } else {
-                var user = yield platformUserService.createPlatformUserAsync(openid);
-                var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
-                if (callback) callback(null, user);
-                return;
+                else {
+                    hasOperationRole = true;
+                }
+                if (hasOperationRole) {
+                    if (callback) callback(null, user);
+                    return;
+                }
             }
-        }catch(e){
-            console.error('registerPlatformOperation err:' + e + '; openid: ' + openid);
-            if (callback) callback(e);
+            var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            if (callback) callback(null, user);
+            return;
+        } else {
+            var user = yield platformUserService.createPlatformUserAsync(openid);
+            var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            if (callback) callback(null, user);
+            return;
         }
+    }).catch(function (e) {
+        console.error('registerPlatformOperation err:' + e + '; openid: ' + openid);
+        if (callback) callback(e);
     })
 };
 
