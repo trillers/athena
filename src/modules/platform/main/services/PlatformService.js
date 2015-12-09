@@ -1,9 +1,6 @@
-var cbUtil = require('../../../../framework/callback');
-var kv = require('../../../../context').kvs.platformUser;
-var TenantMemberRole = require('../../../common/models/TypeRegistry').item('TenantMemberRole');
-
 var co = require('co');
-
+var cbUtil = require('../../../../framework/callback');
+var TenantMemberRole = require('../../../common/models/TypeRegistry').item('TenantMemberRole');
 
 var Service = function(context){
     this.context = context;
@@ -17,11 +14,13 @@ var Service = function(context){
  */
 Service.prototype.registerPlatformPost = function (openid, role, callback) {
     var self = this;
+    var logger = this.context.logger;
     var platformTenantService = this.context.services.platformTenantService;
     var platformUserService = this.context.services.platformUserService;
+    var platformUserKv = this.context.kvs.platformUser;
     co(function*() {
-        var id = yield kv.loadIdByOpenidAsync(openid);
-        var user = yield kv.loadByIdAsync(id);
+        var id = yield platformUserKv.loadIdByOpenidAsync(openid);
+        var user = yield platformUserKv.loadByIdAsync(id);
         var updateOrAdd = 'add';
         var platform = yield platformTenantService.ensurePlatformAsync();
         if (user) {
@@ -54,34 +53,32 @@ Service.prototype.registerPlatformPost = function (openid, role, callback) {
                     return;
                 }
             }
-            var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
             if (callback) callback(null, user);
-            return;
         } else {
-            var user = yield platformUserService.createPlatformUserAsync(openid);
-            var user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            user = yield platformUserService.createPlatformUserAsync(openid);
+            user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
             if (callback) callback(null, user);
-            return;
         }
-    }).catch(function (e) {
-        console.error('registerPlatformOperation err:' + e + '; openid: ' + openid);
-        if (callback) callback(e);
-    })
+    }).catch(Error, function (err) {
+        logger.error('Fail to register platform user for openid '+openid+':' + err);
+        if (callback) callback(err);
+    });
 };
 
 /**
- * set platform user posts
+ * update platform user posts
  * @param user
  * @param role
  * @param updateOrAdd update existed post or add a new post value: 'update' or 'add'
  * @param callback
  */
-Service.prototype.setPlatformUserPosts = function(user, role, updateOrAdd, callback){
+Service.prototype.updatePlatformUserPosts = function(user, role, updateOrAdd, callback){
     var platformTenantService = this.context.services.platformTenantService;
     var tenantMemberService = this.context.services.tenantMemberService;
     var platformUserService = this.context.services.platformUserService;
 
-    co(function*(user){
+    co(function*(){
         var platform = yield platformTenantService.ensurePlatformAsync();
         var update = {};
         var conditions = {}
@@ -117,10 +114,12 @@ Service.prototype.setPlatformUserPosts = function(user, role, updateOrAdd, callb
             }
         }
 
-        var user = yield platformUserService.updateAsync(conditions, update);
+        user = yield platformUserService.updateAsync(conditions, update);
         if(callback) callback(null, user);
-        return ;
-    }, user)
+    }).catch(Error, function (err) {
+        logger.error('Fail to update platform user posts: ' + err);
+        if (callback) callback(err);
+    });
 }
 
 module.exports = Service;
