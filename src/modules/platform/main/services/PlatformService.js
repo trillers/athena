@@ -65,7 +65,7 @@ Service.prototype.registerPlatformPost = function(openid, role, callback) {
                 return;
             }
         }catch(e){
-            console.log('registerPlatformOperation err:' + e + '; openid: ' + openid);
+            console.error('registerPlatformOperation err:' + e + '; openid: ' + openid);
         }
     })
 };

@@ -7,7 +7,7 @@ var poEmitter = new PoEmitter();
 require('./PoMsgHandler')(poEmitter);
 var CommandRegistry = require('../../../framework/wechat/command-registry');
 var registry = new CommandRegistry();
-registry.addCommand('账户邀请二维码', require('./commands/sendTenantQrCodeCommand'));
+registry.addCommand('账户邀请二维码', require('../../platform/main/commands/requestOrgRegistrationQrCodeCommand'));
 
 module.exports = function(emitter){
     emitter.po(function(event, context){
