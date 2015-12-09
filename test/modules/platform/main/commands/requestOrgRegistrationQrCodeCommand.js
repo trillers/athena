@@ -15,28 +15,37 @@ before(function(done){
 })
 
 describe.only('requestOrgRegistrationQrCodeCommand', function() {
-    var openid = 'okvXqs4vtB5JDwtb8Gd6Rj26W6mE';//独自等待的错题本openid
+    var openid = 'okvXqsw1VG76eVVJrKivWDgps_gA';//独自等待的错题本openid
     before(function(done){
         var service = context.services.platformService;
-        service.registerPlatformPost(openid, TenantMemberRole.PlatformOperation.value(), function(err, user){
-            assert.equal(user.posts[0].role, TenantMemberRole.PlatformOperation.value());
-            done();
-        });
-    })
-    it('success requestOrgRegistrationQrCodeCommand', function (done) {
-        var platform = new Wechat.Platform();
-        var client = wxutil.newSignedInClient(platform);
-        var site = wxutil.newRegisteredSite(platform);
-        wechatemitter.bindSite(site);
-        var siteClient = client.subscribeSite(site.getId(), openid);
+        try{
+            service.registerPlatformOperation(openid, function(err, user){
+                console.error(user);
+                assert.equal(user.posts[0].role, TenantMemberRole.PlatformOperation.value());
+                done();
+            });
+        }
+        catch(e){
+            console.error(e);
+            doen();
+        }
+    });
+    describe('request org registration qr code', function(){
+        it('success', function (done) {
+            var platform = new Wechat.Platform();
+            var client = wxutil.newSignedInClient(platform);
+            var site = wxutil.newRegisteredSite(platform);
+            wechatemitter.bindSite(site);
+            var siteClient = client.subscribeSite(site.getId(), openid);
 
-        siteClient.sendText({
-            Content: '账户邀请二维码'
-        });
+            siteClient.sendText({
+                Content: '账户邀请二维码'
+            });
 
-        setTimeout(function(){
-            done();
-        }, 4000);
-    })
-})
+            setTimeout(function(){
+                done();
+            }, 4000);
+        });
+    });
+});
 

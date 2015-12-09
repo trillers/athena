@@ -7,6 +7,24 @@ var Service = function(context){
 };
 
 /**
+ * Register a platform operation
+ * @param openid openid wechat site user's openid
+ * @param callback
+ */
+Service.prototype.registerPlatformOperation = function (openid, callback) {
+    this.registerPlatformPost(openid, TenantMemberRole.PlatformOperation.value(), callback);
+};
+
+/**
+ * Register a platform administrator
+ * @param openid wechat site user's openid
+ * @param callback
+ */
+Service.prototype.registerPlatformAdmin = function (openid, callback) {
+    this.registerPlatformPost(openid, TenantMemberRole.PlatformAdmin.value(), callback);
+};
+
+/**
  * register platform user post
  * @param openid
  * @param role
@@ -53,15 +71,15 @@ Service.prototype.registerPlatformPost = function (openid, role, callback) {
                     return;
                 }
             }
-            user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            user = yield self.updatePlatformUserPostsAsync(user, role, updateOrAdd);
             if (callback) callback(null, user);
         } else {
             user = yield platformUserService.createPlatformUserAsync(openid);
-            user = yield self.setPlatformUserPostsAsync(user, role, updateOrAdd);
+            user = yield self.updatePlatformUserPostsAsync(user, role, updateOrAdd);
             if (callback) callback(null, user);
         }
     }).catch(Error, function (err) {
-        logger.error('Fail to register platform user for openid '+openid+':' + err);
+        logger.error('Fail to register platform user for openid ' + openid + ': ' + err);
         if (callback) callback(err);
     });
 };

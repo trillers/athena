@@ -41,11 +41,10 @@ Service.prototype.loadPlatformWechatSite = function(callback){
         }
 
         if(result){
-            logger.info('Succeed to load platform wechat site');
+            logger.debug('Succeed to load platform wechat site');
             platformWechatSiteKv.loadById(result, callback);
         }
         else{
-            logger.warn('Have no platform data to load');
             if(callback) callback();
         }
     });

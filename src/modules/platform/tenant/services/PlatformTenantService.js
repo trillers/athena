@@ -43,11 +43,10 @@ Service.prototype.loadPlatform = function(callback){
         }
 
         if(result){
-            logger.info('Succeed to load platform');
+            logger.debug('Succeed to load platform');
             platformKv.loadById(result, callback);
         }
         else{
-            logger.warn('Have no platform data to load');
             if(callback) callback();
         }
     });
