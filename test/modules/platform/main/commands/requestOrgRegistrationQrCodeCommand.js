@@ -20,14 +20,13 @@ describe.only('requestOrgRegistrationQrCodeCommand', function() {
         var service = context.services.platformService;
         try{
             service.registerPlatformOperation(openid, function(err, user){
-                console.error(user);
                 assert.equal(user.posts[0].role, TenantMemberRole.PlatformOperation.value());
                 done();
             });
         }
         catch(e){
             console.error(e);
-            doen();
+            done();
         }
     });
     describe('request org registration qr code', function(){

@@ -12,6 +12,7 @@ var RoleMsgDispatcher = function(){
  */
 RoleMsgDispatcher.prototype.emit = function(context){
     var self = this;
+    logger.info('----------- role message dispathing ------------');
     context.getUser().then(function(user){
         logger.debug(user);
         var post = null;
@@ -34,11 +35,16 @@ RoleMsgDispatcher.prototype.emit = function(context){
             }
             else{
                 //for other unknown roles, ignore it
+                throw new Error('illegal member role');
             }
         }
         else{ //for guest users
+            logger.warn('guest message');
             self.emitter.emit('guest', 'guest', context);
         }
+        return user;
+    }).then(function(user){
+        logger.debug(user);
     }).catch(Error, function(err){
         logger.error('Fail to get user in wechat site message handlers: ' + err);
         logger.error(err.stack);
