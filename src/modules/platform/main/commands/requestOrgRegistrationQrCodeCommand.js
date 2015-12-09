@@ -13,7 +13,6 @@ module.exports = function (context) {
         var qrCodePath = os.tmpdir() + openid + '.png';
         request(url).pipe(fs.createWriteStream(qrCodePath)).on('close', function () {
             wechatApi.uploadMedia(qrCodePath, 'image', function (err, data) {
-                console.log('**********finish upload');
                 if (err) {
                     return console.error('uploadImage err: ' + err);
                 }
