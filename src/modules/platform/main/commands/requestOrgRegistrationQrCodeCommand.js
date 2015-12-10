@@ -3,8 +3,8 @@ var os = require('os');
 var request = require('request');
 var logger = require('../../../../app/logging').logger;
 var wechatApi = require('../../../wechat/common/api').api;
-var qrHandler = require('../../../qrchannel/common/QrHandler');
-var handler = new qrHandler(false, 'ta', null);
+var QrHandler = require('../../../qrchannel/common/QrHandler');
+var handler = new QrHandler(false, 'ta', null);
 
 module.exports = function (context) {
     var openid = context.weixin.FromUserName;
